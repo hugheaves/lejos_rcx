@@ -103,7 +103,7 @@ extern void *tei_vector;        // TEI interrupt vector
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#define MAX_BUFFER 32
+#define MAX_BUFFER 8
 
 static short sending;		// transmission state
 
@@ -113,7 +113,7 @@ static short sending;		// transmission state
 
 static unsigned char send_byte;
 static unsigned char buffer[MAX_BUFFER];
-static short start, next;
+static unsigned char start, next;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
@@ -131,32 +131,15 @@ __asm__ (".text\n.align 1\n.global _" wrapstring "\n_" wrapstring \
 void llc_rx_handler(void);
 void llc_rxerror_handler(void);
 void llc_tx_handler(void);
-void llc_txend_handler(void);
-void llc_show(short aValue);
+void llc_rxerror_core(void);
 
 void llc_init(void) {
-  S_CR = 0;                      // Clear Serial Control Register	
-  T1_CR = 0;                     // Clear Timer 1 Control Register
-  T1_CSR = 0;                    // Clear Timer1 Control Status Register
-  S_MR = SMR_P_ODD;              // Serial Mode Register, no parity
-  S_SR = 0;                      // Clear Serial Status Register
   sending = NOT_SENDING;         // Not transmitting
   start = 0;                     // Intitialise cyclic receive buffer pointers
   next = 0;
-  S_BRR = B2400;                 // Serial Baud Rate Register - set to 2400 (slow)
-  PORT4 &= ~1;                   // Port 4 I/O Register - short range = 0
-  rom_port4_ddr |= 1;	         // Rom Port4 Data Direction Shadow Register
-  PORT4_DDR = rom_port4_ddr;     // Port 4 Data Direction Register
-  rom_port5_ddr = 4;	         // Not sure what port5 is used for
-  PORT5_DDR = rom_port5_ddr;
-  T1_CR  = 0x9;                  // Enable carrier frequency
-  T1_CSR = 0x13;                 // Is this what sets frequency to 38k?
-  T1_CORA = 0x1a;
   eri_vector = &llc_rxerror_handler; // Set IRQ handlers
   rxi_vector = &llc_rx_handler;
   txi_vector = &llc_tx_handler;
-  tei_vector = &llc_txend_handler;
-  S_CR = SCR_RECEIVE | SCR_RX_IRQ; // Allow Receives
 }
 
 // Send a single byte to the IR port.
@@ -181,18 +164,6 @@ int llc_read(void) {
   } 
 }
 
-// Check for data in the input cyclic buffer
-
-short llc_data_available() {
-  return (next != start ? 1 : 0);
-} 
-
-// Discards data in the input buffer
-
-void llc_discard(void) {
-  start = next;
-}
-
 // The byte received interrupt handler
 // Adds the byte to the input cyclic buffer.
 // Note that data is silently discarded if 
@@ -200,13 +171,13 @@ void llc_discard(void) {
 
 HANDLER_WRAPPER("llc_rx_handler","llc_rx_core");
 void llc_rx_core(void) {
-  if(!sending) {
+  if (!sending) {
     // received a byte from PC
     buffer[next] = S_RDR;
     if (++next == MAX_BUFFER) next = 0;
   } else {
     // echos of own bytes -> collision detection
-    if(S_RDR != send_byte) llc_txend_handler();
+    if (S_RDR != send_byte) llc_rxerror_core();
     sending = NOT_SENDING;
   }
   S_SR &= ~SSR_RECV_FULL;
@@ -215,19 +186,12 @@ void llc_rx_core(void) {
 // The receive error interrupt handler
 // Does not currently record the parity check error -
 // the erroneous byte is just discarded
+// Clear transmit as this is also used after a collision
 
 HANDLER_WRAPPER("llc_rxerror_handler","llc_rxerror_core");
 void llc_rxerror_core(void) {
-  if (sending) llc_txend_handler(); // Force end of transmission
-  S_SR &= ~SSR_ERRORS;              // Clear error
-}
-
-// End-of-transmission interrupt handler
-
-HANDLER_WRAPPER("llc_txend_handler","llc_txend_core");
-void llc_txend_core(void) {
   S_CR &= ~(SCR_TX_IRQ | SCR_TRANSMIT | SCR_TE_IRQ); // Disable transmit
-  S_SR &= ~(SSR_TRANS_EMPTY | SSR_TRANS_END);        // Clear transmit status flags
+  S_SR &= ~(SSR_ERRORS | SSR_TRANS_EMPTY | SSR_TRANS_END); // Clear error etc.
 }
 
 // The transmit byte interrupt handler
@@ -248,11 +212,5 @@ void llc_tx_core(void) {
   }
 }
 
-// Diagnostic function - equivalent of LCD.showNumber(aValue)
-
-void llc_show(short aValue) {
-    __rcall3 ((short) 0x1ff2, (short) 0x301f, (short) aValue, (short) 0x3002);
-    __rcall0 ((short) 0x27c8);
-}
 
 
