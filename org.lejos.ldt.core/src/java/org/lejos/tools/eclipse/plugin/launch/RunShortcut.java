@@ -10,7 +10,6 @@ import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
@@ -268,7 +267,8 @@ public class RunShortcut implements ILaunchShortcut
         getShell(), labelProvider);
     dialog.setElements(configList.toArray());
     dialog.setTitle(LauncherMessages.getString("leJOS launch"));
-    dialog.setMessage(LauncherMessages.getString("select configuration for running main class"));
+    dialog.setMessage(LauncherMessages
+        .getString("select configuration for running main class"));
     dialog.setMultipleSelection(false);
     int result = dialog.open();
     labelProvider.dispose();
