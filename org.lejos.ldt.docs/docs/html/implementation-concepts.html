@@ -1,0 +1,85 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" 
+            / >
+        <link rel="STYLESHEET" href="../styles/book.css" charset="ISO-8859-1" 
+            type="text/css" />
+        <title>Implementation concepts</title>
+    </head>
+    <body>
+        <h1>Implementation concepts</h1>
+        <h2>leJOS structure</h2>
+        <p><img src="../images/lejos-components.jpg" /><br /><br />Figure: 
+            leJOS components</p>
+        <p>The leJOS project is based on three major parts:</p>
+        <ol>
+            <li><b>leJOS Toolset</b><br />Provides tools for firmware 
+                installation(<code>firmdl</code>), compile 
+                (<code>lejosc</code>), link (<code>lejoslink</code>) and 
+                download leJOS Programs (<code>lejosdl</code>).<br />Also some 
+                internal tools for developing the leJOS VM are provided (as 
+                <code>GenerateConstants</code>).</li>
+            <li> <b>leJOS Virtual Machine, incl. emulator</b> <br />Provides 
+                the leJOS virtual machine, incl. other platforms (e.g. Gameboy, 
+                other undergoing porting tasks), and a host platform for 
+                emulating the virtual machine.</li>
+            <li> <b>leJOS Client environment</b><br /> Provides client side 
+                libraries for interfacing to leJOS, e.g. for IR based 
+                communication and Vision support.</li>
+        </ol>
+        <h2>LDT components</h2>
+        <p><img src="../images/ldt-components.jpg" /><br /><br />Figure: LDT 
+            components</p>
+        <p>All LDT components are marked in yellow, all leJOS components are 
+            marked in light blue.</p>
+        <p>The LDT provides two API's for communicating with the toolset, which 
+            ships with leJOS.<br /><ul> <li>IRuntimeToolset API</li> 
+            <li>IDevelopmentToolset API</li> </ul></p>
+        <p>The leJOS tools have been adapted to the introduced API's. Their 
+            functionality will be used within leJOS commandline tools, and 
+            within the Eclipse environemt, using different hooks for adpating 
+            to platform (<code>ToolsetFactory</code>, 
+            <code>IProgressMonitorToolset</code>).</p>
+        <p>The LDT provides two types of project:</p>
+        <ul>
+            <li>
+                <b>leJOS RCX based project</b>
+                <br />
+                <p>supports: <ul> <li>Firmware: installing leJOS, installing 
+                    other firmware (e.g. the original Lego Mindstorms one), 
+                    deleting the current firmware</li> <li>Building: Provides 
+                    builders, which handles leJOS specific compile, linking 
+                    (with verbose options, if specified).</li> <li>Launching: 
+                    download a program, run a program within emulator, run a 
+                    leJOS program as JUnit test (based on leJOSUnit).</li> 
+                    </ul> </p>
+            </li>
+            <li>
+                <b>leJOS Client based project</b>
+            </li>
+            <br />
+            <p>supports: <ul> <li>Building: based on Eclipse and Java 
+                standards. </li> <li>Launching: run an application. </li> </ul> 
+                </p>
+        </ul>
+        <p><b>Note</b>: It has to be discussed, whether launching a program 
+            should be synchronized between RCX downloading and starting the 
+            client application.</p>
+        <h2>LDT plugin concept</h2>
+        <p><img src="../images/ldt-plugins.jpg" /><br /><br />Figure: LDT 
+            plugins</p>
+        <p>The LDT will be structured into the following plugins (shaded in 
+            light grey) :<br /> <br /> <table><tr><th align="left">Plugin 
+            name</th><th align="left">Plugin description </th></tr> 
+            <tr><td><b><code>org.lejos</code></b></td><td>Library plugin with 
+            the leJOS version</td></tr> 
+            <tr><td><b><code>org.lejos.tools</code></b></td><td>leJOS toolset. 
+            This plugin is independent of Eclipse, will be migrated later into 
+            the leJOS base installation.</td></tr> 
+            <tr><td><b><code>org.lejos.ldt.core</code></b></td><td>The LDT core 
+            implementation. </td></tr> 
+            <tr><td><b><code>org.lejos.ldt.docs</code></b></td><td>The provided 
+            LDT documentation. </td></tr> </table> </p>
+    </body>
+</html>
