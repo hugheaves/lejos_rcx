@@ -26,14 +26,14 @@ public class PlatformRegistry
    /** The Emulator platform. */
    public static IPlatform EMULATOR = new PlatformImpl("emu",
       "leJOS RCX Emulator", "-emu.leJOS",
-      // TOTO LITTLE_ENDIAN only in windows !!! Must be changed for Linux
+      // TODO LITTLE_ENDIAN only in windows !!! Must be changed for Linux
       IRuntimeToolset.BYTE_ORDER_LITTLE_ENDIAN);
 
    /** The Gamyboy platform. */
    public static IPlatform GAMEBOY = new PlatformImpl("gameboy",
       "Nintendo Gameboy", "-gameboy.leJOS", IRuntimeToolset.BYTE_ORDER_UNKNOWN);
 
-   // TOTO which byte order for gameboy ?
+   // TODO which byte order for gameboy ?
 
    // constructors
 
