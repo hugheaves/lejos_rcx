@@ -1,6 +1,7 @@
 package org.lejos.tools.api;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
@@ -143,13 +144,28 @@ public interface IRuntimeToolset
       boolean createSignatureFile, String classpath, String[] classFiles,
       String[] args) throws ToolsetException;
 
-  // TODO ENH download
-  // void downloadExecutable () throws ToolsetException;
   /**
    * Link binary.
+   * 
+   * @param classpath class path
+   * @param classname main class
+   * @param all do not filter classes?
+   * @param stream stream to write binary to
+   * @param bigEndian use big endian encoding?
+   * @throws ToolsetException
    */
   public void link (String classpath, String classname, boolean all,
       OutputStream stream, boolean bigEndian) throws ToolsetException;
+
+  /**
+   * Download executable.
+   * 
+   * @param stream stream to read binary from
+   * @param port port
+   * @param fastMode use fast mode?
+   * @throws ToolsetException
+   */
+  public void downloadExecutable (InputStream stream, String port, boolean fastMode) throws ToolsetException;
 
   /**
    * Download firmware.

@@ -25,7 +25,7 @@ public class FirmwareDownloadAction extends AbstractAction
   {
     final EclipseToolsetFacade facade = new EclipseToolsetFacade();
     ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
-    facade.setProgressMonitor(new EclipseProgressMonitorToolsetImpl(dialog));
+    facade.setProgressMonitor(new EclipseProgressMonitorToolsetImpl(dialog.getProgressMonitor()));
 
     try
     {

@@ -2,13 +2,11 @@ package org.lejos.tools.eclipse.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.URL;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.core.runtime.Platform;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaModelException;
@@ -42,7 +40,6 @@ public class EclipseToolsetFacade
   public void setProgressMonitor (IProgressMonitorToolset aMonitor)
   {
     this.progressMonitor = aMonitor;
-
   }
 
   /**
@@ -261,7 +258,7 @@ public class EclipseToolsetFacade
       toolset.setProgressMonitor(this.progressMonitor);
     } // if
     // create compiler arguments
-    //TODO set additional arguments from preferences (?)
+    // TODO set additional arguments from preferences (?)
     String[] arguments = new String[6];
     arguments[0] = "-bootclasspath";
     String[] lejosLibs = aPreferences.getDefaultClasspathEntries();
@@ -310,16 +307,6 @@ public class EclipseToolsetFacade
   } // compileCU()
 
   /**
-   * Install firmware.
-   */
-  public void installFirmware () throws ToolsetException
-  {
-    IRuntimeToolset toolset = createToolset();
-    // TODO get port and fas mode from preferences
-    toolset.installFirmware("usb", true);
-  }
-
-  /**
    * Dump binary.
    * 
    * @param classdir dir with all classes
@@ -343,6 +330,29 @@ public class EclipseToolsetFacade
     {
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Download executable.
+   * 
+   * @param stream stream to read binary from
+   * @throws ToolsetException
+   */
+  public void downloadExecutable (InputStream stream) throws ToolsetException
+  {
+    IRuntimeToolset toolset = createToolset();
+    // TODO get port and fast mode from preferences
+    toolset.downloadExecutable(stream, "usb", false);
+  }
+
+  /**
+   * Install firmware.
+   */
+  public void installFirmware () throws ToolsetException
+  {
+    IRuntimeToolset toolset = createToolset();
+    // TODO get port and fast mode from preferences
+    toolset.installFirmware("usb", false);
   }
 
   /**

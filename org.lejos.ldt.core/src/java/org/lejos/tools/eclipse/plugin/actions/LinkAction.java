@@ -121,7 +121,7 @@ public class LinkAction
 				}
 				ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
 				facade.setProgressMonitor(
-					new EclipseProgressMonitorToolsetImpl(dialog));
+					new EclipseProgressMonitorToolsetImpl(dialog.getProgressMonitor()));
 
 				// dont fork as process, allow cancel
 				dialog.run(false, true, new IRunnableWithProgress() {

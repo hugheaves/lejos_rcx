@@ -1,9 +1,6 @@
 package org.lejos.tools.eclipse.plugin;
 
-import org.eclipse.jface.dialogs.Dialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.lejos.tools.api.IProgressMonitorToolset;
 
 /**
@@ -16,58 +13,31 @@ import org.lejos.tools.api.IProgressMonitorToolset;
  * 
  * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
-public class EclipseProgressMonitorToolsetImpl
-    implements
-      IProgressMonitorToolset
+public class EclipseProgressMonitorToolsetImpl implements IProgressMonitorToolset
 {
   //
   // attributes
   //
 
   /**
-   * the dialog which will be poped up
+   * the progress monitor
    */
-  private Display _display;
-  private ProgressMonitorDialog _dialog;
+  private IProgressMonitor _progress;
 
   //
   // constructor
   //
-  
+
   /**
    * Default constructor.
-   * <p>
-   * Will create a dialog object.
-   * </p>
-   */
-  public EclipseProgressMonitorToolsetImpl()
-  {
-    this(new ProgressMonitorDialog(new Shell()));
-  }
-
-  /**
-   * Constructor for a given dialog.
-   * <p>
-   * Will create shell. Dialog will be reused.
-   * </p>
    * 
-   * @param dialog the dialog to reuse
+   * @param progress progress monitor to use
    */
-  public EclipseProgressMonitorToolsetImpl(ProgressMonitorDialog dialog)
+  public EclipseProgressMonitorToolsetImpl(IProgressMonitor progress)
   {
-    _dialog = dialog;
-    _dialog.open();
-    _display = dialog.getShell().getDisplay();
-  }
+    assert progress != null : "Precondition: progress != null";
 
-  /**
-   * Get the created dialog object.
-   * 
-   * @return the dialog object
-   */
-  public Dialog getDialog ()
-  {
-    return _dialog;
+    _progress = progress;
   }
 
   /**
@@ -81,15 +51,9 @@ public class EclipseProgressMonitorToolsetImpl
    * @param name the name of the task
    * @param totalWork the total work for this task
    */
-  public void beginTask (final String name, final int totalWork)
+  public void beginTask (String name, int totalWork)
   {
-    _display.asyncExec(new Runnable()
-    {
-      public void run ()
-      {
-        _dialog.getProgressMonitor().beginTask(name, totalWork);
-      }
-    });
+    _progress.beginTask(name, totalWork);
   }
 
   /**
@@ -101,13 +65,7 @@ public class EclipseProgressMonitorToolsetImpl
    */
   public void done ()
   {
-    _display.asyncExec(new Runnable()
-    {
-      public void run ()
-      {
-        _dialog.getProgressMonitor().done();
-      }
-    });
+    _progress.done();
   }
 
   /**
@@ -121,7 +79,7 @@ public class EclipseProgressMonitorToolsetImpl
    */
   public boolean isCanceled ()
   {
-    return _dialog.getProgressMonitor().isCanceled();
+    return _progress.isCanceled();
   }
 
   /**
@@ -133,15 +91,9 @@ public class EclipseProgressMonitorToolsetImpl
    * 
    * @param value true, if progress monitor has be canceled
    */
-  public void setCanceled (final boolean value)
+  public void setCanceled (boolean value)
   {
-    _display.asyncExec(new Runnable()
-    {
-      public void run ()
-      {
-        _dialog.getProgressMonitor().setCanceled(value);
-      }
-    });
+    _progress.setCanceled(value);
   }
 
   /**
@@ -153,14 +105,8 @@ public class EclipseProgressMonitorToolsetImpl
    * 
    * @param work the currently part of work been done
    */
-  public void worked (final int work)
+  public void worked (int work)
   {
-    _display.asyncExec(new Runnable()
-    {
-      public void run ()
-      {
-        _dialog.getProgressMonitor().worked(work);
-      }
-    });
+    _progress.worked(work);
   }
 }

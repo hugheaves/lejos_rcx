@@ -1,6 +1,7 @@
 package org.lejos.tools.impl;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,6 +10,7 @@ import java.util.Map;
 import js.tinyvm.TinyVM;
 import js.tinyvm.TinyVMException;
 import js.tools.Firmdl;
+import js.tools.Lejosdl;
 import js.tools.ToolException;
 
 import org.lejos.tools.api.IRuntimeToolset;
@@ -148,14 +150,35 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
   {
     try
     {
-      // TODO get correct classes.jar
-      TinyVM tinyVM = new TinyVM(new ToolProgressListenerImpl(getProgressMonitor()));
+      TinyVM tinyVM = new TinyVM(new ToolProgressListenerImpl(
+          getProgressMonitor()));
       tinyVM.link(classpath, new String[]
       {classname}, false, stream, true);
     }
     catch (TinyVMException e)
     {
       throw new ToolsetException("Failed to link binary:\n" + e.getMessage(), e);
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.lejos.tools.api.IRuntimeToolset#downloadExecutable(java.io.InputStream,
+   *      java.lang.String, boolean)
+   */
+  public void downloadExecutable (InputStream stream, String port,
+      boolean fastMode) throws ToolsetException
+  {
+    try
+    {
+      Lejosdl lejosdl = new Lejosdl(new ToolProgressListenerImpl(
+          getProgressMonitor()));
+      lejosdl.start(stream, port, true);
+    }
+    catch (ToolException e)
+    {
+      throw new ToolsetException("Failed to download binary:\n" + e.getMessage(), e);
     }
   }
 

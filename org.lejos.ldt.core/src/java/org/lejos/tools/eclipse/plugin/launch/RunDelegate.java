@@ -1,8 +1,10 @@
 package org.lejos.tools.eclipse.plugin.launch;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.eclipse.core.resources.IFile;
@@ -17,7 +19,10 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
+import org.eclipse.jface.dialogs.ProgressMonitorDialog;
+import org.eclipse.swt.widgets.Shell;
 import org.lejos.tools.api.ToolsetException;
+import org.lejos.tools.eclipse.plugin.EclipseProgressMonitorToolsetImpl;
 import org.lejos.tools.eclipse.plugin.EclipseToolsetFacade;
 
 /**
@@ -66,23 +71,52 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
       binFile.delete(true, false, monitor);
       binFile.create(null, true, monitor);
 
-      // link
+      System.out.println(monitor);
       EclipseToolsetFacade facade = new EclipseToolsetFacade();
-      // TODO change facade to use IProgressMonitor
-      // facade.setProgressMonitor(monitor);
-      OutputStream stream = new FileOutputStream(binPath.toOSString());
-      facade.link(outputDir.getAbsolutePath(), mainClass, stream);
-      // TODO download
-      stream.close();
-    }
-    catch (IOException e)
-    {
-      abort("Linking failed", e,
-          IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
+      if (monitor != null)
+      {
+        facade.setProgressMonitor(new EclipseProgressMonitorToolsetImpl(monitor));
+      }
+
+      try
+      {
+        // link
+        OutputStream output = new FileOutputStream(binPath.toOSString());
+        facade.link(outputDir.getAbsolutePath(), mainClass, output);
+        output.close();
+      }
+      catch (IOException e)
+      {
+        abort("Linking failed", e,
+            IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
+      }
+      catch (ToolsetException e)
+      {
+        abort("Linking failed", e,
+            IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
+      }
+
+      try
+      {
+        // download
+        InputStream input = new FileInputStream(binPath.toOSString());
+        facade.downloadExecutable(input);
+        input.close();
+      }
+      catch (IOException e)
+      {
+        abort("Download failed", e,
+            IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
+      }
+      catch (ToolsetException e)
+      {
+        abort("Download failed", e,
+            IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
+      }
     }
     catch (ToolsetException e)
     {
-      abort("Linking failed", e,
+      abort("Run failed", e,
           IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
     }
   }
