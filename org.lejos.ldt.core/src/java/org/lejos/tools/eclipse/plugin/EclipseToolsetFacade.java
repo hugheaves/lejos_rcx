@@ -247,7 +247,13 @@ public class EclipseToolsetFacade {
         String[] arguments = new String[6];
         arguments[0] = "-bootclasspath";
         String[] lejosLibs = aPreferences.getDefaultClasspathEntries();
-        String libs = new String();
+        // tools.jar of SUN's compiler
+        String javaHome = System.getProperty("java.home");
+        if(javaHome==null)
+            throw new ToolsetException("System property java.home could not be read");
+        String libs = javaHome + File.pathSeparator + "lib" 
+            + File.pathSeparator + "tools.jar" + File.pathSeparator;
+        // leJOS libs
         try {
             for (int i = 0; i < lejosLibs.length; i++) {
                 IPath lejosLibPath = new Path(lejosLibs[i]);

@@ -2,6 +2,8 @@ package org.lejos.tools.eclipse.plugin.actions;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaModelException;
@@ -18,6 +20,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.lejos.tools.eclipse.plugin.EclipseProgressMonitorToolsetImpl;
 import org.lejos.tools.eclipse.plugin.EclipseToolsetFacade;
+import org.lejos.tools.eclipse.plugin.EclipseUtilities;
 import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
 /**
@@ -96,7 +99,7 @@ public class LinkAction
 		if (!(this.selection instanceof IStructuredSelection)) {
 			return;
 		}
-		final IJavaElement[] elems = getSelectedJavaElements(this.selection);
+		final IJavaElement[] elems = EclipseUtilities.getSelectedJavaElements(this.selection);
 		final EclipseToolsetFacade facade = new EclipseToolsetFacade();
 		try {
 			int n = facade.countCU(elems);
@@ -177,21 +180,38 @@ public class LinkAction
 		if (!(this.selection instanceof IStructuredSelection)) {
 			return;
 		}
-		IJavaElement[] elems = getSelectedJavaElements(this.selection);
-		// now check for valid types
-		for (int i = 0; i < elems.length; i++) {
-			IJavaElement elem = elems[i];
-			boolean enabled = true;
-			// all other types are INVALID
-			if (!(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT)
-				&& !(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT)
-				&& !(elem.getElementType() == IJavaElement.COMPILATION_UNIT)
-				&& !(elem.getElementType() == IJavaElement.TYPE)) {
-				enabled = false;
-			}
-			action.setEnabled(enabled);
-		}
-	}
+		IJavaElement[] elems = EclipseUtilities.getSelectedJavaElements(this.selection);
+        boolean enabled = false;
+        if((elems==null)||(elems.length==0)) {
+            enabled = false;
+        } else {
+            // check for leJOS project nature
+            IJavaElement firstElem = elems[0];
+            IProject project = firstElem.getJavaProject().getProject();
+            try {
+                enabled = EclipseUtilities.checkForLeJOSNature(project);
+            } catch (CoreException exc) {
+                exc.printStackTrace();
+                enabled = false;
+            }  // catch      
+            if(enabled) {
+        		// now check for valid types
+        		for (int i = 0; i < elems.length; i++) {
+        			IJavaElement elem = elems[i];
+        			enabled = true;
+        			// all other types are INVALID
+        			if (!(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT)
+        				&& !(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT)
+        				&& !(elem.getElementType() == IJavaElement.COMPILATION_UNIT)
+        				&& !(elem.getElementType() == IJavaElement.TYPE)) {
+        				enabled = false;
+                        enabled = false;
+                    } // if
+                } // for
+            } // if
+        } // else
+        action.setEnabled(enabled);
+    }
 
 	// private methods
 
@@ -207,7 +227,7 @@ public class LinkAction
 	 *         no valid structured selections are available, an array with size =
 	 *         0 will be returned.
 	 */
-	private IJavaElement[] getSelectedJavaElements(ISelection aSelection) {
+/*	private IJavaElement[] getSelectedJavaElements(ISelection aSelection) {
 		IStructuredSelection structured = (IStructuredSelection) aSelection;
 		Object[] oElems = structured.toArray();
 		// copy into type safe array
@@ -216,5 +236,5 @@ public class LinkAction
 			elems[i] = (IJavaElement) oElems[i];
 		}
 		return elems;
-	}
+	}*/
 }

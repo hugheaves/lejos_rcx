@@ -1,19 +1,24 @@
 package org.lejos.tools.eclipse.plugin.actions;
 
-import java.lang.reflect.InvocationTargetException;
+import java.util.Hashtable;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IncrementalProjectBuilder;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
+import org.eclipse.jface.wizard.ProgressMonitorPart;
 import org.eclipse.swt.widgets.Shell;
-import org.eclipse.ui.*;
-import org.lejos.tools.eclipse.plugin.*;
+import org.eclipse.ui.IObjectActionDelegate;
+import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.IWorkbenchWindowActionDelegate;
+import org.lejos.tools.eclipse.plugin.EclipseUtilities;
 
 /**
  * represents a compile action for object for the leJOS plugin.
@@ -88,65 +93,38 @@ public class CompileAction
 			return;
 		} // if
         // get selection
-		final IJavaElement[] elems = getSelectedJavaElements(this.fSelection);
-        // some sources selected that can be compiled?
-		final EclipseToolsetFacade facade = new EclipseToolsetFacade();
-		try {
-			int n = facade.countCU(elems);
-			if (n == 0) {
-                // no sources found
-				MessageDialog.openInformation(
-					null,
-					null,
-                    // TODO internationalization - use resorce bundle here 
-					"No java source files to compile found. "
-						+ "Please check whether the selected elements "
-						+ "have a \"main(String[])\" method.");
-			} else {
-				// create a shell based on the current workbench window
-				Shell shell = null;
-				if (this.fWorkbenchPart != null) {
-					shell = this.fWorkbenchPart.getSite().getShell();
-				} //if
-				if (this.fWorkbenchWindow != null) {
-					shell = this.fWorkbenchWindow.getShell();
-				} //if
-                // create progress monitor
-				ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
-				facade.setProgressMonitor(
-					new EclipseProgressMonitorToolsetImpl(dialog));
-				// run dialog
-				dialog.run(false, true, new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor)
-						throws InvocationTargetException, InterruptedException {
-						try {
-                            // compile elements
-							facade.compileJavaElements(elems,LejosPlugin.getPreferences());
-						} catch (Exception ex) {
-							ex.printStackTrace();
-                            // show error
-                            // TODO write to console
-                            //TODO invalid source file in package tree
-                            MessageDialog.openInformation(null, null,
-                                    // TODO internationalization - use resorce bundle here 
-                                    "error: " + ex.getMessage());
-                        } // catch
-					} // run
-				}); // new IRunnableWithProgress
-			} // run
-		} catch (JavaModelException ex) {
-			MessageDialog.openError(null,null,
-                // TODO internationalization - use resorce bundle here 
-            "Internal error: Could not determine the sources to compile");
-		} catch (InvocationTargetException ex) {
-            // something went wrong
-			MessageDialog.openError(null,null,
-                // TODO internationalization - use resorce bundle here 
-                "Internal error: (" + ex.toString() + ") occured");
-		} catch (InterruptedException ex) {
-			MessageDialog.openError(null,null,
-				"Internal error: (" + ex.toString() + ") occured");
-		} // catch
+		final IJavaElement[] elems = EclipseUtilities.getSelectedJavaElements(this.fSelection);
+        // something selected at all?
+        if((elems==null)||(elems.length==0)) {
+            System.out.println("nothing selected");
+            return;
+        } //if
+        // create a shell based on the current workbench window
+        Shell shell = null;
+        if (this.fWorkbenchPart != null) {
+            shell = this.fWorkbenchPart.getSite().getShell();
+        } //if
+        if (this.fWorkbenchWindow != null) {
+            shell = this.fWorkbenchWindow.getShell();
+        } //if
+        // get project (all elements are in one project)
+        IJavaElement elem = elems[0];
+        IProject project = elem.getJavaProject().getProject();
+        // build
+        try {
+            IProgressMonitor myProgressMonitor = new ProgressMonitorPart(shell,null);
+            project.build(IncrementalProjectBuilder.FULL_BUILD, myProgressMonitor);   
+            // set "target 1.1" option
+            Hashtable options = JavaCore.getOptions();
+            options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM,
+                    JavaCore.VERSION_1_1);
+            JavaCore.setOptions(options);
+        } catch(CoreException exc) {
+            exc.printStackTrace();
+            // show error
+            MessageDialog.openInformation(null, null,
+                    "error: " + exc.getMessage());
+        } // catch
 	}
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -171,45 +149,43 @@ public class CompileAction
 	 */
 	public void selectionChanged(IAction action, ISelection aSelection) {
 		this.fSelection = aSelection;
-		// we requires a structured selection
+		// we require a structured selection
 		if (!(this.fSelection instanceof IStructuredSelection)) {
 			return;
 		} //if
-		IJavaElement[] elems = getSelectedJavaElements(this.fSelection);
-		// now check for valid types
-		for (int i = 0; i < elems.length; i++) {
-			IJavaElement elem = elems[i];
-			boolean enabled = true;
-			// all other types are INVALID
-			if (!(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT)
-				&& !(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT)
-				&& !(elem.getElementType() == IJavaElement.COMPILATION_UNIT)
-				&& !(elem.getElementType() == IJavaElement.TYPE)) {
-				enabled = false;
-			} // if
-			action.setEnabled(enabled);
-		} // for
-	}
+		IJavaElement[] elems = EclipseUtilities.getSelectedJavaElements(this.fSelection);
+        boolean enabled = false;
+        if((elems==null)||(elems.length==0)) {
+            enabled = false;
+        } else {
+            // check for leJOS project nature
+            IJavaElement firstElem = elems[0];
+            IProject project = firstElem.getJavaProject().getProject();
+            try {
+            	enabled = EclipseUtilities.checkForLeJOSNature(project);
+            } catch (CoreException exc) {
+                exc.printStackTrace();
+                enabled = false;
+            }  // catch      
+             if(enabled) {
+        		// now check for valid types
+        		for (int i = 0; i < elems.length; i++) {
+        			IJavaElement elem = elems[i];
+        			// all other types are INVALID
+        			if (!(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT)
+        				&& !(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT)
+        				&& !(elem.getElementType() == IJavaElement.COMPILATION_UNIT)
+        				&& !(elem.getElementType() == IJavaElement.TYPE)) {
+        				enabled = false;
+        			} // if
+                } // for
+            } // if
+		} // else
+        action.setEnabled(enabled);
+    }
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
 	// private methods
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     
-	/**
-	 * Get structured selections from the current selection.
-	 * @param aSelection the current selection
-	 * @return an array with all java elements selected. Is always not null. If
-	 *         no valid structured selections are available, an array with size =
-	 *         0 will be returned.
-	 */
-	private IJavaElement[] getSelectedJavaElements(ISelection aSelection) {
-		IStructuredSelection structured = (IStructuredSelection) aSelection;
-		Object[] oElems = structured.toArray();
-		// copy into type safe array
-		IJavaElement[] elems = new IJavaElement[oElems.length];
-		for (int i = 0; i < oElems.length; i++) {
-			elems[i] = (IJavaElement) oElems[i];
-		} //for
-		return elems;
-	}
 }

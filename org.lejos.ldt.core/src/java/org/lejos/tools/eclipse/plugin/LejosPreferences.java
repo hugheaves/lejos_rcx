@@ -68,4 +68,15 @@ public class LejosPreferences {
 			"lib/classes.zip",
 			"lib/rcxrcxcomm.jar" };
 	}
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * delivers the path to tools.jar of SUN's compiler
+     * @return Path the path to tools.jar of SUN's compiler
+   * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+   */     
+//    public Path getCompilerJarPath() {
+//        LejosPlugin.getDefault().getWorkbench().
+//    } // getCompilerJarPath()
+    
 }

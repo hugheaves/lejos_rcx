@@ -8,6 +8,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IPluginDescriptor;
 import org.eclipse.core.runtime.IPluginRegistry;
@@ -21,6 +23,8 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
+import org.eclipse.jface.viewers.ISelection;
+import org.eclipse.jface.viewers.IStructuredSelection;
 import org.lejos.tools.api.ToolsetFactory;
 
 /**
@@ -363,7 +367,79 @@ public final class EclipseUtilities extends ToolsetFactory {
 		URL localJarURL = Platform.asLocalURL(jarURL);
 		return new Path(localJarURL.getPath());
 	}
-
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * checks a project for leJOS nature
+     * @param IProject the project
+     * @return boolean true, if the project has leJOS nature
+     * @throws CoreException
+ * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+     */
+    public static boolean checkForLeJOSNature(IProject aProject)
+        throws CoreException {
+        // check project's natures
+        IProjectDescription description = aProject.getDescription();
+        String[] natures = description.getNatureIds();
+        for(int i=0;i<natures.length;i++) {
+            if(natures[i].equals("org.lejos.ldt.core.lejosprojectnature"))
+                return true;
+        }
+        return false;
+    } // checkForLeJOSNature()
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /** sets a project's nature to "leJOS project"
+    *@param IProject the project
+    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+     * @throws CoreException
+    */
+    public static void setLeJOSNature(IProject aProject) {
+        try {
+            IProjectDescription description = aProject.getDescription();
+            String[] natures = description.getNatureIds();
+            String[] newNatures = new String[natures.length + 1];
+            System.arraycopy(natures, 0, newNatures, 0, natures.length);
+            newNatures[natures.length] = "org.lejos.ldt.core.lejosprojectnature";
+            description.setNatureIds(newNatures);
+            aProject.getProject().setDescription(description,null);
+        } catch (CoreException e) {
+            LejosPlugin.debug(e);   
+            e.printStackTrace();
+        } // catch
+    } //setLeJOSNature()
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * get structured selections of java elements from the current selection
+     * @param aSelection the current selection
+     * @return an array with all java elements selected. Is always not null. If
+     *         no valid structured selections are available, an array with size =
+     *         0 will be returned.
+     */
+    public static IJavaElement[] getSelectedJavaElements(ISelection aSelection) {
+        IStructuredSelection structured = (IStructuredSelection) aSelection;
+        Object[] oElems = structured.toArray();
+        // get only java elements
+        int noOfJavaElements = 0;
+        for (int i = 0; i < oElems.length; i++) {
+            Object elem = oElems[i];
+            if(elem instanceof IJavaElement) {
+                noOfJavaElements++;
+            } //if
+        } //for
+        // copy into type safe array
+        IJavaElement[] elems = new IJavaElement[noOfJavaElements];
+        int counter = 0;
+        for (int i = 0; (i < oElems.length)&&(counter<elems.length); i++) {
+            Object elem = oElems[i];
+            if(elem instanceof IJavaElement) {
+                elems[counter++] = (IJavaElement)elem;
+            } //if
+        } //for
+        return elems;
+    }
+    
 	// constructor
 
 	/**
