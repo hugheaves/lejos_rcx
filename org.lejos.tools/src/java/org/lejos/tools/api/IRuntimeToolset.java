@@ -87,7 +87,6 @@ public interface IRuntimeToolset
    */
   public void setProgressMonitor (IProgressMonitorToolset progressMonitor);
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
   /**
    * compiles leJOS java source files
    * <p>

@@ -185,8 +185,6 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl implements
       lejosdl.start(stream, port, true);
     } catch (LejosdlException e)
     {
-      throw new ToolsetException(
-          "Failed to download binary: " + e.getMessage(), e);
       throw new ToolsetException(e.getMessage(), e);
     }
   }

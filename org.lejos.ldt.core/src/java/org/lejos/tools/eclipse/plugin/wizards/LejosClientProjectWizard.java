@@ -3,14 +3,11 @@ package org.lejos.tools.eclipse.plugin.wizards;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizard;
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.lejos.tools.eclipse.plugin.EclipseUtilities;
 import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
 /**
