@@ -51,217 +51,189 @@ import org.eclipse.swt.widgets.Shell;
  * 
  * <p>
  * Most parts of the code are taken from the book from Erich Gamma / Kent Beck:
- * <b>Contributing to Eclipse</b>, from the class <code>TestProject</code>.
+ * <b>Contributing to Eclipse </b>, from the class <code>TestProject</code>.
  * </p>
  * <p>
  * The class has been adopted for usage within any java project.
  * </p>
  * 
- * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller</a>
+ * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
 public abstract class AbstractJavaTestProject {
 
-	// attributes
+    // attributes
 
-	protected IProject project;
-	protected IJavaProject javaProject;
-	protected IPackageFragmentRoot sourceFolder;
+    protected IProject project;
 
-	// constructors
+    protected IJavaProject javaProject;
 
-	public AbstractJavaTestProject() {
-	}
+    protected IPackageFragmentRoot sourceFolder;
 
-	// abstract methods
+    // constructors
 
-	public abstract void createProject() throws Exception;
+    public AbstractJavaTestProject() {
+    }
 
-	// public methods
+    // abstract methods
 
-	public void createProject(String projectName) throws CoreException {
-		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
-		project = root.getProject(projectName);
-		project.create(null);
-		waitUntilBuild();
+    public abstract void createProject() throws Exception;
 
-		project.open(null);
-		waitUntilBuild();
+    // public methods
 
-		javaProject = JavaCore.create(project);
-		setJavaNature();
+    public void createProject(String projectName) throws CoreException {
+        IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
+        project = root.getProject(projectName);
+        project.create(null);
 
-		javaProject.setRawClasspath(new IClasspathEntry[0], null);
-		waitUntilBuild();
-	}
+        project.open(null);
 
-	public IProject getProject() {
-		return project;
-	}
+        javaProject = JavaCore.create(project);
+        setJavaNature();
 
-	public IJavaProject getJavaProject() {
-		return javaProject;
-	}
+        javaProject.setRawClasspath(new IClasspathEntry[0], null);
+    }
 
-	public void addJar(String plugin, String jar)
-		throws MalformedURLException, IOException, JavaModelException {
-		Path result = findFileInPlugin(plugin, jar);
-		IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-		IClasspathEntry[] newEntries =
-			new IClasspathEntry[oldEntries.length + 1];
-		System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
-		newEntries[oldEntries.length] =
-			JavaCore.newLibraryEntry(result, null, null);
-		javaProject.setRawClasspath(newEntries, null);
-		waitUntilBuild();
-	}
+    public IProject getProject() {
+        return project;
+    }
 
-	public IPackageFragment createPackage(String name) throws CoreException {
-		if (sourceFolder == null)
-			sourceFolder = createSourceFolder("src");
-		return sourceFolder.createPackageFragment(name, false, null);
-	}
+    public IJavaProject getJavaProject() {
+        return javaProject;
+    }
 
-	public IType createType(
-		IPackageFragment pack,
-		String cuName,
-		String source)
-		throws JavaModelException {
-		StringBuffer buf = new StringBuffer();
-		buf.append("package " + pack.getElementName() + ";\n");
-		buf.append("\n");
-		buf.append(source);
-		ICompilationUnit cu =
-			pack.createCompilationUnit(cuName, buf.toString(), false, null);
-		return cu.getTypes()[0];
-	}
+    public void addJar(String plugin, String jar) throws MalformedURLException,
+            IOException, JavaModelException {
+        Path result = findFileInPlugin(plugin, jar);
+        IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+        IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
+        System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
+        newEntries[oldEntries.length] = JavaCore.newLibraryEntry(result, null,
+                null);
+        javaProject.setRawClasspath(newEntries, null);
+    }
 
-	public void dispose() throws CoreException {
-		waitForIndexer();
-		project.delete(true, true, null);
-	}
+    public IPackageFragment createPackage(String name) throws CoreException {
+        if (sourceFolder == null)
+            sourceFolder = createSourceFolder("src");
+        return sourceFolder.createPackageFragment(name, false, null);
+    }
 
-	public boolean hasBeenBuild() {
-		return this.javaProject.hasBuildState();
-	}
+    public IType createType(IPackageFragment pack, String cuName, String source)
+            throws JavaModelException {
+        StringBuffer buf = new StringBuffer();
+        buf.append("package " + pack.getElementName() + ";\n");
+        buf.append("\n");
+        buf.append(source);
+        ICompilationUnit cu = pack.createCompilationUnit(cuName,
+                buf.toString(), false, null);
+        return cu.getTypes()[0];
+    }
 
-	public void buildProject() throws CoreException {
-		if (!hasBeenBuild()) {
-			Shell shell = new Shell();
-			ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
-			dialog.open();
-			IProgressMonitor monitor = dialog.getProgressMonitor();
-			try {
-				monitor.beginTask("Building project", 100);
-				this.project.build(
-					IncrementalProjectBuilder.FULL_BUILD,
-					monitor);
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// ignore
-			} finally {
-				monitor.done();
-			}
-		}
-	}
+    public void dispose() throws CoreException {
+        waitForIndexer();
+        project.delete(true, true, null);
+    }
 
-	// protected methods
+    public boolean hasBeenBuild() {
+        return this.javaProject.hasBuildState();
+    }
 
-	protected IFolder createFolder(String folderName) throws CoreException {
-		IFolder binFolder = project.getFolder(folderName);
-		binFolder.create(false, true, null);
-		return binFolder;
-	}
+    public void buildProject() throws CoreException {
+        if (!hasBeenBuild()) {
+            Shell shell = new Shell();
+            ProgressMonitorDialog dialog = new ProgressMonitorDialog(shell);
+            dialog.open();
+            IProgressMonitor monitor = dialog.getProgressMonitor();
+            try {
+                monitor.beginTask("Building project", 100);
+                this.project.build(IncrementalProjectBuilder.FULL_BUILD,
+                        monitor);
+            } finally {
+                monitor.done();
+            }
+            dialog.close();
+        }
+    }
 
-	protected void setJavaNature() throws CoreException {
-		IProjectDescription description = project.getDescription();
-		description.setNatureIds(new String[] { JavaCore.NATURE_ID });
-		project.setDescription(description, null);
-	}
+    // protected methods
 
-	protected void createOutputFolder(IFolder binFolder)
-		throws JavaModelException {
-		IPath outputLocation = binFolder.getFullPath();
-		javaProject.setOutputLocation(outputLocation, null);
-	}
+    protected IFolder createFolder(String folderName) throws CoreException {
+        IFolder binFolder = project.getFolder(folderName);
+        binFolder.create(false, true, null);
+        return binFolder;
+    }
 
-	protected IPackageFragmentRoot createSourceFolder(String srcFolder)
-		throws CoreException {
-		IFolder folder = project.getFolder(srcFolder);
-		folder.create(false, true, null);
-		IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(folder);
+    protected void setJavaNature() throws CoreException {
+        IProjectDescription description = project.getDescription();
+        description.setNatureIds(new String[] { JavaCore.NATURE_ID });
+        project.setDescription(description, null);
+    }
 
-		IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-		IClasspathEntry[] newEntries =
-			new IClasspathEntry[oldEntries.length + 1];
-		System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
-		newEntries[oldEntries.length] = JavaCore.newSourceEntry(root.getPath());
-		javaProject.setRawClasspath(newEntries, null);
-		waitUntilBuild();
-		return root;
-	}
+    protected void createOutputFolder(IFolder binFolder)
+            throws JavaModelException {
+        IPath outputLocation = binFolder.getFullPath();
+        javaProject.setOutputLocation(outputLocation, null);
+    }
 
-	protected void addSystemLibraries() throws JavaModelException {
-		IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
-		IClasspathEntry[] newEntries =
-			new IClasspathEntry[oldEntries.length + 1];
-		System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
-		newEntries[oldEntries.length] =
-			JavaRuntime.getDefaultJREContainerEntry();
-		javaProject.setRawClasspath(newEntries, null);
-	}
+    protected IPackageFragmentRoot createSourceFolder(String srcFolder)
+            throws CoreException {
+        IFolder folder = project.getFolder(srcFolder);
+        folder.create(false, true, null);
+        IPackageFragmentRoot root = javaProject.getPackageFragmentRoot(folder);
 
-	/**
-	 * Sets autobuilding state for the test workspace.
-	 */
-	protected void setAutoBuilding(boolean state) throws CoreException {
-		IWorkspace workspace = ResourcesPlugin.getWorkspace();
-		IWorkspaceDescription desc = workspace.getDescription();
-		desc.setAutoBuilding(state);
-		workspace.setDescription(desc);
-	}
+        IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+        IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
+        System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
+        newEntries[oldEntries.length] = JavaCore.newSourceEntry(root.getPath());
+        javaProject.setRawClasspath(newEntries, null);
+        return root;
+    }
 
-	protected Path findFileInPlugin(String plugin, String file)
-		throws MalformedURLException, IOException {
-		IPluginRegistry registry = Platform.getPluginRegistry();
-		IPluginDescriptor descriptor = registry.getPluginDescriptor(plugin);
-		URL pluginURL = descriptor.getInstallURL();
-		URL jarURL = new URL(pluginURL, file);
-		URL localJarURL = Platform.asLocalURL(jarURL);
-		return new Path(localJarURL.getPath());
-	}
+    protected void addSystemLibraries() throws JavaModelException {
+        IClasspathEntry[] oldEntries = javaProject.getRawClasspath();
+        IClasspathEntry[] newEntries = new IClasspathEntry[oldEntries.length + 1];
+        System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
+        newEntries[oldEntries.length] = JavaRuntime
+                .getDefaultJREContainerEntry();
+        javaProject.setRawClasspath(newEntries, null);
+    }
 
-	protected void waitForIndexer() throws JavaModelException {
-		new SearchEngine()
-			.searchAllTypeNames(
-				ResourcesPlugin.getWorkspace(),
-				null,
-				null,
-				IJavaSearchConstants.EXACT_MATCH,
-				IJavaSearchConstants.CASE_SENSITIVE,
-				IJavaSearchConstants.CLASS,
-				SearchEngine.createJavaSearchScope(new IJavaElement[0]),
-				new ITypeNameRequestor() {
-			public void acceptClass(
-				char[] packageName,
-				char[] simpleTypeName,
-				char[][] enclosingTypeNames,
-				String path) {
-			}
-			public void acceptInterface(
-				char[] packageName,
-				char[] simpleTypeName,
-				char[][] enclosingTypeNames,
-				String path) {
-			}
-		}, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
-	}
+    /**
+     * Sets autobuilding state for the test workspace.
+     */
+    protected void setAutoBuilding(boolean state) throws CoreException {
+        IWorkspace workspace = ResourcesPlugin.getWorkspace();
+        IWorkspaceDescription desc = workspace.getDescription();
+        desc.setAutoBuilding(state);
+        workspace.setDescription(desc);
+    }
 
-	protected void waitUntilBuild() {
-		// TODO better idea ?
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			// ignore
-		}
-	}
+    protected Path findFileInPlugin(String plugin, String file)
+            throws MalformedURLException, IOException {
+        IPluginRegistry registry = Platform.getPluginRegistry();
+        IPluginDescriptor descriptor = registry.getPluginDescriptor(plugin);
+        URL pluginURL = descriptor.getInstallURL();
+        URL jarURL = new URL(pluginURL, file);
+        URL localJarURL = Platform.asLocalURL(jarURL);
+        return new Path(localJarURL.getPath());
+    }
+
+    protected void waitForIndexer() throws JavaModelException {
+        new SearchEngine().searchAllTypeNames(ResourcesPlugin.getWorkspace(),
+                null, null, IJavaSearchConstants.EXACT_MATCH,
+                IJavaSearchConstants.CASE_SENSITIVE,
+                IJavaSearchConstants.CLASS, SearchEngine
+                        .createJavaSearchScope(new IJavaElement[0]),
+                new ITypeNameRequestor() {
+                    public void acceptClass(char[] packageName,
+                            char[] simpleTypeName, char[][] enclosingTypeNames,
+                            String path) {
+                    }
+
+                    public void acceptInterface(char[] packageName,
+                            char[] simpleTypeName, char[][] enclosingTypeNames,
+                            String path) {
+                    }
+                }, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+    }
 }
