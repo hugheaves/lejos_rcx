@@ -1,7 +1,5 @@
 package org.lejos.tools.eclipse.plugin.wizards;
 
-import java.util.Hashtable;
-
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
@@ -44,8 +42,8 @@ public class LejosProjectWizard  extends NewProjectCreationWizard {
             // update classpath
             updateClasspath(project);
             // set "target 1.1" option
-            Hashtable options = JavaCore.getOptions();
-            options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM,
+            project.setOption(
+                    JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM,
                     JavaCore.VERSION_1_1);
             return rc;
     } //performFinish()
