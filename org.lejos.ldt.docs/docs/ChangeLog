@@ -1,5 +1,12 @@
 ChangeLog:
 
+2004-01-09 (mps):
+- lejos project wizard and nature
+- CompileAction uses internal project builder
+
+2004-01-04 (mps):
+- added compile features
+
 2003-11-28 (jhi):
 - Renamed "@TODO" to "TODO"
 - Added a menu entry to a leJOS menu for all java elements
