@@ -3,8 +3,6 @@ package org.lejos.tools.eclipse.plugin.preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.events.ModifyEvent;
-import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -104,16 +102,16 @@ public class LejosPreferencePage extends PreferencePage
       _fastmode = new Button(group, SWT.CHECK | SWT.LEFT);
       _fastmode.setText("Fast mode");
       _fastmode.setSelection(store.getBoolean(LejosPreferences.P_FASTMODE));
-      _fastmode.setVisible(_port.getText().toLowerCase().indexOf("usb") == -1);
+//      _fastmode.setVisible(_port.getText().toLowerCase().indexOf("usb") == -1);
 
       // disable fastmode on usb
-      _port.addModifyListener(new ModifyListener()
-      {
-         public void modifyText (ModifyEvent e)
-         {
-            _fastmode.setVisible(_port.getText().toLowerCase().indexOf("usb") == -1);
-         }
-      });
+//      _port.addModifyListener(new ModifyListener()
+//      {
+//         public void modifyText (ModifyEvent e)
+//         {
+//            _fastmode.setVisible(_port.getText().toLowerCase().indexOf("usb") == -1);
+//         }
+//      });
 
       return result;
    }
