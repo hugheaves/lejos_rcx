@@ -1,5 +1,9 @@
 ChangeLog:
 
+2004-06-16 (jhi):
+- Refactored the docs plugin. Now using a toc.xml, created "theplan.html",
+  using standard Eclipse stylesheets, added licenses
+
 2004-01-09 (mps):
 - lejos project wizard and nature
 - CompileAction uses internal project builder

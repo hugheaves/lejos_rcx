@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?NLS TYPE="org.eclipse.help.toc"?>
+
+<toc label="leJOS Development Tool (LDT) User Guide">
+   <topic label="The Plan" href="docs/html/theplan.html" />
+   <topic label="Miscellaneous">
+      <topic label="Development style" href="docs/html/development.html" />
+      <topic label="External tools" href="docs/html/external-tools.html" />
+      <topic label="Licenses" href="docs/html/licenses.html" />
+      <topic label="ChangeLog" href="docs/ChangeLog" />
+      <topic label="TODO" href="docs/TODO" />
+   </topic>
+   <topic label="OLD">
+      <topic label="index.html" href="docs/OLD/index.html" />
+      <topic label="about.html" href="docs/OLD/about.html" />
+   </topic>
+</toc>
