@@ -22,22 +22,61 @@
       <import plugin="org.eclipse.jdt.ui"/>
    </requires>
 
+<extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            name="leJOS project"
+            icon="icons/wizard.gif"
+            category="org.eclipse.jdt.ui.java"
+            class="org.lejos.tools.eclipse.plugin.wizards.LejosProjectWizard"
+            project="true"
+            id="org.lejos.tools.eclipse.plugin.wizards.LejosProjectWizard">
+         <description>
+            Creates a Lejos project
+         </description>
+      </wizard>
+   </extension>
+   
+   <extension
+         id="lejosprojectnature"
+         name="LeJOS nature"
+         point="org.eclipse.core.resources.natures">
+      <runtime>
+         <run
+               class="org.lejos.tools.eclipse.plugin.natures.LejosProjectNature">
+         </run>
+      </runtime>
+   </extension>
 
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
             label="leJOS"
             id="org.lejos.ldt.core.actionSet">
+         <menu
+               label="leJOS"
+               path="additions"
+               id="leJOSMenu">
+            <separator
+                  name="leJOSGroup">
+            </separator>
+         </menu>
          <action
                label="Compile"
+              icon="icons/compile.gif"
                class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
+               menubarPath="leJOSMenu/leJOSGroup"
                toolbarPath="leJOSGroup"
+               tooltip="Compiles the sources of a leJOS project"
                id="org.lejos.ldt.core.CompileAction">
          </action>
          <action
                label="Link"
+               icon="icons/link.gif"
                class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
+               menubarPath="leJOSMenu/leJOSGroup"
                toolbarPath="leJOSGroup"
+               tooltip="Links the classes for a leJOS project"
                id="org.lejos.ldt.core.LinkAction">
          </action>
       </actionSet>
@@ -57,18 +96,20 @@
          </menu>
          <action
                label="Compile"
+               icon="icons/compile.gif"
                tooltip="Compiles the selected source file(s)"
                class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
                menubarPath="leJOSMenu/leJOSGroup"
-               enablesFor="1"
+               enablesFor="+"
                id="org.lejos.ldt.core.CompileAction">
          </action>
          <action
                label="Link"
+               icon="icons/link.gif"
                class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
                tooltip="Links as leJOS binary"
                menubarPath="leJOSMenu/leJOSGroup"
-               enablesFor="1"
+               enablesFor="+"
                id="org.lejos.ldt.core.LinkAction">
          </action>
       </objectContribution>
