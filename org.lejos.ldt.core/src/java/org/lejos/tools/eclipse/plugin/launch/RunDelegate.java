@@ -13,6 +13,8 @@ import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.core.runtime.SubProgressMonitor;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.jdt.core.IJavaProject;
@@ -73,17 +75,16 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
       binFile.delete(true, false, monitor);
       binFile.create(null, true, monitor);
 
-      System.out.println(monitor);
-      EclipseToolsetFacade facade = new EclipseToolsetFacade();
-      if (monitor != null)
-      {
-        facade.setProgressMonitor(new EclipseProgressMonitorToolsetImpl(monitor));
-      }
+      // monitor
+      monitor = monitor == null ? new NullProgressMonitor() : monitor;
 
+      EclipseToolsetFacade facade = new EclipseToolsetFacade();
       try
       {
         // link
         OutputStream output = new FileOutputStream(binPath.toOSString());
+        facade.setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
+            new SubProgressMonitor(monitor, 10)));
         facade.link(outputDir.getAbsolutePath(), mainClass, output);
         output.close();
       }
@@ -102,6 +103,8 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
       {
         // download
         InputStream input = new FileInputStream(binPath.toOSString());
+        facade.setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
+            new SubProgressMonitor(monitor, 90)));
         facade.downloadExecutable(input);
         input.close();
       }
