@@ -261,12 +261,6 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
     case read_4_5I:
       push_word(llc_read());
       return;
-    case dataAvailable_4_5Z:
-      push_word(llc_data_available());
-      return;
-    case discard_4_5V:
-      llc_discard();
-      return;
     default:
       throw_exception (noSuchMethodError);
       return;
