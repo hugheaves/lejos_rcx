@@ -1,5 +1,10 @@
 ChangeLog:
 
+2004-07-14 (jhi):
+- Finished builder.
+	- now links only, if there are no compile errors
+	- if link fails, create a marker
+
 2004-06-19 (jhi):
 - Consolidated all tests again.
 - Moved patched code for js.tinyvm into lejos project
