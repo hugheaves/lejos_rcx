@@ -59,6 +59,22 @@
          </run>
       </builder>
    </extension>
+   
+   <extension 
+         point="org.eclipse.core.resources.markers"
+   	     id="linkFailure"
+   	     name="leJOS Link failed">
+   	     <super type="org.eclipse.jdt.core.problem" />
+   	     <persistent value="true" />
+   </extension>
+   <extension 
+         point="org.eclipse.ui.ide.markerImageProviders">
+      <imageprovider
+            markertype="org.lejos.ldt.core.linkFailure"
+            icon="icons/markerLinkFailed.gif"
+            id="org.lejos.ldt.core">
+      </imageprovider>
+   </extension>
 
    <extension
          point="org.eclipse.ui.actionSets">
@@ -74,6 +90,7 @@
                   name="leJOSGroup">
             </separator>
          </menu>
+<!--         
          <action
                toolbarPath="leJOSGroup"
                label="Compile"
@@ -94,6 +111,7 @@
                menubarPath="leJOSMenu/leJOSGroup"
                id="org.lejos.ldt.core.LinkAction">
          </action>
+-->
          <action
                toolbarPath="leJOSGroup"
                label="Install firmware"
@@ -120,6 +138,7 @@
                   name="leJOSGroup">
             </separator>
          </menu>
+<!--
          <action
                enablesFor="+"
                label="Compile"
@@ -141,6 +160,7 @@
                menubarPath="leJOSMenu/leJOSGroup"
                id="org.lejos.ldt.core.LinkAction">
          </action>
+-->
       </objectContribution>
    </extension>
 
