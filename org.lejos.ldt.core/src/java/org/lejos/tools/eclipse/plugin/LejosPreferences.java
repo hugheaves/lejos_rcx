@@ -68,7 +68,12 @@ public class LejosPreferences {
 			"lib/classes.jar",
 			"lib/rcxcomm.jar" };
 	}
-    
+
+	public String[] getClientClasspathEntries() {
+		return new String[] {
+			"lib/pcrcxcomm.jar" };
+	}
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * delivers the path to tools.jar of SUN's compiler
