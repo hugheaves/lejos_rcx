@@ -186,7 +186,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
       {
          LejosdlTool lejosdl = new LejosdlTool(new ToolProgressMonitorImpl(
             getProgressMonitor()));
-         lejosdl.start(stream, port, true);
+         lejosdl.start(stream, port, fastMode);
       }
       catch (LejosdlException e)
       {
