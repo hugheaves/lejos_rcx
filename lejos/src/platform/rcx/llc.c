@@ -1,5 +1,14 @@
+// Low-level communication functions to send and receive single bytes.
+// Based on code in Legos 0.2.6 by Markus L. Noga.
+// These functions do the minimum necessary to send and receive single 
+// bytes, leaving it to Java code to do timing and error handling, and to
+// implement communication protocols. This means that the impact on the 
+// footprint of the lejos firmware is minimized.
 //
-// Serial port
+// Author Lawrie Griffiths (lawrie.griffiths@ntlworld.com)
+
+//
+// Serial port definitions
 //
 
 // Serial receive data register 
@@ -10,6 +19,16 @@ extern unsigned char S_TDR;
 
 // Serial mode register
 extern unsigned char S_MR;
+
+#define SMR_SYNC	0x80	   // in sync mode, the other settings
+#define SMR_ASYNC	0x00	   // have no effect.
+#define SMR_7BIT	0x40
+#define SMR_8BIT	0x00
+#define SMR_P_NONE	0x00
+#define SMR_P_EVEN	0x20
+#define SMR_P_ODD	0x30
+#define SMR_1STOP	0x00
+#define SMR_2STOP	0x08
 
 // Serial control register
 extern unsigned char S_CR;
@@ -34,7 +53,19 @@ extern unsigned char S_SR;
 // Serial baud rate register
 extern unsigned char S_BRR;
 
-// Ports 4 and 5
+//
+// values for the bit rate register BRR
+// assuming CMR_CLOCK selected on 16 MHz processor
+// error <= 0.16%
+//
+
+#define B2400		207
+#define B4800		103
+#define B9600		51
+#define B19200		25
+#define B38400		12
+
+// Definitions for Ports 4 and 5
 
 // Port 4 data direction register
 extern unsigned char PORT4_DDR;
@@ -48,7 +79,7 @@ extern unsigned char PORT5_DDR;
 extern unsigned char rom_port4_ddr;	//!< ROM shadow of port 4 DDR
 extern unsigned char rom_port5_ddr;	//!< ROM shadow of port 5 DDR
 
-// Timer 1
+// Definitions for Timer 1
 
 // Timer 1 control register
 extern unsigned char T1_CR;
@@ -66,18 +97,31 @@ extern void *rxi_vector;        // RXI interrupt vector
 extern void *txi_vector;        // TXI interrupt vector
 extern void *tei_vector;        // TEI interrupt vector
 
+///////////////////////////////////////////////////////////////////////////////
+//
+// Variables
+//
+///////////////////////////////////////////////////////////////////////////////
+
 #define MAX_BUFFER 32
 
-static int sending;		// transmission state
+static short sending;		// transmission state
+
+#define NOT_SENDING 0
+#define SENDING 1
+#define SENT_BUT_NOT_VALIDATED 2
+
 static unsigned char send_byte;
 static unsigned char buffer[MAX_BUFFER];
-static int start, next;
+static short start, next;
 
 ///////////////////////////////////////////////////////////////////////////////
 //
 // Functions
 //
 ///////////////////////////////////////////////////////////////////////////////
+
+// Macro to wrap interrupt handler
 
 #define HANDLER_WRAPPER(wrapstring,handstring) \
 __asm__ (".text\n.align 1\n.global _" wrapstring "\n_" wrapstring \
@@ -91,76 +135,95 @@ void llc_txend_handler(void);
 void llc_show(short aValue);
 
 void llc_init(void) {
-  S_CR = 0;                      // Serial Control Register	
-  T1_CR = 0;                     // Timer 1 Control Register
-  T1_CSR = 0;                    // Timer1 Control Status Register
-  S_MR = 0;                      // Serial Mode Register, no parity
-  S_BRR = 207;                   // Serial Baud Rate Register - set to 2400 (slow)
-  S_SR = 0;                      // Serial Status Register
+  S_CR = 0;                      // Clear Serial Control Register	
+  T1_CR = 0;                     // Clear Timer 1 Control Register
+  T1_CSR = 0;                    // Clear Timer1 Control Status Register
+  S_MR = SMR_P_ODD;              // Serial Mode Register, no parity
+  S_SR = 0;                      // Clear Serial Status Register
+  sending = NOT_SENDING;         // Not transmitting
+  start = 0;                     // Intitialise cyclic receive buffer pointers
+  next = 0;
+  S_BRR = B2400;                 // Serial Baud Rate Register - set to 2400 (slow)
   PORT4 &= ~1;                   // Port 4 I/O Register - short range = 0
-  sending = 0;                   // Not transmitting
   rom_port4_ddr |= 1;	         // Rom Port4 Data Direction Shadow Register
   PORT4_DDR = rom_port4_ddr;     // Port 4 Data Direction Register
-  T1_CR  = 0x9;                  // Enable carrier frequency
-  T1_CSR = 0x13;
-  T1_CORA = 0x1a;
-  rom_port5_ddr = 4;	
+  rom_port5_ddr = 4;	         // Not sure what port5 is used for
   PORT5_DDR = rom_port5_ddr;
-  eri_vector = &llc_rxerror_handler;
+  T1_CR  = 0x9;                  // Enable carrier frequency
+  T1_CSR = 0x13;                 // Is this what sets frequency to 38k?
+  T1_CORA = 0x1a;
+  eri_vector = &llc_rxerror_handler; // Set IRQ handlers
   rxi_vector = &llc_rx_handler;
   txi_vector = &llc_tx_handler;
   tei_vector = &llc_txend_handler;
   S_CR = SCR_RECEIVE | SCR_RX_IRQ; // Allow Receives
-  start = next = 0;
 }
+
+// Send a single byte to the IR port.
+// Just initiates the transfer and returns
 
 void llc_write(unsigned char b) {
   send_byte = b;
-  sending = 1;
+  sending = SENDING;
   S_SR &= ~(SSR_TRANS_EMPTY | SSR_TRANS_END);	  // clear flags
   S_CR |= SCR_TRANSMIT | SCR_TX_IRQ | SCR_TE_IRQ; // enable transmit & irqs
 }
 
-unsigned int llc_read(void) {
+// Read a byte from the input cyclic buffer
+
+int llc_read(void) {
   if (next != start) {
     unsigned char b = buffer[start];
-    if (start++ == MAX_BUFFER) start = 0;
+    if (++start == MAX_BUFFER) start = 0;
     return b;
   } else {
-    return -1;
+    return -1; // No data
   } 
 }
+
+// Check for data in the input cyclic buffer
 
 short llc_data_available() {
   return (next != start ? 1 : 0);
 } 
 
+// Discards data in the input buffer
+
+void llc_discard(void) {
+  start = next;
+}
 
 // The byte received interrupt handler
+// Adds the byte to the input cyclic buffer.
+// Note that data is silently discarded if 
+// the buffer becomes full.
 
 HANDLER_WRAPPER("llc_rx_handler","llc_rx_core");
 void llc_rx_core(void) {
   if(!sending) {
     // received a byte from PC
     buffer[next] = S_RDR;
-    if (next++ == MAX_BUFFER) next = 0;
+    if (++next == MAX_BUFFER) next = 0;
   } else {
     // echos of own bytes -> collision detection
     if(S_RDR != send_byte) llc_txend_handler();
-    sending = 0;
+    sending = NOT_SENDING;
   }
   S_SR &= ~SSR_RECV_FULL;
 }
 
 // The receive error interrupt handler
+// Does not currently record the parity check error -
+// the erroneous byte is just discarded
 
 HANDLER_WRAPPER("llc_rxerror_handler","llc_rxerror_core");
 void llc_rxerror_core(void) {
-  if(sending) llc_txend_handler(); // Force end of transmission
-  S_SR &= ~SSR_ERRORS;             // Clear error
+  if (sending) llc_txend_handler(); // Force end of transmission
+  S_SR &= ~SSR_ERRORS;              // Clear error
 }
 
 // End-of-transmission interrupt handler
+
 HANDLER_WRAPPER("llc_txend_handler","llc_txend_core");
 void llc_txend_core(void) {
   S_CR &= ~(SCR_TX_IRQ | SCR_TRANSMIT | SCR_TE_IRQ); // Disable transmit
@@ -168,17 +231,24 @@ void llc_txend_core(void) {
 }
 
 // The transmit byte interrupt handler
-// Write next byte if there's one left, otherwise unhook irq.
+// This is called twice for a single byte transfer.
+// Note the three values for the sending state indicator.
+// It is called before the echoed byte is received 
+// by the receive handler.
+// Write the byte if not done, otherwise unhook irq.
+
 HANDLER_WRAPPER("llc_tx_handler","llc_tx_core");
 void llc_tx_core(void) {
-  if(sending == 1) {
+  if(sending == SENDING) {
     S_TDR = send_byte ;      // transmit byte
-    sending = 2;             // Sent but not validated
+    sending = SENT_BUT_NOT_VALIDATED; 
     S_SR &= ~SSR_TRANS_EMPTY;
   } else {
     S_CR &= ~SCR_TX_IRQ;     // disable transmission interrupt
   }
 }
+
+// Diagnostic function - equivalent of LCD.showNumber(aValue)
 
 void llc_show(short aValue) {
     __rcall3 ((short) 0x1ff2, (short) 0x301f, (short) aValue, (short) 0x3002);
