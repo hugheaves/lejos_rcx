@@ -22,14 +22,16 @@ public class ReadSensor {
       DataOutputStream dos = new DataOutputStream(os);
 
       System.out.println("Reading Light Sensor");
+      int sendTime = (int)System.currentTimeMillis();
+      for(int i=0;i<20;i++) {
+        dos.writeByte(1);
+        dos.flush();
 
-      dos.writeByte(1);
-      dos.flush();
+        int n = dis.readShort();
 
-      int n = dis.readShort();
-
-      System.out.println("Received " + n);
-
+        System.out.println("Received " + n);
+      }
+      System.out.println("Time = " + ((int)System.currentTimeMillis() -  sendTime));
     }
     catch (Exception e) {
       System.out.println("Exception " + e.getMessage());
