@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.lejos.tools.api.IRuntimeToolset;
+import org.lejos.tools.api.PlatformRegistry;
 import org.lejos.tools.api.ToolsetException;
 
 /**
@@ -50,7 +51,7 @@ public class RuntimeToolsetImplTest extends TestCase
 
       File outputFile = File.createTempFile("junit", ".leJOS");
 
-      toolset.link(outputFile, IRuntimeToolset.LINK_METHOD_ALL, true,
+      toolset.link(PlatformRegistry.RCX, outputFile, IRuntimeToolset.LINK_METHOD_ALL, true,
          classpath, new String[]
          {
             "package1.package2.Class1"
@@ -68,7 +69,7 @@ public class RuntimeToolsetImplTest extends TestCase
       toolset.setProgressMonitor(new NullProgressMonitorToolsetImpl());
       try
       {
-         toolset.link(null, 0, true, null, null, null);
+         toolset.link(null, null, 0, true, null, null, null);
          fail("Oops, exception expected");
       }
       catch (ToolsetException ex)
@@ -77,7 +78,7 @@ public class RuntimeToolsetImplTest extends TestCase
       }
       try
       {
-         toolset.link(new File("C:\\output_blabla\\blabla.leJOS"),
+         toolset.link(PlatformRegistry.RCX, new File("C:\\output_blabla\\blabla.leJOS"),
             IRuntimeToolset.LINK_METHOD_ALL, true, null, new String[]
             {
                new String("input_blabla.Blbalba")

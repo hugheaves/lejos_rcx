@@ -16,6 +16,7 @@ import js.tools.FirmdlTool;
 import js.tools.LejosdlException;
 import js.tools.LejosdlTool;
 
+import org.lejos.tools.api.IPlatform;
 import org.lejos.tools.api.IRuntimeToolset;
 import org.lejos.tools.api.ToolsetException;
 import org.lejos.tools.impl.link.LejosLink;
@@ -41,6 +42,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
     * @see #LINK_METHOD_ALL
     * @see #LINK_METHOD_OPTIMIZING
     * 
+    * @param platform the leJOS Platform to link for
     * @param outputFile the output file, where the binary will be stored. Must
     *           be not null.
     * @param linkMethod the link method, whether optimizing linking or all
@@ -58,7 +60,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
     *           empty list.
     * @throws ToolsetException will be raised in any error case
     */
-   public void link (File outputFile, int linkMethod,
+   public void link (IPlatform platform, File outputFile, int linkMethod,
       boolean createSignatureFile, String classpathString, String[] classFiles,
       String[] args) throws ToolsetException
    {
@@ -147,11 +149,14 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
    /*
     * (non-Javadoc)
     * 
+    * @param platform the leJOS Platform to link for
+    * 
     * @see org.lejos.tools.api.IRuntimeToolset#link(java.lang.String,
     *      java.lang.String, boolean, java.io.OutputStream, boolean)
     */
-   public void link (String classpath, String classname, boolean all,
-      OutputStream stream, boolean bigEndian) throws ToolsetException
+   public void link (IPlatform platform, String classpath, String classname,
+      boolean all, OutputStream stream, boolean bigEndian)
+      throws ToolsetException
    {
       try
       {

@@ -6,6 +6,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.lejos.tools.api.IRuntimeToolset;
+import org.lejos.tools.api.PlatformRegistry;
 import org.lejos.tools.api.ToolsetException;
 import org.lejos.tools.api.ToolsetFactory;
 
@@ -109,8 +110,9 @@ public class LejosLink extends LejosCommandLineTool
       // now call the toolset to link
       try
       {
-         toolset.link(outputFile, linkMode, createSignature,
-         // TODO get the classpath. Handle it after supporting compile.
+         toolset.link(PlatformRegistry.RCX, outputFile, linkMode,
+            createSignature,
+            // TODO get the classpath. Handle it after supporting compile.
             ".", classNames, args);
       }
       catch (ToolsetException ex)

@@ -122,6 +122,7 @@ public interface IRuntimeToolset
     * @see #LINK_METHOD_ALL
     * @see #LINK_METHOD_OPTIMIZING
     * 
+    * @param platform the leJOS Platform to link for
     * @param outputFile the output file, where the binary will be stored. Must
     *           be not null.
     * @param linkMethod the link method, whether optimizing linking or all
@@ -139,13 +140,14 @@ public interface IRuntimeToolset
     *           empty list.
     * @throws ToolsetException will be raised in any error case
     */
-   public void link (File outputFile, int linkMethod,
+   public void link (IPlatform platform, File outputFile, int linkMethod,
       boolean createSignatureFile, String classpath, String[] classFiles,
       String[] args) throws ToolsetException;
 
    /**
     * Link binary.
     * 
+    * @param platform the leJOS Platform to link for
     * @param classpath class path
     * @param classname main class
     * @param all do not filter classes?
@@ -153,8 +155,9 @@ public interface IRuntimeToolset
     * @param bigEndian use big endian encoding?
     * @throws ToolsetException
     */
-   public void link (String classpath, String classname, boolean all,
-      OutputStream stream, boolean bigEndian) throws ToolsetException;
+   public void link (IPlatform platform, String classpath, String classname,
+      boolean all, OutputStream stream, boolean bigEndian)
+      throws ToolsetException;
 
    /**
     * Download executable.
