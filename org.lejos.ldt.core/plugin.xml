@@ -168,7 +168,7 @@
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
             icon="icons/run.gif"
-            configTypeID="org.lejos.ldt.core.Run"
+            configTypeID="org.lejos.ldt.core.run"
             id="org.lejos.ldt.core.runImage"/>
    </extension>
    <extension
@@ -237,6 +237,82 @@
          </perspective>
       </shortcut>
    </extension>
+
+   <!-- for run in emulator -->
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTypeImages">
+      <launchConfigurationTypeImage
+            icon="icons/runEmulator.gif"
+            configTypeID="org.lejos.ldt.core.RunEmulator"
+            id="org.lejos.ldt.core.runEmulatorImage"/>
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchConfigurationTabGroups">
+      <launchConfigurationTabGroup
+            type="org.lejos.ldt.core.run"
+            class="org.lejos.tools.eclipse.plugin.launch.RunTabGroup"
+            description="leJOS Emulator"
+            id="org.lejos.ldt.core.runEmulatorTabGroup">
+         <launchMode
+               description="leJOS Emulator"
+               mode="run"/>
+      </launchConfigurationTabGroup>
+   </extension>
+   <extension
+         point="org.eclipse.debug.core.launchConfigurationTypes">
+      <launchConfigurationType
+            sourceLocatorId="org.eclipse.jdt.launching.sourceLocator.JavaSourceLookupDirector"
+            delegate="org.lejos.tools.eclipse.plugin.launch.RunEmulatorDelegate"
+            public="true"
+            sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
+            name="leJOS Emulator"
+            id="org.lejos.ldt.core.runEMulator"
+            modes="run">
+         <fileExtension
+            default="true"
+            extension="java">
+         </fileExtension>
+      </launchConfigurationType>  
+   </extension>
+   <extension
+         point="org.eclipse.debug.ui.launchShortcuts">
+      <shortcut
+            label="leJOS"
+            icon="icons/run.gif"
+            class="org.lejos.tools.eclipse.plugin.launch.RunShortcut"
+            modes="run"
+            id="org.lejos.ldt.core.runShortcut">
+         <contextualLaunch>
+            <enablement>
+               <with variable="selection">
+                  <count value="1"/>
+                  <iterate>
+                    <or>
+                   	  <instanceof value="org.eclipse.core.resources.IResource"/>
+                   	  <instanceof value="org.eclipse.jdt.core.IJavaElement"/>
+                    </or>
+<!--
+                    <test property="org.lejos.tools.hasMain"/>
+-->
+                  </iterate>
+               </with>
+            </enablement>
+         </contextualLaunch>
+         <perspective
+               id="org.eclipse.jdt.ui.JavaPerspective">
+         </perspective>
+         <perspective
+               id="org.eclipse.jdt.ui.JavaHierarchyPerspective">
+         </perspective>
+         <perspective
+               id="org.eclipse.jdt.ui.JavaBrowsingPerspective">
+         </perspective>
+         <perspective
+               id="org.eclipse.debug.ui.DebugPerspective">
+         </perspective>
+      </shortcut>
+   </extension>
+   
    <extension
          point="org.eclipse.ui.preferencePages">
       <page

@@ -31,7 +31,7 @@ import org.lejos.tools.eclipse.plugin.LejosPlugin;
 /**
  * Run on RCX launch delegate.
  */
-public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
+public class RunEmulatorDelegate extends AbstractJavaLaunchConfigurationDelegate
 {
    /*
     * (non-Javadoc)

@@ -10,8 +10,10 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.JavaModelException;
+import org.lejos.tools.api.IPlatform;
 import org.lejos.tools.api.IProgressMonitorToolset;
 import org.lejos.tools.api.IRuntimeToolset;
+import org.lejos.tools.api.PlatformRegistry;
 import org.lejos.tools.api.ToolsetException;
 import org.lejos.tools.api.ToolsetFactory;
 import org.lejos.tools.eclipse.plugin.preferences.LejosPreferences;
@@ -64,11 +66,6 @@ public class EclipseToolsetFacade
          toolset.setProgressMonitor(this.progressMonitor);
       }
 
-      // prepare all arguments
-      File outputFile = EclipseUtilities.getOutputFile(aCompilationUnit,
-         aPreferences.getExtensionBinary());
-      int linkMethod = aPreferences.getLinkMethod();
-
       // only create signature, if specified in preferences
       boolean createSignatureFile = aPreferences.isCreateSignatureFile();
       String[] classNames = new String[1];
@@ -95,6 +92,13 @@ public class EclipseToolsetFacade
             + File.pathSeparator;
       }
 
+      // prepare all arguments
+      // default link for platform "rcx"
+      IPlatform platform = PlatformRegistry.RCX;
+      File outputFile = EclipseUtilities.getOutputFile(aCompilationUnit,
+         platform.getBinaryExtension());
+      int linkMethod = aPreferences.getLinkMethod();
+
       // finally, call the link process
       StringBuffer sbuf = new StringBuffer();
       sbuf.append("Linking ");
@@ -108,8 +112,18 @@ public class EclipseToolsetFacade
       }
       sbuf.append(" to " + outputFile.toString());
       LejosPlugin.debug(sbuf.toString());
-      toolset.link(outputFile, linkMethod, createSignatureFile, classpath,
-         classNames, args);
+      toolset.link(platform, outputFile, linkMethod, createSignatureFile,
+         classpath, classNames, args);
+
+      // and again for emulator
+      platform = PlatformRegistry.EMULATOR;
+      outputFile = EclipseUtilities.getOutputFile(aCompilationUnit, platform
+         .getBinaryExtension());
+      outputFile = EclipseUtilities.getOutputFile(aCompilationUnit, "-emu"
+         + aPreferences.getExtensionBinary());
+      linkMethod = aPreferences.getLinkMethod();
+      toolset.link(platform, outputFile, linkMethod, createSignatureFile,
+         classpath, classNames, args);
    }
 
    /**
@@ -343,8 +357,8 @@ public class EclipseToolsetFacade
     * @param stream output stream to write binary to
     * @throws ToolsetException
     */
-   public void link (String classdir, String classname, OutputStream stream)
-      throws ToolsetException
+   public void link (IPlatform platform, String classdir, String classname,
+      OutputStream stream) throws ToolsetException
    {
       try
       {
@@ -353,7 +367,7 @@ public class EclipseToolsetFacade
          IPath classesJar = EclipseUtilities.findLejosLib("classes.jar");
          String classpath = classesJar.toOSString() + File.pathSeparator
             + classdir;
-         toolset.link(classpath, classname, false, stream, true);
+         toolset.link(platform, classpath, classname, false, stream, true);
       }
       catch (IOException e)
       {
