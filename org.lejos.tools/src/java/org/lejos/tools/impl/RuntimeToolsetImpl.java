@@ -9,8 +9,8 @@ import java.util.Map;
 
 import js.tinyvm.TinyVMException;
 import js.tinyvm.TinyVMTool;
-import js.tools.Firmdl;
 import js.tools.FirmdlException;
+import js.tools.FirmdlTool;
 import js.tools.Lejosdl;
 import js.tools.LejosdlException;
 
@@ -193,7 +193,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
   public void installFirmware (String port, boolean fastMode)
       throws ToolsetException
   {
-    Firmdl firmdl = new Firmdl(new ToolProgressListenerImpl(
+    FirmdlTool firmdl = new FirmdlTool(new ToolProgressListenerImpl(
         getProgressMonitor()));
     try
     {
