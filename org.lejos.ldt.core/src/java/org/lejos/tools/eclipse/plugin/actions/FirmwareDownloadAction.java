@@ -22,7 +22,7 @@ public class FirmwareDownloadAction extends AbstractAction
    */
   public void run (IAction action)
   {
-    Job job = new Job("leJOS Firmware download")
+    Job job = new Job("leJOS firmware download")
     {
       /*
        * (non-Javadoc)
@@ -48,6 +48,7 @@ public class FirmwareDownloadAction extends AbstractAction
         return Status.OK_STATUS;
       }
     };
+    job.setUser(true);
     job.schedule();
   }
 }

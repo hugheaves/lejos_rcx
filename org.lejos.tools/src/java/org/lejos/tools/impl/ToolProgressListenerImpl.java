@@ -30,7 +30,7 @@ public class ToolProgressListenerImpl implements ToolProgressListener
    */
   public void operation (String operation)
   {
-    _monitor.beginTask(operation, 100);
+    _monitor.beginTask(operation, 1000);
     _progress = 0;
   }
 
@@ -51,7 +51,7 @@ public class ToolProgressListenerImpl implements ToolProgressListener
    */
   public void progress (int progress)
   {
-    if (progress >= 100)
+    if (progress >= 1000)
     {
       _monitor.done();
     }
