@@ -46,8 +46,8 @@ public class SimpleJavaProject extends AbstractJavaTestProject {
 
 		createOutputFolder(binFolder);
 		// do NOT add system libraries, use leJOS classes instead
-		addJar("org.lejos", "lib/classes.zip");
-		addJar("org.lejos", "lib/rcxrcxcomm.jar");
+		addJar("org.lejos", "lib/classes.jar");
+		addJar("org.lejos", "lib/rcxcomm.jar");
 
 		// specific for leJOS
 		// enforce compile with 1.1 class format

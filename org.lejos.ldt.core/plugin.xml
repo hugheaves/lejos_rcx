@@ -52,6 +52,7 @@
          point="org.eclipse.ui.actionSets">
       <actionSet
             label="leJOS"
+            visible="true"
             id="org.lejos.ldt.core.actionSet">
          <menu
                label="leJOS"
@@ -62,22 +63,35 @@
             </separator>
          </menu>
          <action
-               label="Compile"
-              icon="icons/compile.gif"
-               class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
-               menubarPath="leJOSMenu/leJOSGroup"
                toolbarPath="leJOSGroup"
+               label="Compile"
                tooltip="Compiles the sources of a leJOS project"
+               class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
+               icon="icons/compile.gif"
+               style="push"
+               menubarPath="leJOSMenu/leJOSGroup"
                id="org.lejos.ldt.core.CompileAction">
          </action>
          <action
-               label="Link"
-               icon="icons/link.gif"
-               class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
-               menubarPath="leJOSMenu/leJOSGroup"
                toolbarPath="leJOSGroup"
+               label="Link"
                tooltip="Links the classes for a leJOS project"
+               class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
+               icon="icons/link.gif"
+               style="push"
+               menubarPath="leJOSMenu/leJOSGroup"
                id="org.lejos.ldt.core.LinkAction">
+         </action>
+         <action
+               toolbarPath="leJOSGroup"
+               label="Install firmware"
+               icon="icons/firmware.gif"
+               class="org.lejos.tools.eclipse.plugin.actions.FirmwareDownloadAction"
+               tooltip="Download leJOS firmware to RCX"
+               style="push"
+               menubarPath="leJOSMenu/leJOSGroup"
+               state="false"
+               id="org.lejos.ldt.core.FirmwareDownloadAction">
          </action>
       </actionSet>
    </extension>
@@ -95,21 +109,24 @@
             </separator>
          </menu>
          <action
-               label="Compile"
-               icon="icons/compile.gif"
-               tooltip="Compiles the selected source file(s)"
-               class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
-               menubarPath="leJOSMenu/leJOSGroup"
                enablesFor="+"
+               label="Compile"
+               class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
+               tooltip="Compiles the selected source file(s)"
+               icon="icons/compile.gif"
+               style="push"
+               state="false"
+               menubarPath="leJOSMenu/leJOSGroup"
                id="org.lejos.ldt.core.CompileAction">
          </action>
          <action
-               label="Link"
-               icon="icons/link.gif"
-               class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
-               tooltip="Links as leJOS binary"
-               menubarPath="leJOSMenu/leJOSGroup"
                enablesFor="+"
+               label="Link"
+               tooltip="Links as leJOS binary"
+               class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
+               icon="icons/link.gif"
+               style="push"
+               menubarPath="leJOSMenu/leJOSGroup"
                id="org.lejos.ldt.core.LinkAction">
          </action>
       </objectContribution>

@@ -83,7 +83,7 @@ public class AbstractToolsetImplTest extends TestCase {
         // TODO specify somewhere the directory of lejos,
         // e.g. as LEJOS_HOME as part of the toolset
         //TODO this also does NOT work, if starting with PDE JUnit
-        copyFile("../org.lejos/lib/classes.zip", binDir + "/classes.zip");
+        copyFile("../org.lejos/lib/classes.jar", binDir + "/classes.jar");
         copyFile("tools.jar", binDir + "/tools.jar");
 
         // check for lookup using a directory
@@ -96,8 +96,8 @@ public class AbstractToolsetImplTest extends TestCase {
         is.close();
 
         // check for lookup of zip file
-        cp = toolset.new Classpath(binDir + File.separator + "classes.zip");
-        expected = binDir + File.separator + "classes.zip" + File.pathSeparator;
+        cp = toolset.new Classpath(binDir + File.separator + "classes.jar");
+        expected = binDir + File.separator + "classes.jar" + File.pathSeparator;
         expected = expected.replace('/', File.separatorChar);
         assertEquals(expected, cp.toString());
         assertTrue(cp.exists("java.lang.Object"));
@@ -105,8 +105,8 @@ public class AbstractToolsetImplTest extends TestCase {
         assertNotNull(is);
         is.close();
 
-        cp = toolset.new Classpath(binDir + File.separator + "tools.jar");
-        expected = binDir + File.separator + "tools.jar" + File.pathSeparator;
+        cp = toolset.new Classpath(binDir + File.separator + "jtools.jar");
+        expected = binDir + File.separator + "jtools.jar" + File.pathSeparator;
         expected = expected.replace('/', File.separatorChar);
         assertEquals(expected, cp.toString());
         assertTrue(cp.exists("js.tinyvm.ClassPath"));
@@ -117,9 +117,9 @@ public class AbstractToolsetImplTest extends TestCase {
         // cleanup generated files
         File f = new File(binDir + "/X.class");
         assertTrue(f.delete());
-        f = new File(binDir + "/classes.zip");
+        f = new File(binDir + "/classes.jar");
         assertTrue(f.delete());
-        f = new File(binDir + "/tools.jar");
+        f = new File(binDir + "/jtools.jar");
         assertTrue(f.delete());
         f = new File(binDir);
         assertTrue(f.delete());
