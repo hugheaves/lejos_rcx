@@ -82,11 +82,16 @@ public abstract class AbstractJavaTestProject {
 		IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		project = root.getProject(projectName);
 		project.create(null);
-		project.open(null);
-		javaProject = JavaCore.create(project);
+		waitUntilBuild();
 
+		project.open(null);
+		waitUntilBuild();
+
+		javaProject = JavaCore.create(project);
 		setJavaNature();
+
 		javaProject.setRawClasspath(new IClasspathEntry[0], null);
+		waitUntilBuild();
 	}
 
 	public IProject getProject() {
@@ -107,6 +112,7 @@ public abstract class AbstractJavaTestProject {
 		newEntries[oldEntries.length] =
 			JavaCore.newLibraryEntry(result, null, null);
 		javaProject.setRawClasspath(newEntries, null);
+		waitUntilBuild();
 	}
 
 	public IPackageFragment createPackage(String name) throws CoreException {
@@ -147,8 +153,8 @@ public abstract class AbstractJavaTestProject {
 			try {
 				monitor.beginTask("Building project", 100);
 				this.project.build(
-						IncrementalProjectBuilder.FULL_BUILD,
-						monitor);
+					IncrementalProjectBuilder.FULL_BUILD,
+					monitor);
 				Thread.sleep(2000);
 			} catch (InterruptedException e) {
 				// ignore
@@ -190,6 +196,7 @@ public abstract class AbstractJavaTestProject {
 		System.arraycopy(oldEntries, 0, newEntries, 0, oldEntries.length);
 		newEntries[oldEntries.length] = JavaCore.newSourceEntry(root.getPath());
 		javaProject.setRawClasspath(newEntries, null);
+		waitUntilBuild();
 		return root;
 	}
 
@@ -247,5 +254,14 @@ public abstract class AbstractJavaTestProject {
 				String path) {
 			}
 		}, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+	}
+
+	protected void waitUntilBuild() {
+		// TODO better idea ?
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// ignore
+		}
 	}
 }

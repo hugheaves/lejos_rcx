@@ -33,8 +33,12 @@ public class SimpleJavaProject extends AbstractJavaTestProject {
 
 	public void createProject()
 		throws CoreException, IOException, MalformedURLException {
+		
+		// enable auto building after creation of project
+		setAutoBuilding(false);
+		
 		createProject("simpleproject");
-
+		
 		this.sourceFolder = createSourceFolder("src");
 
 		createFolder("build");
@@ -46,7 +50,6 @@ public class SimpleJavaProject extends AbstractJavaTestProject {
 		addJar("org.lejos", "lib/rcxrcxcomm.jar");
 
 		// specific for leJOS
-		setAutoBuilding(true);
 		// enforce compile with 1.1 class format
 		this.javaProject.setOption(
 			JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM,
@@ -91,7 +94,9 @@ public class SimpleJavaProject extends AbstractJavaTestProject {
 
 		this.package1package2Class2 =
 			createType(this.package1package2, "Class2.java", buf.toString());
-
+		// now enforce building
+		setAutoBuilding(true);
+		
         // now check, if Class1.java really exists
         File sourceFile = EclipseUtilities.getAbsoluteLocationForResource(
                 this.getPackage1Package2Class1CU().getJavaProject().getProject(),
