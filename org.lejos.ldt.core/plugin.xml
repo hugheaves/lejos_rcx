@@ -19,6 +19,7 @@
       <import plugin="org.eclipse.jdt.core"/>
       <import plugin="org.lejos.tools"/>
       <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.eclipse.jdt.ui"/>
    </requires>
 
 
@@ -56,16 +57,16 @@
          </menu>
          <action
                label="Compile"
-               class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
                tooltip="Compiles the selected source file(s)"
+               class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
                menubarPath="leJOSMenu/leJOSGroup"
                enablesFor="1"
                id="org.lejos.ldt.core.CompileAction">
          </action>
          <action
                label="Link"
-               tooltip="Links as leJOS binary"
                class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
+               tooltip="Links as leJOS binary"
                menubarPath="leJOSMenu/leJOSGroup"
                enablesFor="1"
                id="org.lejos.ldt.core.LinkAction">
