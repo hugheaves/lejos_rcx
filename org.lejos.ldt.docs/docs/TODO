@@ -1,6 +1,8 @@
 TODO
 
 - newWizards: Post bug to Eclipse, as schema is invalid
+- newWizards: Ask Eclipse, how to change the classpath during new wizard,
+  and NOT at the end
 - contribute for leJOS Library Containers
   for RCX and Client
 - fix all deprecated warnings
