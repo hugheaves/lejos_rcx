@@ -48,4 +48,8 @@
 #define testEQ_4Ljava_3lang_3String_2II_5V 41
 #define floatToIntBits_4F_5I 42
 #define intBitsToFloat_4I_5F 43
+#define init_4_5V 44
+#define write_4B_5V 45
+#define read_4_5I 46
+#define dataAvailable_4_5Z 47
 #endif // _SPECIALSIGNATURES_H
