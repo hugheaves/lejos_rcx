@@ -7,11 +7,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Vector;
 
+import js.tinyvm.Binary;
+import js.tinyvm.ClassPath;
 import js.tinyvm.io.BEDataOutputStream;
 import js.tinyvm.io.ByteWriter;
-import js.tinyvm.ClassPath;
 import js.tinyvm.io.LEDataOutputStream;
-import js.tinyvm.PatchedBinary;
 
 import org.lejos.tools.api.IRuntimeToolset;
 import org.lejos.tools.api.ToolsetException;
@@ -42,8 +42,8 @@ public class LejosLink {
 	 */
 	private int byteOrder;
 
-	/** the plain js.tools helper classes */
-	private PatchedBinary binary;
+    /** the plain js.tools helper classes */
+    private Binary binary;
 
 	// constructor
 
@@ -123,48 +123,40 @@ public class LejosLink {
 			throw new ToolsetException("Too many entry classes: max is 255 !");
 		}
 
-		// TODO for the moment: Convert from our classpath to the old one
-		ClassPath oldClasspath;
-		try {
-			oldClasspath = new ClassPath(classpath.toString());
-		} catch (Exception ex) {
-			throw new ToolsetException(
-				"Error with classpath \""
-					+ classpath.toString()
-					+ "\": "
-					+ ex.getMessage());
-		}
-		// TODO temporarily, convert to a vector
-		Vector vector = new Vector();
-		for (int i = 0; i < classFiles.length; i++) {
-			String s = classFiles[i];
-			// the old classes require a "package1/package2/Class1" style
-			s = s.replace('.', '/');
-			vector.add(s);
-		}
-		boolean linkAll = (this.linkMethod == IRuntimeToolset.LINK_METHOD_ALL);
-		// check, whether the specified classes really have a main
-		try {
-			this.binary =
-				PatchedBinary.patchedCreateFromClosureOf(
-					vector,
-					oldClasspath,
-					linkAll);
-		} catch (Exception ex) {
-			throw new ToolsetException(
-				"Error with creating binary closure: " + ex.getMessage());
-		}
-		for (int i = 0; i < classFiles.length; i++) {
-			// use convention package1/package2/Class1
-			if (!this.binary.hasMain((String) vector.elementAt(i))) {
-				throw new ToolsetException(
-					"Class "
-						+ classFiles[i]
-						+ " does not have a "
-						+ "static void main(String[]) method.");
-			}
-		}
-	}
+        // TODO for the moment: Convert from our classpath to the old one
+        ClassPath oldClasspath;
+        try {
+            oldClasspath = new ClassPath(classpath.toString());
+        } catch (Exception ex) {
+            throw new ToolsetException("Error with classpath \""
+                    + classpath.toString() + "\": " + ex.getMessage());
+        }
+        // TODO temporarily, convert to a vector
+        Vector vector = new Vector();
+        for (int i = 0; i < classFiles.length; i++) {
+            String s = classFiles[i];
+            // the old classes require a "package1/package2/Class1" style
+            s = s.replace('.', '/');
+            vector.add(s);
+        }
+        boolean linkAll = (this.linkMethod == IRuntimeToolset.LINK_METHOD_ALL);
+        // check, whether the specified classes really have a main
+        try {
+            this.binary = Binary.createFromClosureOf(vector, oldClasspath,
+                    linkAll);
+        } catch (Exception ex) {
+            throw new ToolsetException("Error with creating binary closure: "
+                    + ex.getMessage());
+        }
+        for (int i = 0; i < classFiles.length; i++) {
+            // use convention package1/package2/Class1
+            if (!this.binary.hasMain((String) vector.elementAt(i))) {
+                throw new ToolsetException("Class " + classFiles[i]
+                        + " does not have a "
+                        + "static void main(String[]) method.");
+            }
+        }
+    }
 
 	/**
 	 * Creates the binary and signature file.
