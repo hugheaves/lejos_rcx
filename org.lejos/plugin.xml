@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin
    id="org.lejos"
-   name="leJOS"
+   name="%pluginName"
    version="3.0.0"
-   provider-name="lejos.org">
+   provider-name="%providerName">
    
    <runtime>
       <library name="lib/classes.jar"/>

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin
    id="org.lejos.ldt.core"
-   name="leJOS Development Tools"
+   name="%pluginName"
    version="1.2.0"
-   provider-name="lejos.org"
+   provider-name="%providerName"
    class="org.lejos.tools.eclipse.plugin.LejosPlugin">
 
    <runtime>

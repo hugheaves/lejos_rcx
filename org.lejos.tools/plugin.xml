@@ -3,7 +3,7 @@
    id="org.lejos.tools"
    name="leJOS Tools"
    version="1.2.0"
-   provider-name="lejos.org">
+   provider-name="leJOS.org">
 
    <runtime>
       <library name="tools-extensions.jar">
