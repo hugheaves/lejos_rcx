@@ -116,17 +116,11 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
                }
                catch (IOException e)
                {
-                  String pluginID = LejosPlugin.getDefault().getBundle()
-                     .getSymbolicName();
-                  return new Status(IStatus.ERROR, pluginID, -1,
-                     e.getMessage(), e);
+                  return LejosPlugin.errorStatus(e);
                }
                catch (ToolsetException e)
                {
-                  String pluginID = LejosPlugin.getDefault().getBundle()
-                     .getSymbolicName();
-                  return new Status(IStatus.ERROR, pluginID, -1,
-                     e.getMessage(), e);
+                  return LejosPlugin.errorStatus(e);
                }
 
                try
@@ -144,10 +138,7 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
                }
                catch (IOException e)
                {
-                  String pluginID = LejosPlugin.getDefault().getBundle()
-                     .getSymbolicName();
-                  return new Status(IStatus.ERROR, pluginID, -1,
-                     e.getMessage(), e);
+                  return LejosPlugin.errorStatus(e);
                }
                catch (ToolsetException e)
                {
@@ -156,8 +147,7 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
                      return Status.CANCEL_STATUS;
                   }
 
-                  return new Status(IStatus.ERROR, LejosPlugin.getId(), -1, e
-                     .getMessage(), e);
+                  return LejosPlugin.errorStatus(e);
                }
 
                return Status.OK_STATUS;

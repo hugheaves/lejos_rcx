@@ -7,12 +7,12 @@ import java.net.MalformedURLException;
 import org.eclipse.core.resources.IFolder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IStatus;
-import org.eclipse.core.runtime.Status;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.lejos.tools.eclipse.plugin.EclipseUtilities;
+import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
 /**
  * A <code>SimpleJavaProject</code> for testing purposes.
@@ -108,9 +108,8 @@ public class SimpleJavaProject extends AbstractJavaTestProject
          .getPackage1Package2Class1CU().getPath());
       if (!sourceFile.exists())
       {
-         IStatus status = new Status(Status.ERROR,
-            "org.lejos.tools.eclipse.plugin", 1, "source file " + sourceFile
-               + " does not exist", null);
+         IStatus status = LejosPlugin.errorStatus(
+            "source file " + sourceFile + " does not exist");
          throw new CoreException(status);
       }
 
@@ -121,8 +120,7 @@ public class SimpleJavaProject extends AbstractJavaTestProject
          .getPackage1Package2Class1CU(), ".class");
       if (!classFile.exists())
       {
-         IStatus status = new Status(Status.ERROR,
-            "org.lejos.tools.eclipse.plugin", 1, "Compile failed", null);
+         IStatus status = LejosPlugin.errorStatus("Compilation failed");
          throw new CoreException(status);
       }
    }

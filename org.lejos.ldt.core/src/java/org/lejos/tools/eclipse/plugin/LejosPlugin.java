@@ -8,6 +8,8 @@ import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.lejos.tools.eclipse.plugin.preferences.LejosPreferences;
 
@@ -216,5 +218,24 @@ public class LejosPlugin extends AbstractUIPlugin
             return true;
       }
       return false;
+   }
+
+   //
+   // Status handling
+   //
+
+   public static IStatus errorStatus (String  errorMessage)
+   {
+      return errorStatus(errorMessage, null);
+   }
+
+   public static IStatus errorStatus (Exception e)
+   {
+      return errorStatus(e.getMessage(), e);
+   }
+
+   public static IStatus errorStatus (String  errorMessage, Exception e)
+   {
+      return new Status(IStatus.ERROR, getId(), IStatus.OK, errorMessage, e);
    }
 }

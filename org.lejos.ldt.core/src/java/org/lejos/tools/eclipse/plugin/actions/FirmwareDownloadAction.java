@@ -45,8 +45,7 @@ public class FirmwareDownloadAction extends AbstractAction
                   return Status.CANCEL_STATUS;
                }
 
-               return new Status(IStatus.ERROR, LejosPlugin.getId(), -1, e
-                  .getMessage(), e);
+               return LejosPlugin.errorStatus(e);
             }
 
             return Status.OK_STATUS;
