@@ -3,19 +3,21 @@ package org.lejos.tools.main;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import org.apache.commons.cli.*;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
 
 /**
  * Tests for <code>LejosCompile</code> class
  * 
- * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+ * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
  */
 public class LejosCompileTest extends TestCase {
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     // public methods
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     public static void main(String[] args) {
         junit.textui.TestRunner.run(new TestSuite(LejosCompileTest.class));
@@ -28,33 +30,35 @@ public class LejosCompileTest extends TestCase {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     // test methods
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     public void testCommandLineValid() {
         NoLejosCompile noCompile = new NoLejosCompile();
 
-        // check 
+        // check
         int rc = noCompile.doMain(new String[] { "-verbose", "Source.java" });
         assertEquals(0, rc);
-        assertEquals(2,noCompile.cl.getArgs().length);
+        assertEquals(2, noCompile.cl.getArgs().length);
         //assertEquals("-verbose", noCompile.cl.getArgs()[0]);
     } // testCommandLineValid()
 
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     // inner classes
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     /**
      * no compiling
      */
     public static class NoLejosCompile extends LejosLink {
         public CommandLine cl;
+
         public CommandLine getCommandLine(Options options, String[] args)
-            throws ParseException {
+                throws ParseException {
             cl = super.getCommandLine(options, args);
             return cl;
         }
+
         public int executeCommandLine(CommandLine cmdLine) {
             // do nothing here
             return 0;

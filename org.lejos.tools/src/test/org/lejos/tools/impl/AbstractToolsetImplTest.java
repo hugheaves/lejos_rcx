@@ -17,13 +17,13 @@ import org.lejos.tools.impl.AbstractToolsetImpl.Classpath;
 /**
  * Tests for <code>AbstractToolsetImpl</code> class.
  * 
- * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller</a>
+ * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
 public class AbstractToolsetImplTest extends TestCase {
 
     public static void main(String[] args) {
-        junit.textui.TestRunner.run(
-            new TestSuite(AbstractToolsetImplTest.class));
+        junit.textui.TestRunner
+                .run(new TestSuite(AbstractToolsetImplTest.class));
     }
 
     public AbstractToolsetImplTest(String name) {
@@ -63,7 +63,7 @@ public class AbstractToolsetImplTest extends TestCase {
         assertTrue(monitor == toolset.getProgressMonitor());
 
         // cleanup generated files
-        assertTrue (f.delete());
+        assertTrue(f.delete());
     }
 
     public void testClasspathValid() throws IOException {
@@ -155,30 +155,20 @@ public class AbstractToolsetImplTest extends TestCase {
         assertEquals("", cp.toString());
         cp = toolset.new Classpath("blablab");
         assertEquals("", cp.toString());
-        cp =
-            toolset.new Classpath(
-                "blablab"
-                    + File.pathSeparator
-                    + "blabla.zip"
-                    + File.pathSeparator
-                    + "blablab.jar");
+        cp = toolset.new Classpath("blablab" + File.pathSeparator
+                + "blabla.zip" + File.pathSeparator + "blablab.jar");
         assertEquals("", cp.toString());
 
-        cp =
-            toolset.new Classpath(
-                "."
-                    + File.pathSeparator
-                    + "blablab"
-                    + File.pathSeparator
-                    + "blablab.zip");
+        cp = toolset.new Classpath("." + File.pathSeparator + "blablab"
+                + File.pathSeparator + "blablab.zip");
         assertEquals("." + File.pathSeparator, cp.toString());
     }
 
     // private methods
 
     /**
-	 * Copies a file.
-	 */
+     * Copies a file.
+     */
     private void copyFile(String src, String dest) throws IOException {
         File srcFile = new File(src);
         File destFile = new File(dest);
@@ -218,9 +208,11 @@ public class AbstractToolsetImplTest extends TestCase {
         protected IProgressMonitorToolset getProgressMonitor() {
             return super.getProgressMonitor();
         }
+
         protected boolean getVerbose() {
             return super.getVerbose();
         }
+
         protected PrintStream getVerboseStream() {
             return super.getVerboseStream();
         }

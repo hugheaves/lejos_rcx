@@ -8,13 +8,13 @@ import org.lejos.tools.api.IProgressMonitorToolset;
 /**
  * Tests for <code>ConsoleProgressMonitorToolsetImpl</code> class.
  * 
- * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller</a>
+ * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
 public class ConsoleProgressMonitorToolsetImplTest extends TestCase {
 
     public static void main(String[] args) {
-        junit.textui.TestRunner.run(
-            new TestSuite(ConsoleProgressMonitorToolsetImplTest.class));
+        junit.textui.TestRunner.run(new TestSuite(
+                ConsoleProgressMonitorToolsetImplTest.class));
     }
 
     public ConsoleProgressMonitorToolsetImplTest(String name) {
@@ -28,8 +28,7 @@ public class ConsoleProgressMonitorToolsetImplTest extends TestCase {
     }
 
     public void testTasks() {
-        IProgressMonitorToolset progress =
-            new SilentConsoleProgressMonitor();
+        IProgressMonitorToolset progress = new SilentConsoleProgressMonitor();
         progress.beginTask("Doing something", 100);
         progress.worked(25);
         progress.worked(50);
@@ -51,8 +50,7 @@ public class ConsoleProgressMonitorToolsetImplTest extends TestCase {
     }
 
     public void testCancel() {
-        IProgressMonitorToolset progress =
-            new ConsoleProgressMonitorToolsetImpl();
+        IProgressMonitorToolset progress = new ConsoleProgressMonitorToolsetImpl();
         assertFalse(progress.isCanceled());
         progress.setCanceled(true);
         assertTrue(progress.isCanceled());
@@ -62,8 +60,8 @@ public class ConsoleProgressMonitorToolsetImplTest extends TestCase {
 
     // inner classes
 
-    public static class SilentConsoleProgressMonitor
-        extends ConsoleProgressMonitorToolsetImpl {
+    public static class SilentConsoleProgressMonitor extends
+            ConsoleProgressMonitorToolsetImpl {
         protected void print(String aMsg) {
             // do nothing !!!
         }
