@@ -160,7 +160,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl implements
   {
     try
     {
-      TinyVMTool tinyVM = new TinyVMTool(new ToolProgressListenerImpl(
+      TinyVMTool tinyVM = new TinyVMTool(new ToolProgressMonitorImpl(
           getProgressMonitor()));
       tinyVM.link(classpath, new String[] { classname }, false, stream, true);
     } catch (TinyVMException e)
@@ -180,7 +180,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl implements
   {
     try
     {
-      LejosdlTool lejosdl = new LejosdlTool(new ToolProgressListenerImpl(
+      LejosdlTool lejosdl = new LejosdlTool(new ToolProgressMonitorImpl(
           getProgressMonitor()));
       lejosdl.start(stream, port, true);
     } catch (LejosdlException e)
@@ -198,7 +198,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl implements
   public void installFirmware(String port, boolean fastMode)
       throws ToolsetException
   {
-    FirmdlTool firmdl = new FirmdlTool(new ToolProgressListenerImpl(
+    FirmdlTool firmdl = new FirmdlTool(new ToolProgressMonitorImpl(
         getProgressMonitor()));
     try
     {
