@@ -1,12 +1,15 @@
 package org.lejos.tools.eclipse.plugin.wizards;
 
-import org.eclipse.core.runtime.IPath;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizard;
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
+import org.eclipse.jface.wizard.Wizard;
 import org.lejos.tools.eclipse.plugin.EclipseUtilities;
 import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
@@ -18,7 +21,7 @@ import org.lejos.tools.eclipse.plugin.LejosPlugin;
 public class LejosClientProjectWizard extends JavaProjectWizard
 {
   // public methods
-  
+
   /**
    * @see Wizard#performFinish
    */
@@ -27,7 +30,8 @@ public class LejosClientProjectWizard extends JavaProjectWizard
     boolean rc = super.performFinish();
     // get project
     JavaCapabilityConfigurationPage page = (JavaCapabilityConfigurationPage) getPage("JavaCapabilityConfigurationPage");
-    if (page == null) {
+    if (page == null)
+    {
       return rc;
     }
     // update classpath
@@ -41,7 +45,8 @@ public class LejosClientProjectWizard extends JavaProjectWizard
   /**
    * update the project's classpath with additional leJOS libraries.
    * 
-   * @param aProject a java project
+   * @param aProject
+   *          a java project
    */
   private void updateClasspath(IJavaProject aProject)
   {
@@ -49,32 +54,27 @@ public class LejosClientProjectWizard extends JavaProjectWizard
     {
       // get existing classpath
       IClasspathEntry[] existingClasspath = aProject.getRawClasspath();
-      // get lejos libraries
-      String[] lejosClientLibs = LejosPlugin.getPreferences()
+      // get classpath entries from preferences
+      IClasspathEntry[] theCPEntries = LejosPlugin.getPreferences()
           .getClientClasspathEntries();
-      if ((lejosClientLibs == null) || (lejosClientLibs.length == 0))
-        return;
+
       // create new classpath with additional leJOS libraries last
-      IClasspathEntry[] newClasspath = new IClasspathEntry[existingClasspath.length
-          + lejosClientLibs.length];
-      int counter = 0;
+      List newClasspath = new ArrayList(existingClasspath.length
+          + theCPEntries.length);
       for (int i = 0; i < existingClasspath.length; i++)
       {
-        newClasspath[counter] = existingClasspath[i];
-        counter = counter + 1;
+          newClasspath.add(existingClasspath[i]);
       }
-      for (int i = 0; i < lejosClientLibs.length; i++)
+      // add the other cp entries
+      for (int i = 0; i < theCPEntries.length; i++)
       {
-        IPath lejosLibPath = new Path(lejosClientLibs[i]);
-        IPath absoluteLibPath = EclipseUtilities.findFileInPlugin("org.lejos",
-            lejosLibPath.toString());
-        IClasspathEntry classpathForLibrary = JavaCore.newLibraryEntry(
-            absoluteLibPath, null, null);
-        newClasspath[counter] = classpathForLibrary;
-        counter = counter + 1;
+        newClasspath.add(theCPEntries[i]);
       }
+
+      IClasspathEntry[] cpEntries = (IClasspathEntry[]) newClasspath
+          .toArray(new IClasspathEntry[0]);
       // set new classpath to project
-      aProject.setRawClasspath(newClasspath, null);
+      aProject.setRawClasspath(cpEntries, null);
     } catch (Exception e)
     {
       LejosPlugin.debug(e);

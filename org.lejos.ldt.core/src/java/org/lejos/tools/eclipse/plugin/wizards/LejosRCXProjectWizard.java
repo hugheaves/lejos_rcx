@@ -1,27 +1,41 @@
 package org.lejos.tools.eclipse.plugin.wizards;
 
-import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.Path;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizard;
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
+import org.eclipse.jface.wizard.Wizard;
 import org.lejos.tools.eclipse.plugin.EclipseUtilities;
 import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
 /**
- * Represents a project wizard for leJOS RCX projects.
+ * Wizard for creating a leJOS RCX project.
+ * <p>
+ * The wizard will update the CLASSPATH after creating the project. The leJOS
+ * standard libraries <code>classes.jar</code> and <code>rcxcomm.jar</code>
+ * will be added with a link to the corresponding sources. The standard
+ * JRE_CONTAINER will be removed, to avoid duplicate include of Java core
+ * classes.
+ * </p>
+ * <p>
+ * Additionally, the internal compiler will be set to compile against target
+ * 1.1. There will a leJOS nature added to the project.
+ * </p>
  * 
  * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
- *         based on implementation parts of Christophe Ponsard
  * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
 public class LejosRCXProjectWizard extends JavaProjectWizard
 {
   // public methods
-  
+
   /**
+   * Will be called when setup of project has been finished.
+   * 
    * @see Wizard#performFinish
    */
   public boolean performFinish()
@@ -29,12 +43,13 @@ public class LejosRCXProjectWizard extends JavaProjectWizard
     boolean rc = super.performFinish();
     // get project
     JavaCapabilityConfigurationPage page = (JavaCapabilityConfigurationPage) getPage("JavaCapabilityConfigurationPage");
-    if (page == null) {
+    if (page == null)
+    {
       return rc;
     }
     // set leJOS project nature
     IJavaProject project = page.getJavaProject();
-    EclipseUtilities.setLeJOSNature(project.getProject());
+    EclipseUtilities.addLeJOSNature(project.getProject());
     // update classpath
     updateClasspath(project);
     // set "target 1.1" option
@@ -48,7 +63,8 @@ public class LejosRCXProjectWizard extends JavaProjectWizard
   /**
    * update the project's classpath with additional leJOS libraries.
    * 
-   * @param aProject a java project
+   * @param aProject
+   *          a java project
    */
   private void updateClasspath(IJavaProject aProject)
   {
@@ -56,32 +72,37 @@ public class LejosRCXProjectWizard extends JavaProjectWizard
     {
       // get existing classpath
       IClasspathEntry[] existingClasspath = aProject.getRawClasspath();
-      // get lejos libraries
-      String[] lejosLibs = LejosPlugin.getPreferences()
-          .getDefaultClasspathEntries();
-      if ((lejosLibs == null) || (lejosLibs.length == 0))
-        return;
+      // get classpath entries from preferences
+      IClasspathEntry[] theCPEntries = LejosPlugin.getPreferences()
+          .getRCXClasspathEntries();
+
       // create new classpath with additional leJOS libraries last
-      IClasspathEntry[] newClasspath = new IClasspathEntry[existingClasspath.length
-          + lejosLibs.length];
-      int counter = 0;
+      List newClasspath = new ArrayList(existingClasspath.length
+          + theCPEntries.length);
       for (int i = 0; i < existingClasspath.length; i++)
       {
-        newClasspath[counter] = existingClasspath[i];
-        counter = counter + 1;
+        // filter out JRE_CONTAINER
+        IClasspathEntry cpEntry = existingClasspath[i];
+        if ((cpEntry.getEntryKind() == IClasspathEntry.CPE_CONTAINER)
+            && ((cpEntry.getPath().lastSegment()).indexOf("JRE_CONTAINER") >= 0))
+        {
+          // skip JRE_CONTAINER, if container ends with JRE_CONTAINER
+        } else
+        {
+          // e.g. source container
+          newClasspath.add(existingClasspath[i]);
+        }
       }
-      for (int i = 0; i < lejosLibs.length; i++)
+      // add the other cp entries
+      for (int i = 0; i < theCPEntries.length; i++)
       {
-        IPath lejosLibPath = new Path(lejosLibs[i]);
-        IPath absoluteLibPath = EclipseUtilities.findFileInPlugin("org.lejos",
-            lejosLibPath.toString());
-        IClasspathEntry classpathForLibrary = JavaCore.newLibraryEntry(
-            absoluteLibPath, null, null);
-        newClasspath[counter] = classpathForLibrary;
-        counter = counter + 1;
+        newClasspath.add(theCPEntries[i]);
       }
+
+      IClasspathEntry[] cpEntries = (IClasspathEntry[]) newClasspath
+          .toArray(new IClasspathEntry[0]);
       // set new classpath to project
-      aProject.setRawClasspath(newClasspath, null);
+      aProject.setRawClasspath(cpEntries, null);
     } catch (Exception e)
     {
       LejosPlugin.debug(e);
