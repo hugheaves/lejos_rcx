@@ -34,7 +34,7 @@
          id="org.lejos"
          download-size="0"
          install-size="0"
-         version="2.1.0"/>
+         version="3.0.0"/>
 
    <plugin
          id="org.lejos.tools"
