@@ -23,11 +23,11 @@ public class LejosPreferences
 
    private static final String[] D_PORTS_WIN = new String[]
    {
-      "usb", "usb1", "usb2", "usb3", "usb4", "com1", "com2", "com3", "com4"
+      "usb1", "usb2", "usb3", "usb4", "com1", "com2", "com3", "com4"
    };
    private static final String[] D_PORTS_LINUX = new String[]
    {
-      "usb", "usb0", "usb1", "usb2", "usb3", "/dev/ttyS0", "/dev/ttyS1", "/dev/ttyS2", "/dev/ttyS3"
+      "usb0", "usb1", "usb2", "usb3", "/dev/ttyS0", "/dev/ttyS1", "/dev/ttyS2", "/dev/ttyS3"
    };
 
    //
