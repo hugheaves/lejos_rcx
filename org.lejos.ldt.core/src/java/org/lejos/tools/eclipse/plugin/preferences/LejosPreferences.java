@@ -1,7 +1,12 @@
 package org.lejos.tools.eclipse.plugin.preferences;
 
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.jdt.core.IClasspathEntry;
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.lejos.tools.api.IRuntimeToolset;
+import org.lejos.tools.eclipse.plugin.EclipseUtilities;
 import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
 /**
@@ -163,7 +168,7 @@ public class LejosPreferences
     * 
     * @return an array with all classpath entries
     */
-   public String[] getDefaultClasspathEntries ()
+   public String[] getRCXClasspathEntriesString ()
    {
       return new String[]
       {
@@ -171,7 +176,56 @@ public class LejosPreferences
       };
    }
 
-   public String[] getClientClasspathEntries ()
+   public IClasspathEntry[] getRCXClasspathEntries()
+   {
+     // classes.jar, with sources attached
+     IPath theJar = EclipseUtilities.findFileInPlugin("org.lejos",
+         "lib/classes.jar");
+     IClasspathEntry theClassesJarEntry = null;
+     if (theJar != null)
+     {
+       theClassesJarEntry = JavaCore.newLibraryEntry(theJar, EclipseUtilities
+           .findFileInPlugin("org.lejos", "src/classes-src.zip"), new Path("/"));
+     } else
+     {
+       LejosPlugin.debug("Could not create a classpath entry for classes.jar");
+     }
+
+     // rcxcomm.jar, with sources attached
+     theJar = EclipseUtilities.findFileInPlugin("org.lejos", "lib/rcxcomm.jar");
+     IClasspathEntry theRcxcommJar = null;
+     if (theJar != null)
+     {
+       theRcxcommJar = JavaCore.newLibraryEntry(theJar, EclipseUtilities
+           .findFileInPlugin("org.lejos", "src/rcxcomm-src.zip"), new Path("/"));
+     } else
+     {
+       LejosPlugin.debug("Could not create a classpath entry for rcxcomm.jar");
+     }
+
+     // create array in required size, and fill dependent of result
+     IClasspathEntry[] theEntries;
+     if ((theClassesJarEntry != null) && (theRcxcommJar != null))
+     {
+       theEntries = new IClasspathEntry[2];
+       theEntries[0] = theClassesJarEntry;
+       theEntries[1] = theRcxcommJar;
+     } else if (theClassesJarEntry != null)
+     {
+       theEntries = new IClasspathEntry[1];
+       theEntries[0] = theClassesJarEntry;
+     } else if (theRcxcommJar != null)
+     {
+       theEntries = new IClasspathEntry[1];
+       theEntries[0] = theRcxcommJar;
+     } else
+     {
+       theEntries = new IClasspathEntry[0];
+     }
+     return theEntries;
+   }
+   
+   public String[] getClientClasspathEntriesString ()
    {
       return new String[]
       {
@@ -179,7 +233,34 @@ public class LejosPreferences
       };
    }
 
-   //
+   public IClasspathEntry[] getClientClasspathEntries()
+   {
+     // pcrcxcomm.jar, with sources attached
+     IPath theJar = EclipseUtilities.findFileInPlugin("org.lejos",
+         "lib/pcrcxcomm.jar");
+     IClasspathEntry theEntry = null;
+     if (theJar != null)
+     {
+       theEntry = JavaCore.newLibraryEntry(theJar, EclipseUtilities
+           .findFileInPlugin("org.lejos", "src/pcrcxcomm-src.zip"),
+           new Path("/"));
+     } else
+     {
+       LejosPlugin.debug("Could not create a classpath entry for pcrcxcomm.jar");
+     }
+
+     // create array in required size, and fill dependent of result
+     IClasspathEntry[] theEntries;
+     if (theEntry != null)
+     {
+       theEntries = new IClasspathEntry[1];
+       theEntries[0] = theEntry;
+     } else
+     {
+       theEntries = new IClasspathEntry[0];
+     }
+     return theEntries;
+   }   //
    // protected interface
    // 
 
