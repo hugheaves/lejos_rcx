@@ -10,6 +10,7 @@ import org.lejos.tools.impl.AbstractToolsetImplTest;
 import org.lejos.tools.impl.ConsoleProgressMonitorToolsetImplTest;
 import org.lejos.tools.impl.NullProgressMonitorToolsetImplTest;
 import org.lejos.tools.impl.RuntimeToolsetImplTest;
+import org.lejos.tools.main.LejosCompileTest;
 import org.lejos.tools.main.LejosLinkTest;
 
 /**
@@ -31,10 +32,10 @@ public class AllTests {
 		suite.addTestSuite(ToolsetFactoryTest.class);
 		suite.addTestSuite(NullProgressMonitorToolsetImplTest.class);
 		suite.addTestSuite(ConsoleProgressMonitorToolsetImplTest.class);
-		suite.addTestSuite(LejosLinkTest.class);
 		suite.addTestSuite(AbstractToolsetImplTest.class);
 		suite.addTestSuite(RuntimeToolsetImplTest.class);
-		suite.addTestSuite(LejosLinkTest.class);
+        suite.addTestSuite(LejosCompileTest.class);
+        suite.addTestSuite(LejosLinkTest.class);
 		//$JUnit-END$
 		return suite;
 	}

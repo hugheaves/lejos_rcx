@@ -3,12 +3,6 @@
 	<name>org.lejos.ldt.core</name>
 	<comment></comment>
 	<projects>
-		<project>org.eclipse.core.resources</project>
-		<project>org.eclipse.core.runtime.compatibility</project>
-		<project>org.eclipse.jdt.core</project>
-		<project>org.eclipse.jdt.launching</project>
-		<project>org.eclipse.ui</project>
-		<project>org.junit</project>
 		<project>org.lejos.tools</project>
 	</projects>
 	<buildSpec>
@@ -34,8 +28,7 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</nature>
+		<nature>org.eclipse.pde.PluginNature</nature>
 	</natures>
 </projectDescription>

@@ -1,9 +1,7 @@
 package org.lejos.tools.impl;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import org.lejos.tools.api.IRuntimeToolset;
 import org.lejos.tools.api.ToolsetException;
@@ -16,7 +14,7 @@ import org.lejos.tools.impl.link.LejosLink;
  */
 public class RuntimeToolsetImpl
 	extends AbstractToolsetImpl
-	implements IRuntimeToolset {
+	implements IRuntimeToolset { 
 
 	// implementation of IRuntimeToolset
 
@@ -83,6 +81,50 @@ public class RuntimeToolsetImpl
 		this.getProgressMonitor().done();
 	}
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * compiles java source files
+     * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+     * @param aSourceFiles an array of Strings containing the names of the source files
+     * @param compilerArguments arguments for the compiler
+     */
+    public void compile (String[] aSourceFiles,String[] aCompilerArguments) 
+        throws ToolsetException {
+        if((aSourceFiles==null)||(aSourceFiles.length==0))
+            throw new ToolsetException("no source files specified");
+        //progress
+        this.getProgressMonitor().beginTask(
+                "Compiling", 100);
+        // create arguments
+        String[] arguments = null;
+        if(aCompilerArguments==null) {
+            arguments = new String[aSourceFiles.length];
+        } else {
+            arguments = new String[aCompilerArguments.length 
+                                   + aSourceFiles.length];
+        } // else
+        // add compiler arguments passed to this method
+        int noOfCompilerArguments = 0;
+        if(aCompilerArguments!=null) {
+            noOfCompilerArguments = aCompilerArguments.length;
+            for(int i=0;i<noOfCompilerArguments;i++) {
+                arguments[i] =aCompilerArguments[i];
+            } // if
+        } // for
+        // last arguments are source files
+        int noOfSourceFiles = aSourceFiles.length;
+        for(int i=0;i<noOfSourceFiles;i++) {
+            arguments[noOfSourceFiles+noOfCompilerArguments+i-1] = aSourceFiles[i];
+        } //for
+        //progress
+        this.getProgressMonitor().worked(50);
+        // compile
+        if(com.sun.tools.javac.Main.compile(arguments)>0)
+           throw new ToolsetException("compilation failed");
+        //progress
+        this.getProgressMonitor().done();
+        } // compile ()
+    
 	// private methods
 
 	/**

@@ -57,7 +57,7 @@ public interface IRuntimeToolset {
 	void setVerbose(boolean onOff);
 
 	/**
-	 * Sets the output writer to be used for printing out verbose mnessages.
+	 * Sets the output writer to be used for printing out verbose messages.
 	 * 
 	 * <p>
 	 * If not set, <code>System.out</code> will be used.
@@ -78,24 +78,28 @@ public interface IRuntimeToolset {
 	 */
 	void setProgressMonitor(IProgressMonitorToolset progressMonitor);
 
-	/**
-	 * Will compile all specified files.
-	 * <p>
-	 * The implementation has to care about:
-	 * </p>
-	 * <ul>
-	 * <li>specify <code>-target 1.1</code> as far as required</li>
-	 * <li>specify <code>-bootclasspath</code> with all required jar files.
-	 * Currently this is <code>classes.jar</code> and <code>rcxrcxcomm.jar<code>.
-	 *   </li>
-	 * </ul>
-	 * 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * compiles leJOS java source files
+     * <p>
+     * The implementation has to care about:
+     * </p>
+     * <ul>
+     * <li>specify <code>-target 1.1</code> as far as required</li>
+     * <li>specify <code>-bootclasspath</code> with all required jar files.
+     * For the time being these are
+     * <ul>
+     * <li>classes.jar</li>
+     * <li>rcxrcxcomm.jar</li>
+     * <li>tools.jar by SUN</li>
+     * </ul>
+     * </li>
+     * </ul>
+ * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+     * @param aSourceFiles an array of Strings containing the names of the source files
 	 * @param compilerArguments all arguments for the compiler
-	 * @param files the files to compile
 	 */
-	// TODO ENH compile
-	// void compile (String compilerArguments, File[] files) throws
-	// ToolsetException;
+	void compile (String[] aSourceFiles,String[] aCompilerArguments) throws ToolsetException;
 
 	/**
 	 * Links a leJOS program.
@@ -133,6 +137,7 @@ public interface IRuntimeToolset {
 		String[] args)
 		throws ToolsetException;
 
+            
 	// TODO ENH download
 	// void downloadExecutable () throws ToolsetException;
 

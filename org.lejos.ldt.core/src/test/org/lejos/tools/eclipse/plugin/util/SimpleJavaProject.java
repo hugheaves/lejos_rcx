@@ -92,6 +92,20 @@ public class SimpleJavaProject extends AbstractJavaTestProject {
 		this.package1package2Class2 =
 			createType(this.package1package2, "Class2.java", buf.toString());
 
+        // now check, if Class1.java really exists
+        File sourceFile = EclipseUtilities.getAbsoluteLocationForResource(
+                this.getPackage1Package2Class1CU().getJavaProject().getProject(),
+                this.getPackage1Package2Class1CU().getPath());
+        if (!sourceFile.exists()) {
+            IStatus status =   new Status(
+                        Status.ERROR,
+                        "org.lejos.tools.eclipse.plugin",
+                        1,
+                        "source file " + sourceFile + " does not exist",
+                        null);
+            throw new CoreException(status);
+        }
+        
 		try {
 			// give auto build a chance to run
 			Thread.sleep(1000);

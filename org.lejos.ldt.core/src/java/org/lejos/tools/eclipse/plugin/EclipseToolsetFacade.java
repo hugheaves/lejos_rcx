@@ -5,13 +5,8 @@ import java.io.IOException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.JavaModelException;
-import org.lejos.tools.api.IProgressMonitorToolset;
-import org.lejos.tools.api.IRuntimeToolset;
-import org.lejos.tools.api.ToolsetException;
-import org.lejos.tools.api.ToolsetFactory;
+import org.eclipse.jdt.core.*;
+import org.lejos.tools.api.*;
 
 /**
  * The <code>EclipseToolsetFacade</code> provides the services of the <code>IRuntimeToolset</code>
@@ -112,32 +107,6 @@ public class EclipseToolsetFacade {
 			args);
 	}
 
-	/**
-	 * Link one java element.
-	 * 
-	 * <p>
-	 * Will collect all classed for this java element, and link every
-	 * compilation unit.
-	 * </p>
-	 * 
-	 * @param aJavaElem the java element
-	 * @param aPreferences the lejos preferences
-	 * @throws JavaModelException will be raised, if some internal model error
-	 *             occured
-	 * @throws ToolsetException will be raised if some error occurs during
-	 *             calling the leJOS toolset
-	 */
-	public void linkJavaElement(
-		IJavaElement aJavaElem,
-		LejosPreferences aPreferences)
-		throws ToolsetException, JavaModelException {
-
-		ICompilationUnit[] cus = EclipseUtilities.collectLinkClasses(aJavaElem);
-
-		for (int i = 0; i < cus.length; i++) {
-			linkCU(cus[i], aPreferences);
-		}
-	}
 
 	/**
 	 * Link an array of java elements.
@@ -164,7 +133,33 @@ public class EclipseToolsetFacade {
 		}
 	}
 
-	/**
+    /**
+     * Link a single java element.
+     * 
+     * <p>
+     * Will collect all classed for this java element, and link every
+     * compilation unit.
+     * </p>
+     *
+     * @param aJavaElem the java element
+     * @param aPreferences the lejos preferences
+     * @throws JavaModelException will be raised, if some internal model error
+     *             occured
+     * @throws ToolsetException will be raised if some error occurs during
+     *             calling the leJOS toolset
+     */
+    public void linkJavaElement( 
+            IJavaElement aJavaElem,
+            LejosPreferences aPreferences)
+    throws ToolsetException, JavaModelException {
+        ICompilationUnit[] cus = EclipseUtilities.collectLinkClasses(aJavaElem);
+
+         for (int i = 0; i < cus.length; i++) {
+         linkCU(cus[i], aPreferences);
+         }
+    } 
+
+    /**
 	 * Count the number of compilation units for a list of java elements.
 	 * 
 	 * @param elems an array of java elements
@@ -181,4 +176,109 @@ public class EclipseToolsetFacade {
 		}
 		return n;
 	}
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * compiles an array of java elements
+    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+     * @param aJavaElems an array with java elements
+     * @param aPreferences the lejos preferences
+     * @throws JavaModelException will be raised, if some internal model error
+     *             occured
+     * @throws ToolsetException will be raised if some error occurs during
+     *             call of the leJOS toolset
+     */
+    public void compileJavaElements(IJavaElement[] aJavaElems,
+            LejosPreferences aPreferences)
+    throws ToolsetException, JavaModelException {
+        for (int i = 0; i < aJavaElems.length; i++) {
+            // compile each element
+            compileJavaElement(aJavaElems[i], aPreferences);
+        } //for
+    } // compileJavaElements()
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * compiles a single java element.
+    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+     * @param aJavaElem the java element
+     * @param aPreferences the lejos preferences
+     * @throws JavaModelException will be raised, if some internal model error
+     *             occured
+     * @throws ToolsetException will be raised if some error occurs during
+     *             call of the leJOS toolset
+     */
+    public void compileJavaElement( IJavaElement aJavaElem,
+            LejosPreferences aPreferences)
+    throws ToolsetException, JavaModelException {
+        // get source files to compile
+        ICompilationUnit[] cus = EclipseUtilities.collectLinkClasses(aJavaElem);
+        // compile them
+        for (int i = 0; i < cus.length; i++) {
+            // compile compilation unit
+            compileCU(cus[i], aPreferences);
+        } //for
+    } //compileJavaElement()
+    
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * compiles a compilation unit with the given preferences
+     * <br>uses the com.sun.tools.javac.main class
+    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+     * @param aCompilationUnit the compulation unit
+     * @param aPreferences the lejos preferences
+     * @throws JavaModelException will be raised, if some internal model error
+     *             occured
+     * @throws ToolsetException will be raised if some error occurs during
+     *             call of the leJOS toolset
+     */
+    public void compileCU(ICompilationUnit aCompilationUnit,
+            LejosPreferences aPreferences)
+    throws ToolsetException, JavaModelException {
+        // set progress monitor at need
+        ToolsetFactory factory = ToolsetFactory.newInstance();
+        IRuntimeToolset toolset = factory.newRuntimeToolset();
+        if (this.progressMonitor != null) {
+            toolset.setProgressMonitor(this.progressMonitor);
+        } // if
+        // create compiler arguments
+        //TODO set additional arguments from preferences (?)
+        String[] arguments = new String[6];
+        arguments[0] = "-bootclasspath";
+        String[] lejosLibs = aPreferences.getDefaultClasspathEntries();
+        String libs = new String();
+        try {
+            for (int i = 0; i < lejosLibs.length; i++) {
+                IPath lejosLibPath = new Path(lejosLibs[i]);
+                Path absoluteLibPath =
+                    EclipseUtilities.findFileInPlugin("org.lejos",
+                            lejosLibPath.toString());
+               libs += absoluteLibPath.toString() + File.pathSeparator;
+            } //for
+            arguments[1] = libs; 
+        } catch (IOException ex) {
+            throw new ToolsetException(
+                    "Could not create CLASSPATH for compilation: ",
+                    ex);
+        } // catch
+        // target 1.1
+        arguments[2] = "-target";
+        arguments[3] = "1.1";
+        // output directory
+        arguments[4] = "-d";
+        arguments[5] = EclipseUtilities.getOutputFolder(aCompilationUnit).toString();
+        // get name & packages of source file
+        String javaSource = EclipseUtilities.getAbsoluteLocationForResource(
+                aCompilationUnit.getJavaProject().getProject(),
+                aCompilationUnit.getPath()).getAbsolutePath();
+        String[] sourceFile = { javaSource };
+        // now compile via toolset
+        StringBuffer debug = new StringBuffer("compiling: ");
+        for(int i=0;i<arguments.length;i++) 
+            debug.append(arguments[i] + " " );
+        LejosPlugin.debug(debug.toString());
+        toolset.compile(sourceFile,arguments);
+    } // compileCU()
+    
 }

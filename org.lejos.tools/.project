@@ -3,8 +3,6 @@
 	<name>org.lejos.tools</name>
 	<comment></comment>
 	<projects>
-		<project>org.junit</project>
-		<project>org.lejos</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -29,8 +27,7 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
-		<nature>org.eclipse.pde.PluginNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>com.atlassw.tools.eclipse.checkstyle.CheckstyleNature</nature>
+		<nature>org.eclipse.pde.PluginNature</nature>
 	</natures>
 </projectDescription>

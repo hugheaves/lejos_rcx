@@ -145,7 +145,32 @@ public final class EclipseUtilities extends ToolsetFactory {
 		return packageName + "." + className;
 	}
 
-	/**
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+     * delivers the full qualified source file name for the compilation unit
+    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+     * @param aCompilationUnit the compilation unit
+     * @return a full qualified source file name in "/" notation
+     * @throws JavaModelException will be raised, if package declarations
+     *             cannot be determined
+     */
+    public static String getFQSFN(ICompilationUnit aCompilationUnit)
+    throws JavaModelException {
+        // get the declared package
+        IPackageDeclaration[] packages;
+        packages = aCompilationUnit.getPackageDeclarations();
+        String packageName = "";
+        if (packages.length > 0) {
+            packageName = packages[0].getElementName();
+        } //if
+        String packagePath = packageName.replace('.', '/');
+        // source file name
+        String sourceFileName = aCompilationUnit.getElementName();
+        // add
+        return packagePath + "/" + sourceFileName;
+    } // getFQSFN()
+
+    /**
 	 * Checks, whether a compilation unit has a main methids,
 	 * 
 	 * @param cu the compilation unit

@@ -10,6 +10,7 @@
       <library name="ldt-core.jar">
          <export name="*"/>
       </library>
+      <library name="tools.jar"/>
    </runtime>
    <requires>
       <import plugin="org.junit"/>
@@ -27,6 +28,12 @@
       <actionSet
             label="leJOS"
             id="org.lejos.ldt.core.actionSet">
+         <action
+               class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
+               label="Compile"
+               id="org.lejos.ldt.core.CompileAction"
+               toolbarPath="leJOSGroup">
+         </action>
          <action
                label="Link"
                class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
@@ -48,6 +55,14 @@
                   name="leJOSGroup">
             </separator>
          </menu>
+         <action
+               label="Compile"
+               tooltip="Compiles the selected source file(s)"
+               class="org.lejos.tools.eclipse.plugin.actions.CompileAction"
+               menubarPath="leJOSMenu/leJOSGroup"
+               enablesFor="1"
+               id="org.lejos.ldt.core.CompileAction">
+         </action>
          <action
                label="Link"
                class="org.lejos.tools.eclipse.plugin.actions.LinkAction"

@@ -111,7 +111,13 @@ public class EclipseUtilitiesTest extends TestCase {
 		assertEquals("package1.package2.Class1", fqcn);
 	}
 
-	public void testHasMain() throws JavaModelException {
+    public void testGetFQSFN() throws JavaModelException {
+        String fqsfn =
+            EclipseUtilities.getFQSFN(sjp.getPackage1Package2Class1CU());
+        assertEquals("package1/package2/Class1.java", fqsfn);
+    } //testGetFQSFN() 
+    
+    public void testHasMain() throws JavaModelException {
 		boolean hasMain =
 			EclipseUtilities.hasMain(sjp.getPackage1Package2Class1CU());
 		assertTrue(hasMain);

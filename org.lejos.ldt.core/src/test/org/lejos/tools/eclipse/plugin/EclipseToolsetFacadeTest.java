@@ -40,7 +40,22 @@ public class EclipseToolsetFacadeTest extends TestCase {
 
 	// test methods
 
-	public void testLinkOneCU()
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**
+    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+     */
+    public void testCompileJavaElements()
+    throws ToolsetException,  InterruptedException,
+    MalformedURLException,  CoreException,   IOException {
+        EclipseToolsetFacade facade = new EclipseToolsetFacade();
+        // silent monitor for tests
+        facade.setProgressMonitor(new NullProgressMonitorToolsetImpl());
+        facade.compileJavaElement(
+                sjp.getPackage1(),
+                LejosPlugin.getPreferences());
+    } // testCompileJavaElements()
+    
+    public void testLinkOneCU()
 		throws ToolsetException, InterruptedException, MalformedURLException, CoreException, IOException {
 		EclipseToolsetFacade facade = new EclipseToolsetFacade();
 		// disbable output for tests
