@@ -1,3 +1,14 @@
+
+TBD: Local variable instructions (including JSR) need to be adjusted 
+based on long and double parameters. The system is unstable (may hang)
+until this is done. Example:
+
+   static void mymethod (int a, double b, int c);
+
+Suppose there's an ALOAD_3 instruction in this method.
+It needs to be adjusted to ALOAD_2 because the double
+parameter no longer requires two stack entries.
+
 leJOS 1.0.2:
 ------------
 
@@ -22,7 +33,7 @@ leJOS 1.0.1:
 ------------
 
   - Fixed bug in java.util.Vector: NoSuchMethodError after 7
-    elements added.
+    elements added. Reported by Rune Berge.
   --------------------------------------------------------------
   - Phil Berry has contributed some documentation (see
     docs/phil_berry) and more meaningful trace output
@@ -31,7 +42,7 @@ leJOS 1.0.1:
     argument was not initialized properly, which
     means that in some systems (e.g. W2K) you'd see a message 
     saying that lejosc was unable to execute javac or something 
-    to that effect, with no apparent reason.
+    to that effect, for no apparent reason.
 
 leJOS 1.0.0beta3:
 -----------------

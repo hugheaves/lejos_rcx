@@ -86,7 +86,7 @@ typedef struct S_Thread
   JINT waitingOn;            // Object who's monitor we want
   JINT stackFrameArray;      // Array of stack frames
   JINT stackArray;           // The stack itself
-  JINT isReferenceArray;     // Array indicating if a stack entry is a reference or not
+  JINT stackEntryTypeArray;  // Array indicating if a stack entry is an int/byte or long/double or reference
   JBYTE stackFrameArraySize; // Number of stack frames in use.
   JBYTE threadId;            // Unique thread ID
   JBYTE state;               // RUNNING, DEAD, etc.

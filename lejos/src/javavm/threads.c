@@ -119,10 +119,9 @@ boolean init_thread (Thread *thread)
     thread->stackFrameArray = JNULL;
     return false;    
   }
-  
   // Allocate reference flag array of same size
-  thread->isReferenceArray = ptr2word (new_primitive_array (T_BOOLEAN, STACK_SIZE));
-  if (thread->isReferenceArray == JNULL)
+  thread->stackEntryTypeArray = ptr2word (new_primitive_array (T_BOOLEAN, STACK_SIZE));
+  if (thread->stackEntryTypeArray == JNULL)
   {
     free_array (ref2obj(thread->stackFrameArray));
     free_array (ref2obj(thread->stackArray));
@@ -135,7 +134,7 @@ boolean init_thread (Thread *thread)
   #ifdef VERIFY
   assert (is_array (word2obj (thread->stackFrameArray)), THREADS0);
   assert (is_array (word2obj (thread->stackArray)), THREADS1);
-  assert (is_array (word2obj (thread->isReferenceArray)), THREADS2);
+  assert (is_array (word2obj (thread->stackEntryTypeArray)), THREADS2);
   #endif
 
   thread->stackFrameArraySize = 0;
@@ -260,20 +259,21 @@ boolean switch_thread()
             }
             break;
           case DEAD:
+
         #if DEBUG_THREADS
         printf ("Tidying up DEAD thread %d: %d\n", (int) currentThread, (int)currentThread->threadId);
         #endif
     
             #if REMOVE_DEAD_THREADS
             // This order of deallocation is actually crucial to avoid leaks
-            free_array ((Object *) word2ptr (currentThread->isReferenceArray));
+            free_array ((Object *) word2ptr (currentThread->stackEntryTypeArray));
             free_array ((Object *) word2ptr (currentThread->stackArray));
             free_array ((Object *) word2ptr (currentThread->stackFrameArray));
     
             #ifdef SAFE
             currentThread->stackFrameArray = JNULL;
             currentThread->stackArray = JNULL;
-            currentThread->isReferenceArray = JNULL;
+            currentThread->stackEntryTypeArray = JNULL;
             #endif SAFE
             #endif REMOVE_DEAD_THREADS
           

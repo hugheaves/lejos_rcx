@@ -143,10 +143,11 @@ public class MethodRecord implements WritableData, Constants
       {
         case 'J':
         case 'D':
-          pWords += 2;
+          pWords++;
           break;
         default:
           pWords++;
+          break;
       }
     }
     return pWords + (aMethod.isStatic() ? 0 : 1);

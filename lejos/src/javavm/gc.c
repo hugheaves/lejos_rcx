@@ -34,12 +34,12 @@ void mark (Object *obj)
   {
     if (get_element_type (obj) == T_REFERENCE)
     {
-      unsigned short i;
-      unsigned short length = get_array_length (obj);
+      TWOBYTES length = get_array_length (obj);
       REFERENCE *refarr = ref_array (obj);
+      REFERENCE *top = refarr + length;
       
-      for (i = 0; i < length; i++)
-	mark (refarr[i]);
+      while (refarr < top)
+	mark (*refarr++);
     }
   }
   else
@@ -59,3 +59,10 @@ void mark (Object *obj)
     } 
   }
 }
+
+
+
+
+
+
+

@@ -36,7 +36,7 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       switch_thread();
       return;
     case getPriority_4_5I:
-      push_word (get_thread_priority ((Thread*)word2obj(paramBase[0])));
+      push_category1 (get_thread_priority ((Thread*)word2obj(paramBase[0])));
       return;
     case setPriority_4I_5V:
       {
@@ -54,16 +54,16 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       interrupt_thread((Thread*)word2obj(paramBase[0]));
       return;
     case interrupted_4_5Z:
-      push_word(currentThread->interrupted);
+      push_category1(currentThread->interrupted);
       return;
     case isInterrupted_4_5Z:
-      push_word(((Thread*)word2ptr(paramBase[0]))->interrupted);
+      push_category1(((Thread*)word2ptr(paramBase[0]))->interrupted);
       return;
     case setDaemon_4Z_5V:
       ((Thread*)word2ptr(paramBase[0]))->daemon = (JBYTE)paramBase[1];
       return;
     case isDaemon_4_5Z:
-      push_word(((Thread*)word2ptr(paramBase[0]))->daemon);
+      push_category1(((Thread*)word2ptr(paramBase[0]))->daemon);
       return;
     case exit_4I_5V:
       schedule_request(REQUEST_EXIT);
@@ -75,8 +75,7 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       join_thread((Thread*)word2obj(paramBase[0]));
       return;
     case currentTimeMillis_4_5J:
-      push_word (0);
-      push_word (sys_time);
+      push_category2 (sys_time);
       return;
 
 #if 0
@@ -129,7 +128,7 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       __rcall4 (paramBase[0], paramBase[1], paramBase[2], paramBase[3], paramBase[4]);
       return;
     case readMemoryByte_4I_5B:
-      push_word ((STACKWORD) *((byte *) word2ptr(paramBase[0])));
+      push_category1 ((STACKWORD) *((byte *) word2ptr(paramBase[0])));
       return;
     case writeMemoryByte_4IB_5V:
       *((byte *) word2ptr(paramBase[0])) = (byte) (paramBase[1] & 0xFF);
@@ -139,7 +138,7 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
         ( *((byte *)word2ptr(paramBase[0])) & (~(1<<paramBase[1])) ) | (((paramBase[2] != 0) ? 1 : 0) <<paramBase[1]);
       return;      
     case getDataAddress_4Ljava_3lang_3Object_2_5I:
-      push_word (ptr2word (((byte *) word2ptr (paramBase[0])) + HEADER_SIZE));
+      push_category1 (ptr2word (((byte *) word2ptr (paramBase[0])) + HEADER_SIZE));
       return;
     case resetSerial_4_5V:
       reset_rcx_serial();
@@ -158,18 +157,18 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
 	  switch ((byte) paramBase[1])
 	  {
 	    case 0:
-	      push_word ((JINT) sensor->raw);
+	      push_category1 ((JINT) sensor->raw);
 	      return;
 	    case 1:
-	      push_word ((JINT) sensor->value);
+	      push_category1 ((JINT) sensor->value);
 	      return;
 	    case 2:
-	      push_word (sensor->boolean);
+	      push_category1 (sensor->boolean);
 	      return;
 	  }
 	}
       }
-      push_word (0);
+      push_category1 (0);
       return;
     case setSensorValue_4III_5V:
       // Arguments: int romId (1..3), int value, int requestedValue (0..3) 
@@ -204,12 +203,10 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       }
       return;
     case freeMemory_4_5J:
-      push_word (0);
-      push_word (getHeapFree());
+      push_category2 (getHeapFree());
       return;
     case totalMemory_4_5J:
-      push_word (0);
-      push_word (getHeapSize());
+      push_category2 (getHeapSize());
       return;
     case getRuntime_4_5Ljava_3lang_3Runtime_2:
       push_ref(ptr2ref(runtime));

@@ -38,11 +38,11 @@ typedef struct S_StackFrame
   Object *monitor;
   // The following 2 fields are constant for a given stack frame.
   STACKWORD *localsBase;
-  boolean *isReferenceBase;
+  boolean *stackEntryTypeBase;
   // The following fields only need to be assigned to on switch_thread.
   byte *pc;
   STACKWORD *stackTop;
-  boolean *isReference;
+  boolean *stackEntryType;
 } StackFrame;
 
 extern boolean init_thread (Thread *thread);
@@ -57,10 +57,10 @@ extern void enqueue_thread(Thread *thread);
 
 #define stackframe_array_ptr()   (word2ptr(currentThread->stackFrameArray))
 #define stack_array_ptr()        (word2ptr(currentThread->stackArray))
-#define is_reference_array_ptr() (word2ptr(currentThread->isReferenceArray))
+#define stack_entry_type_array_ptr() (word2ptr(currentThread->stackEntryTypeArray))
 #define stackframe_array()       ((StackFrame *) ((byte *) stackframe_array_ptr() + HEADER_SIZE))
 #define stack_array()            ((STACKWORD *) ((byte *) stack_array_ptr() + HEADER_SIZE))
-#define is_reference_array()     ((JBYTE *) ((byte *) is_reference_array_ptr() + HEADER_SIZE))
+#define stack_entry_type_array()     ((JBYTE *) ((byte *) stack_entry_type_array_ptr() + HEADER_SIZE))
 #define set_program_number(N_)   {gProgramNumber = (N_);}
 #define inc_program_number()     {if (++gProgramNumber >= get_num_entry_classes()) gProgramNumber = 0;}
 #define get_program_number()     gProgramNumber 

@@ -420,7 +420,7 @@ main(int argc, char **argv)
     if (pBinary[0] != ((MAGIC >> 8) & 0xFF) ||
         pBinary[1] != ((MAGIC >> 0) & 0xFF))
     {
-      printf ("Magic number is not right. Linker used was for emulation only?\n");
+      printf ("Magic number in RCX is not right. Linker used was for emulation only? Wrong firmware version?\n");
       exit (1);
     }
 

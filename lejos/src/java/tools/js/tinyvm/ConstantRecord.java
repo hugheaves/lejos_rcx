@@ -24,7 +24,7 @@ public class ConstantRecord implements WritableData, Constants
       }
     }  
     else if (aEntry instanceof JCPE_Double || aEntry instanceof JCPE_Long)
-      iSize = 8;
+      iSize = 4;
     else if (aEntry instanceof JCPE_Integer || aEntry instanceof JCPE_Float)
       iSize = 4;
     else

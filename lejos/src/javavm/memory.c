@@ -1,5 +1,6 @@
 
 #include "types.h"
+#include "stack.h"
 #include "trace.h"
 #include "constants.h"
 #include "specialsignatures.h"
@@ -29,11 +30,26 @@ byte typeSize[] = {
   1, // 4 == T_BOOLEAN
   2, // 5 == T_CHAR
   4, // 6 == T_FLOAT
-  8, // 7 == T_DOUBLE
+  4, // 7 == T_DOUBLE
   1, // 8 == T_BYTE
   2, // 9 == T_SHORT
   4, // 10 == T_INT
-  8  // 11 == T_LONG
+  4  // 11 == T_LONG
+};
+
+byte typeCategory[] = { 
+  SET_REFERENCE, // 0 == T_REFERENCE
+  0, // 1 == T_STACKFRAME
+  0, // 2
+  0, // 3
+  SET_CATEGORY1, // 4 == T_BOOLEAN
+  SET_CATEGORY1, // 5 == T_CHAR
+  SET_CATEGORY1, // 6 == T_FLOAT
+  SET_CATEGORY2, // 7 == T_DOUBLE
+  SET_CATEGORY1, // 8 == T_BYTE
+  SET_CATEGORY1, // 9 == T_SHORT
+  SET_CATEGORY1, // 10 == T_INT
+  SET_CATEGORY2  // 11 == T_LONG
 };
 
 /**
@@ -284,6 +300,12 @@ void store_word (byte *ptr, byte aSize, STACKWORD aWord)
 }
 
 #else
+
+#if 0
+
+// Commented out get_word because h8300 asm chokes on it.
+// Using make_word instead.
+
 /**
  * Problem here is bigendian v. littleendian. Java has its
  * words stored bigendian, intel is littleendian.
@@ -299,6 +321,8 @@ STACKWORD get_word(byte *ptr, byte aSize)
   
   return aWord;
 }
+
+#endif
 
 void store_word (byte *ptr, byte aSize, STACKWORD aWord)
 {

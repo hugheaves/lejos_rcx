@@ -8,6 +8,7 @@
 #define DEBUG_RCX_MEMORY 0
 
 extern byte typeSize[];
+extern byte typeCategory[];
 
 extern void init_memory (void *ptr, TWOBYTES size);
 extern void free_array (Object *objectRef);

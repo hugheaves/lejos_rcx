@@ -13,6 +13,9 @@
 #define INTERPRETER4   14
 #define INTERPRETER5   15
 #define INTERPRETER6   16
+#define INTERPRETER7   17
+#define INTERPRETER8   18
+#define INTERPRETER9   19
 
 #define THREADS0       20
 #define THREADS1       21
@@ -87,7 +90,7 @@ extern void assert (boolean aCond, int aCode);
 #endif
 
 #if DEBUG_RCX
-extern void debug (short s, short n1, short n2);
+extern void trace (short s, short n1, short n2);
 #endif
 
 #endif _TRACE_H

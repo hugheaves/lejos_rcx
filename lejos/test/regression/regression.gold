@@ -610,4 +610,11 @@
 & ROM call 0: 0x27C8
 ----------------- Run of TestPriorities.tvm
 ----------------- Run of TestDaemon.tvm
+Daemon thread woke up
+*** UNCAUGHT EXCEPTION/ERROR: 
+--  Exception class   : 5
+--  Thread            : 3
+--  Method signature  : 1
+--  Root method sig.  : 1
+--  Bytecode offset   : 16
 ----------------- Run of TestThreadState.tvm

@@ -38,6 +38,7 @@ typedef unsigned long FOURBYTES;
 // No extra assertion code
 
 #undef VERIFY
+#define DEBUG_RCX 0
 
 // sensors
 

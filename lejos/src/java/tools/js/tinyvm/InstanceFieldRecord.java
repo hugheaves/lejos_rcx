@@ -75,7 +75,7 @@ public class InstanceFieldRecord implements WritableData, Constants
         return 4;
       case T_LONG:
       case T_DOUBLE:
-        return 8;
+        return 4;
       default:
         Utilities.fatal ("Bug SV-1: " + aType);
     }
@@ -100,3 +100,6 @@ public class InstanceFieldRecord implements WritableData, Constants
   }
 }
   
+
+
+

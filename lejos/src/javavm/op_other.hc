@@ -3,7 +3,7 @@
  */
 
 case OP_ATHROW:
-  tempStackWord = pop_ref();
+  tempStackWord = pop_value();
   if (tempStackWord == JNULL)
   {
     throw_exception (nullPointerException);
@@ -12,10 +12,10 @@ case OP_ATHROW:
   throw_exception (word2obj (tempStackWord));
   goto LABEL_ENGINELOOP;
 case OP_MONITORENTER:
-  enter_monitor (word2obj(pop_ref()));
+  enter_monitor (word2obj(pop_value()));
   goto LABEL_ENGINELOOP;
 case OP_MONITOREXIT:
-  exit_monitor (word2obj(pop_ref()));
+  exit_monitor (word2obj(pop_value()));
   goto LABEL_ENGINELOOP;
 
 // Notes:

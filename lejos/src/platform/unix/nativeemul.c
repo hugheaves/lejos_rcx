@@ -19,7 +19,7 @@
 #include "exceptions.h"
 #include "platform_config.h"
 
-static TWOBYTES gSensorValue = 0;
+static TWOBYTES gSensorValue = 25;
 
 extern int	verbose;	/* If non-zero, generates verbose output. */
 char *get_meaning(STACKWORD *);
@@ -75,7 +75,10 @@ char* string2chp(String* s)
     Object *obj;
     JCHAR *pA;
     int length;
-    obj = word2obj(get_word((byte*)(&(s->characters)), 4));
+    STACKWORD word;
+   
+    make_word ((byte*)(&(s->characters)), 4, &word);
+    obj = word2obj(word);
     pA = jchar_array(obj);
     length = get_array_length(obj);
     ret = malloc(length+1);
@@ -109,7 +112,7 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       switch_thread();
       return;
     case getPriority_4_5I:
-      push_word (get_thread_priority ((Thread*)word2ptr(paramBase[0])));
+      push_category1 (get_thread_priority ((Thread*)word2ptr(paramBase[0])));
       return;
     case setPriority_4I_5V:
       {
@@ -127,16 +130,16 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       interrupt_thread((Thread*)word2ptr(paramBase[0]));
       return;
     case interrupted_4_5Z:
-      push_word(currentThread->interrupted);
+      push_category1(currentThread->interrupted);
       return;
     case isInterrupted_4_5Z:
-      push_word(((Thread*)word2ptr(paramBase[0]))->interrupted);
+      push_category1(((Thread*)word2ptr(paramBase[0]))->interrupted);
       return;
     case setDaemon_4Z_5V:
       ((Thread*)word2ptr(paramBase[0]))->daemon = (JBYTE)paramBase[1];
       return;
     case isDaemon_4_5Z:
-      push_word(((Thread*)word2ptr(paramBase[0]))->daemon);
+      push_category1(((Thread*)word2ptr(paramBase[0]))->daemon);
       return;
     case join_4_5V:
       join_thread((Thread*)word2ptr(paramBase[0]));
@@ -148,8 +151,7 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       schedule_request(REQUEST_EXIT);
       return;
     case currentTimeMillis_4_5J:
-      push_word (0);
-      push_word (get_sys_time());
+      push_category2 (get_sys_time());
       return;
     case callRom0_4S_5V:
 	if(verbose == 0)
@@ -191,7 +193,7 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
 		printf ("& Attempt to read byte from 0x%lX\n", (paramBase[0] & 0xFFFF));
 	else
 		printf ("> read byte from 0x%lX\n", (paramBase[0] & 0xFFFF));
-	push_word (0);
+	push_category1 (0);
 	return;
     case writeMemoryByte_4IB_5V:
 	if(verbose == 0)
@@ -205,28 +207,29 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       printf ("& Attempt to set memory bit [%ld] at 0x%lX (no effect)\n", paramBase[1] & 0xFF, paramBase[0] & 0xFFFF);
       return;      
     case getDataAddress_4Ljava_3lang_3Object_2_5I:
-      push_word (ptr2word (((byte *) word2ptr (paramBase[0])) + HEADER_SIZE));
+      push_category1 (ptr2word (((byte *) word2ptr (paramBase[0])) + HEADER_SIZE));
       return;
     case resetSerial_4_5V:
       printf ("& Call to resetRcx");
       return;
     case readSensorValue_4II_5I:
       // Parameters: int romId (0..2), int requestedValue (0..2).
-      if (gSensorValue > 100)
+      printf ("& Call to readSensorValue: %d, %d\n", (int) paramBase[0], (int) paramBase[1]);
+      if (gSensorValue > 200)
 	gSensorValue = 0;
-      push_word (gSensorValue++);
+      printf ("& readSensorValue returning: %d\n", (int) gSensorValue);
+      push_category1 ((JINT) gSensorValue++);
       return;
     case setSensorValue_4III_5V:
       // Arguments: int romId (1..3), int value, int requestedValue (0..3) 
+      printf ("& setSensorValue: %d\n", (int) paramBase[1]);
       gSensorValue = paramBase[1];
       return;
     case freeMemory_4_5J:
-      push_word (0);
-      push_word (getHeapFree());
+      push_category2 (getHeapFree());
       return;
     case totalMemory_4_5J:
-      push_word (0);
-      push_word (getHeapSize());
+      push_category2 (getHeapSize());
       return;
     case getRuntime_4_5Ljava_3lang_3Runtime_2:
       push_ref(ptr2ref(runtime));
@@ -252,5 +255,6 @@ void dispatch_native (TWOBYTES signature, STACKWORD *paramBase)
       throw_exception (noSuchMethodError);
   }
 } 
+
 
 

@@ -1,3 +1,4 @@
+/* Common stack operations */
 
 #include "configure.h"
 #include "threads.h"
@@ -8,26 +9,32 @@
 #ifndef _STACK_H
 #define _STACK_H
 
+/* Stack entry types */
+
+#define SET_REFERENCE 3 /*reference*/
+#define SET_CATEGORY1 1 /*int,float*/
+#define SET_CATEGORY2 2 /*long,double*/
+
 #define get_local_word(IDX_)       (localsBase[(IDX_)])
 #define get_local_ref(IDX_)        (localsBase[(IDX_)])
 #define inc_local_word(IDX_,NUM_)  (localsBase[(IDX_)] += (NUM_))
-#define just_set_top_word(WRD_)    (stackTop[0] = (WRD_))
-#define get_top_word()             (stackTop[0])
+#define just_set_top_value(WRD_)    (stackTop[0] = (WRD_))
+#define get_top_value()             (stackTop[0])
 #define get_top_ref()              (stackTop[0])
-#define get_word_at(DOWN_)         (*(stackTop-(DOWN_)))
+#define get_value_at(DOWN_)         (*(stackTop-(DOWN_)))
 #define get_ref_at(DOWN_)          *(stackTop-(DOWN_))
 #define get_stack_ptr()            (stackTop)
 #define get_stack_ptr_at(DOWN_)    (stackTop-(DOWN_))
-#define get_is_ref_ptr()           (isReference)
-#define get_is_ref_ptr_at(DOWN_)   (isReference-(DOWN_))
+#define get_category_ptr()           (stackEntryType)
+#define get_category_ptr_at(DOWN_)   (stackEntryType-(DOWN_))
 
 // Note: The following locals should only be accessed
 // in this header file.
 
 extern STACKWORD *localsBase;
 extern STACKWORD *stackTop;
-extern boolean   *isReference;
-extern boolean   *isReferenceBase;
+extern byte      *stackEntryType;
+extern byte      *stackEntryTypeBase;
 
 /**
  * Clears the operand stack for the given stack frame.
@@ -35,18 +42,18 @@ extern boolean   *isReferenceBase;
 static inline void init_sp (StackFrame *stackFrame, MethodRecord *methodRecord)
 {
   stackTop = stackFrame->localsBase + methodRecord->numLocals - 1;
-  isReference = stackFrame->isReferenceBase + methodRecord->numLocals - 1;
+  stackEntryType = stackFrame->stackEntryTypeBase + methodRecord->numLocals - 1;
 }
 
 /**
  * Clears/initializes the operand stack at the bottom-most stack frame,
  * and pushes a void (unitialized) element, which should be overriden
- * immediately with set_top_word or set_top_ref.
+ * immediately with set_top_value or set_top_ref.
  */
 static inline void init_sp_pv (void)
 {
   stackTop = stack_array();
-  isReference = is_reference_array();
+  stackEntryType = stack_entry_type_array();
 }
 
 /**
@@ -60,7 +67,7 @@ static inline boolean is_stack_overflow (MethodRecord *methodRecord)
 static inline void update_stack_frame (StackFrame *stackFrame)
 {
   stackFrame->stackTop = stackTop;
-  stackFrame->isReference = isReference;
+  stackFrame->stackEntryType = stackEntryType;
   stackFrame->pc = pc;
 }  
 
@@ -69,8 +76,8 @@ static inline void update_registers (StackFrame *stackFrame)
   pc = stackFrame->pc;
   stackTop = stackFrame->stackTop;
   localsBase = stackFrame->localsBase;
-  isReference = stackFrame->isReference;
-  isReferenceBase = stackFrame->isReferenceBase;
+  stackEntryType = stackFrame->stackEntryType;
+  stackEntryTypeBase = stackFrame->stackEntryTypeBase;
 }
 
 /**--**/
@@ -78,97 +85,78 @@ static inline void update_registers (StackFrame *stackFrame)
 static inline void update_constant_registers (StackFrame *stackFrame)
 {
   localsBase = stackFrame->localsBase;
-  isReferenceBase = stackFrame->isReferenceBase;
-}
-
-static inline void push_word (const STACKWORD word)
-{
-  *(++stackTop) = word;
-  *(++isReference) = false;
+  stackEntryTypeBase = stackFrame->stackEntryTypeBase;
 }
 
 static inline void push_ref (const REFERENCE word)
 {
   *(++stackTop) = word;
-  *(++isReference) = true;
+  *(++stackEntryType) = SET_REFERENCE;
 }
 
-static inline void push_word_or_ref (const REFERENCE word, const boolean aIsReference)
+static inline void push_value (const REFERENCE word, byte category)
 {
   *(++stackTop) = word;
-  *(++isReference) = aIsReference;
+  *(++stackEntryType) = category;
 }
 
-static inline STACKWORD pop_word (void)
+static inline void push_category1 (const STACKWORD word)
 {
-  --isReference;
-  return *stackTop--;
+  *(++stackTop) = word;
+  *(++stackEntryType) = SET_CATEGORY1;
 }
 
-static inline REFERENCE pop_ref (void)
+static inline void push_category2 (const STACKWORD word)
 {
-  --isReference;
+  *(++stackTop) = word;
+  *(++stackEntryType) = SET_CATEGORY2;
+}
+
+static inline STACKWORD pop_value (void)
+{
+  --stackEntryType;
   return *stackTop--;
 }
 
 static inline JINT pop_jint (void)
 {
-  --isReference;
+  --stackEntryType;
   return word2jint(*stackTop--);
 }
 
-static inline STACKWORD pop_word_or_ref()
+static inline void pop_values (byte aNum)
 {
-  --isReference;
-  return *stackTop--;
-}
-
-static inline void pop_jlong (JLONG *lword)
-{
-  lword->lo = *stackTop--;
-  lword->hi = *stackTop--;
-  isReference -= 2;
-}
-
-static inline void pop_words (byte aNum)
-{
-  isReference -= aNum;
+  stackEntryType -= aNum;
   stackTop -= aNum;
-}
-
-static inline void just_pop_word (void)
-{
-  --isReference;
-  --stackTop;
-}
-
-static inline void just_pop_ref (void)
-{
-  --isReference;
-  --stackTop;
 }
 
 static inline void push_void (void)
 {
-  *(++isReference) = false;
+  *(++stackEntryType) = SET_CATEGORY1;
   ++stackTop;
 }
 
 static inline void set_top_ref (REFERENCE aRef)
 {
-  *isReference = true;
+  *stackEntryType = SET_REFERENCE;
   *stackTop = aRef;
 }
 
-static inline void set_top_word (STACKWORD aWord)
+static inline void set_top_category1 (STACKWORD aWord)
 {
-  *isReference = false;
+  *stackEntryType = SET_CATEGORY1;
   *stackTop = aWord;
 }
 
-static inline void set_top_word_or_ref (STACKWORD aWord, boolean aIsRef)
+static inline void set_top_category2 (STACKWORD aWord)
 {
-  *isReference = aIsRef;
+  *stackEntryType = SET_CATEGORY2;
+  *stackTop = aWord;
+}
+
+static inline void set_top_value (STACKWORD aWord, byte entryType)
+{
+  *stackEntryType = entryType;
   *stackTop = aWord;
 }
 
@@ -176,18 +164,8 @@ static inline void dup (void)
 {
   stackTop++;
   *stackTop = *(stackTop-1);
-  isReference++;
-  *isReference = *(isReference-1);
-}
-
-static inline void dup2 (void)
-{
-  *(stackTop+1) = *(stackTop-1);
-  *(stackTop+2) = *stackTop;
-  stackTop += 2;
-  *(isReference+1) = *(isReference-1);
-  *(isReference+2) = *isReference;
-  isReference += 2;
+  stackEntryType++;
+  *stackEntryType = *(stackEntryType-1);
 }
 
 static inline void dup_x1 (void)
@@ -196,58 +174,10 @@ static inline void dup_x1 (void)
   *stackTop = *(stackTop-1);
   *(stackTop-1) = *(stackTop-2);
   *(stackTop-2) = *stackTop;
-  isReference++;
-  *isReference = *(isReference-1);
-  *(isReference-1) = *(isReference-2);
-  *(isReference-2) = *isReference;
-}
-
-static inline void dup2_x1 (void)
-{
-  stackTop += 2;
-  *stackTop = *(stackTop-2);
-  *(stackTop-1) = *(stackTop-3);
-  *(stackTop-2) = *(stackTop-4);
-  *(stackTop-3) = *stackTop;
-  *(stackTop-4) = *(stackTop-1);
-  isReference += 2;
-  *isReference = *(isReference-2);
-  *(isReference-1) = *(isReference-3);
-  *(isReference-2) = *(isReference-4);
-  *(isReference-3) = *isReference;
-  *(isReference-4) = *(isReference-1);
-}
-
-static inline void dup_x2 (void)
-{
-  stackTop++;
-  *stackTop = *(stackTop-1);
-  *(stackTop-1) = *(stackTop-2);
-  *(stackTop-2) = *(stackTop-3);
-  *(stackTop-3) = *stackTop;
-  isReference++;
-  *isReference = *(isReference-1);
-  *(isReference-1) = *(isReference-2);
-  *(isReference-2) = *(isReference-3);
-  *(isReference-3) = *isReference;
-}
-
-static inline void dup2_x2 (void)
-{
-  stackTop += 2;
-  *stackTop = *(stackTop-2);
-  *(stackTop-1) = *(stackTop-3);
-  *(stackTop-2) = *(stackTop-4);
-  *(stackTop-3) = *(stackTop-5);
-  *(stackTop-4) = *stackTop;
-  *(stackTop-5) = *(stackTop-1);
-  isReference += 2;
-  *isReference = *(isReference-2);
-  *(isReference-1) = *(isReference-3);
-  *(isReference-2) = *(isReference-4);
-  *(isReference-3) = *(isReference-5);
-  *(isReference-4) = *isReference;
-  *(isReference-5) = *(isReference-1);
+  stackEntryType++;
+  *stackEntryType = *(stackEntryType-1);
+  *(stackEntryType-1) = *(stackEntryType-2);
+  *(stackEntryType-2) = *stackEntryType;
 }
 
 static inline void swap (void)
@@ -255,22 +185,52 @@ static inline void swap (void)
   tempStackWord = *stackTop;
   *stackTop = *(stackTop-1);
   *(stackTop-1) = tempStackWord;
-  tempStackWord = *isReference;
-  *isReference = *(isReference-1);
-  *(isReference-1) = tempStackWord;
+  tempStackWord = *stackEntryType;
+  *stackEntryType = *(stackEntryType-1);
+  *(stackEntryType-1) = tempStackWord;
 }
 
-static inline void set_local_word (byte aIndex, STACKWORD aWord)
+static inline void dup2 (void)
+{
+   if (*stackEntryType == SET_CATEGORY2)
+       dup();
+   else
+   {
+       stackTop[1] = *(stackTop-1);
+       stackTop[2] = stackTop[0];
+       stackTop += 2;
+       stackEntryType[1] = *(stackEntryType-1);
+       stackEntryType[2] = stackEntryType[0];
+       stackEntryType += 2;
+   }
+}
+
+static inline void pop2 (void)
+{
+   if (*stackEntryType == SET_CATEGORY2)
+      pop_value();
+   else
+   {
+      pop_value();
+      pop_value();
+   }
+}
+
+static inline void set_local_value (byte aIndex, STACKWORD aWord)
 {
   localsBase[aIndex] = aWord;
-  isReferenceBase[aIndex] = false;
+  stackEntryTypeBase[aIndex] = SET_CATEGORY1;
 }
 
 static inline void set_local_ref (byte aIndex, REFERENCE aWord)
 {
   localsBase[aIndex] = aWord;
-  isReferenceBase[aIndex] = true;
+  stackEntryTypeBase[aIndex] = SET_REFERENCE;
 }
 
+
 #endif
+
+
+
 

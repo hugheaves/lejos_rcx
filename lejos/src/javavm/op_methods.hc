@@ -41,9 +41,8 @@ case OP_LRETURN:
 case OP_FRETURN:
 case OP_DRETURN:
 case OP_ARETURN:
-  // Stack: 1 or 2 words copied up
   // Arguments: 0
-  do_return ((*(pc-1) - OP_IRETURN) % 2 + 1);
+  do_return (1);
   goto LABEL_ENGINELOOP;
 case OP_RETURN:
   // Stack: unchanged

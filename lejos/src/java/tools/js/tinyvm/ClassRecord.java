@@ -118,7 +118,7 @@ public class ClassRecord implements WritableData, Constants
   }
 
   /**
-   * @return Number of words required for object allocation.
+   * @return Number of 2-byte words required for object allocation.
    */
   public int getAllocationSize()
   {

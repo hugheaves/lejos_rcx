@@ -27,6 +27,7 @@ implements OpCodeConstants, OpCodeInfo, Constants
       "- Remainder operations on floats or doubles.\n" +
       "- Too many constants or locals ( > 255).\n" +
       "- Method code too long ( > 64 Kb!).\n" +
+      "- Certain ambiguous stack operations (e.g. dup2_x1).\n" +
     "");                    
   }
 
@@ -98,7 +99,7 @@ implements OpCodeConstants, OpCodeInfo, Constants
     {
       Utilities.fatal ("In " + iFullName + ": Operations instanceof or " +
                        "checkcast on array classes (" + pClassName + 
-                       " in this case) are not yet supported by TinyVM.");
+                       " in this case) are not yet supported.");
     }
     int pIdx = iBinary.getClassIndex (pClassName);
     if (pIdx == -1)
@@ -330,6 +331,9 @@ implements OpCodeConstants, OpCodeInfo, Constants
           pOutCode[i++] = (byte) (pWord5 >> 8);
           pOutCode[i++] = (byte) (pWord5 & 0xFF);
           break;
+        case OP_DUP2_X1:
+        case OP_DUP_X2:
+        case OP_DUP2_X2:
         case OP_LOOKUPSWITCH:
         case OP_TABLESWITCH:
         case OP_WIDE:

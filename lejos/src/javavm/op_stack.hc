@@ -6,7 +6,7 @@ case OP_BIPUSH:
   // Stack size: +1
   // Arguments: 1
   // TBD: check negatives
-  push_word ((JBYTE) (*pc++));
+  push_category1 ((JBYTE) (*pc++));
   goto LABEL_ENGINELOOP;
 case OP_SIPUSH:
   // Stack size: +1
@@ -14,7 +14,7 @@ case OP_SIPUSH:
   #if 0
   printf ("  OP_SIPUSH args: %d, %d (%d)\n", (int) pc[0], (int) pc[1], (int) pc[2]);
   #endif
-  push_word ((JSHORT) (((TWOBYTES) pc[0] << 8) | pc[1]));
+  push_category1 ((JSHORT) (((TWOBYTES) pc[0] << 8) | pc[1]));
   pc += 2;
   goto LABEL_ENGINELOOP;
 case OP_LDC:
@@ -36,7 +36,7 @@ case OP_LDC:
     case T_FLOAT:
       make_word (get_constant_ptr(tempConstRec), 4, &tempStackWord);
       //printf ("### LDC offset=%d 0x%X (%f)\n", (int) tempConstRec->offset, (int) tempStackWord, word2jfloat(tempStackWord));
-      push_word (tempStackWord);
+      push_category1 (tempStackWord);
       break;
     #ifdef VERIFY
     default:
@@ -46,19 +46,14 @@ case OP_LDC:
   goto LABEL_ENGINELOOP;
 
 case OP_LDC2_W:
-  // Stack size: +2
+  // Stack size: +1
   // Arguments: 2
   tempConstRec = get_constant_record (((TWOBYTES) pc[0] << 8) | pc[1]);
 
-  #ifdef VERIFY
-  assert (tempConstRec->constantSize == 8, INTERPRETER6);
-  #endif VERIFY
-
   tempBytePtr = get_constant_ptr (tempConstRec);
   make_word (tempBytePtr, 4, &tempStackWord);
-  push_word (tempStackWord);
-  make_word (tempBytePtr + 4, 4, &tempStackWord);
-  push_word (tempStackWord);
+
+  push_category2 (tempStackWord);
 
   pc += 2;
   goto LABEL_ENGINELOOP;
@@ -78,30 +73,29 @@ case OP_ICONST_4:
 case OP_ICONST_5:
   // Stack size: +1
   // Arguments: 0
-  push_word ((JINT) (*(pc-1) - OP_ICONST_0));
+  push_category1 (*(pc-1) - OP_ICONST_0);
   goto LABEL_ENGINELOOP;
-case OP_LCONST_0:
 case OP_LCONST_1:
-  // Stack size: +2
+  // Stack size: +1
   // Arguments: 0
-  push_word (0);
-  push_word (*(pc-1) - OP_LCONST_0);
+  push_category2 (1);
   goto LABEL_ENGINELOOP;
 case OP_DCONST_0:
-  push_word (0);
-  // Fall through!
-case OP_FCONST_0:
-  push_word (0);
+case OP_LCONST_0:
+  push_category2 (0);
   goto LABEL_ENGINELOOP;  
-case OP_POP2:
-  // Stack size: -2
-  // Arguments: 0
-  just_pop_word();
-  // Fall through
+case OP_FCONST_0:
+  push_category1 (0);
+  goto LABEL_ENGINELOOP;  
 case OP_POP:
   // Stack size: -1
   // Arguments: 0
-  just_pop_word();
+  pop_value();
+  goto LABEL_ENGINELOOP;
+case OP_POP2:
+  // Stack size: -1
+  // Arguments: 0
+  pop2();
   goto LABEL_ENGINELOOP;
 case OP_DUP:
   // Stack size: +1
@@ -109,7 +103,6 @@ case OP_DUP:
   dup();
   goto LABEL_ENGINELOOP;
 case OP_DUP2:
-  // Stack size: +2
   // Arguments: 0
   dup2();
   goto LABEL_ENGINELOOP;
@@ -118,21 +111,6 @@ case OP_DUP_X1:
   // Arguments: 0
   dup_x1();
   goto LABEL_ENGINELOOP;
-case OP_DUP2_X1:
-  // Stack size: +2
-  // Arguments: 0
-  dup2_x1();
-  goto LABEL_ENGINELOOP;
-case OP_DUP_X2:
-  // Stack size: +1
-  // Arguments: 0
-  dup_x2();
-  goto LABEL_ENGINELOOP;
-case OP_DUP2_X2:
-  // Stack size: +2
-  // Arguments: 0
-  dup2_x2();
-  goto LABEL_ENGINELOOP;
 case OP_SWAP:
   swap(); 
   goto LABEL_ENGINELOOP;
@@ -140,16 +118,13 @@ case OP_SWAP:
 #if FP_ARITHMETIC
   
 case OP_FCONST_1:
-  push_word (jfloat2word((JFLOAT) 1.0));
-  goto LABEL_ENGINELOOP;
-case OP_FCONST_2:
-  push_word (jfloat2word((JFLOAT) 2.0));
+  push_category1 (jfloat2word((JFLOAT) 1.0));
   goto LABEL_ENGINELOOP;
 case OP_DCONST_1:
-  // Stack size: +2
-  // Arguments: 0
-  push_word (0);
-  push_word (jfloat2word((JFLOAT) 1.0));
+  push_category2 (jfloat2word((JFLOAT) 1.0));
+  goto LABEL_ENGINELOOP;
+case OP_FCONST_2:
+  push_category1 (jfloat2word((JFLOAT) 2.0));
   goto LABEL_ENGINELOOP;
 
 #endif FP_ARITHMETIC
@@ -158,6 +133,7 @@ case OP_DCONST_1:
 // Notes:
 // - LDC_W should not occur in TinyVM or CompactVM.
 // - Arguments of LDC and LDC2_W are postprocessed.
+// - All ambiguous stack operations unsupported (e.g. POP2 and DUP2).
 // - NOP is in op_skip.hc.
 
 /*end*/

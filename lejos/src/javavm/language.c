@@ -164,7 +164,7 @@ boolean dispatch_special (MethodRecord *methodRecord, byte *retAddr)
   printf ("-- stack ptr    = %d\n", (int) get_stack_ptr());
   #endif
 
-  pop_words (methodRecord->numParameters);
+  pop_values (methodRecord->numParameters);
   pc = retAddr;
 
   if (is_native (methodRecord))
@@ -204,7 +204,7 @@ boolean dispatch_special (MethodRecord *methodRecord, byte *retAddr)
   stackFrame->methodRecord = methodRecord;
   stackFrame->monitor = null;
   stackFrame->localsBase = get_stack_ptr() + 1;
-  stackFrame->isReferenceBase = get_is_ref_ptr() + 1;
+  stackFrame->stackEntryTypeBase = get_category_ptr() + 1;
   // Initialize auxiliary global variables (registers)
   pc = get_code_ptr(methodRecord);
 
@@ -232,7 +232,7 @@ void do_return (byte numWords)
 {
   StackFrame *stackFrame;
   STACKWORD *fromStackPtr;
-  boolean *fromIsRefPtr;
+  byte *fromCategoryPtr;
 
   stackFrame = current_stackframe();
 
@@ -268,7 +268,8 @@ void do_return (byte numWords)
 
   // Place source ptr below data to be copied up the stack
   fromStackPtr = get_stack_ptr_at (numWords);
-  fromIsRefPtr = get_is_ref_ptr_at (numWords);
+
+  fromCategoryPtr = get_category_ptr_at (numWords);
   // Pop stack frame
   currentThread->stackFrameArraySize--;
   stackFrame--;
@@ -282,7 +283,7 @@ void do_return (byte numWords)
 
   while (numWords--)
   {
-    push_word_or_ref (*(++fromStackPtr), *(++fromIsRefPtr));
+    push_value (*(++fromStackPtr), *(++fromCategoryPtr));
   }  
 }
 

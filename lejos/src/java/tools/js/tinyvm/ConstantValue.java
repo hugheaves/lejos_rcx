@@ -26,11 +26,11 @@ public class ConstantValue extends WritableDataWithOffset
     }
     else if (iEntry instanceof JCPE_Long)
     {
-      return 8;
+      return 4;
     }
     else if (iEntry instanceof JCPE_Double)
     {
-      return 8;
+      return 4;
     }
     else if (iEntry instanceof JCPE_Float)
     {
@@ -64,7 +64,6 @@ public class ConstantValue extends WritableDataWithOffset
       int pIntValue = (int) pValue;
       if (pIntValue != pValue)
 	System.out.println ("Warning: Long " + pValue + "L truncated to " + pIntValue + ".");
-      pDataOut.writeInt (0);
       pDataOut.writeInt (pIntValue);      
     }
     else if (iEntry instanceof JCPE_Double)
@@ -75,7 +74,6 @@ public class ConstantValue extends WritableDataWithOffset
       {
 	System.out.println ("Warning: Double " + pDoubleValue + " truncated to " + pValue + "f.");
       }
-      pDataOut.writeInt (0);
       pDataOut.writeInt (Float.floatToIntBits (pValue));
     }
     else if (iEntry instanceof JCPE_Float)

@@ -43,8 +43,8 @@ byte    gRequestCode;
 byte *pc;
 STACKWORD *localsBase;
 STACKWORD *stackTop;
-boolean *isReference;
-boolean *isReferenceBase;
+boolean *stackEntryType;
+boolean *stackEntryTypeBase;
 
 // Temporary globals:
 
@@ -76,8 +76,8 @@ void do_isub (void)
 {
   STACKWORD poppedWord;
 
-  poppedWord = pop_word();
-  set_top_word (word2jint(get_top_word()) - word2jint(poppedWord));
+  poppedWord = pop_value();
+  set_top_category1 (word2jint(get_top_value()) - word2jint(poppedWord));
 }
 
 #if FP_ARITHMETIC
@@ -85,13 +85,13 @@ void do_isub (void)
 void do_fcmp (JFLOAT f1, JFLOAT f2, STACKWORD def)
 {
   if (f1 > f2)
-    push_word (1);
+    push_category1 (1);
   else if (f1 == f2)
-    push_word (0);
+    push_category1 (0);
   else if (f1 < f2)
-    push_word (-1);
+    push_category1 (-1);
   else 
-    push_word (def);
+    push_category1 (def);
 }
 
 #endif
@@ -139,7 +139,7 @@ static inline Object *create_string (ConstantRecord *constantRecord,
  */
 boolean array_load_helper()
 {
-  tempInt = word2jshort(pop_word());
+  tempInt = word2jshort(pop_value());
   tempBytePtr = word2ptr(get_top_ref());
   if (tempBytePtr == JNULL)
     throw_exception (nullPointerException);
@@ -158,7 +158,7 @@ boolean array_store_helper()
 {
   if (array_load_helper())
   {
-    pop_ref();
+    pop_value();
     return true;
   }
   return false;    
@@ -215,9 +215,6 @@ void engine()
 
   switch (*pc++)
   {
-    case OP_NOP:
-        goto LABEL_ENGINELOOP;
-
     #include "op_stack.hc"
     #include "op_locals.hc"
     #include "op_arrays.hc"
@@ -228,7 +225,7 @@ void engine()
     #include "op_logical.hc"
     #include "op_arithmetic.hc"
     #include "op_methods.hc"
-
+    #include "op_skip.hc"
 
   }
 
@@ -245,7 +242,7 @@ void engine()
    // This point should never be reached
 
    #ifdef VERIFY
-   assert (false, 1000 + *pc);
+   assert (false, 1000 + *(pc-1));
    #endif VERIFY
 
    #endif FP_ARITHMETIC

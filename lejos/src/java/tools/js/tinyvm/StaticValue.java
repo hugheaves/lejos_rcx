@@ -46,10 +46,9 @@ implements Constants
         pDataOut.writeFloat ((float) 0.0);
         break;
       case T_LONG:
-        pDataOut.writeLong (0L);
+        pDataOut.writeInt (0);
         break;
       case T_DOUBLE:
-        pDataOut.writeInt (0);
         pDataOut.writeFloat ((float) 0.0);
         break;
       default:
