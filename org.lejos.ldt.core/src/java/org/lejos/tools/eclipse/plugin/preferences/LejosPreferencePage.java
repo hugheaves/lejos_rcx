@@ -3,6 +3,8 @@ package org.lejos.tools.eclipse.plugin.preferences;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferencePage;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -47,7 +49,7 @@ public class LejosPreferencePage extends PreferencePage
       IPreferenceStore store = getPreferenceStore();
       // TODO fix defaults
       store.setDefault(LejosPreferences.P_PORT, LejosPreferences.D_PORT);
-      store.setDefault(LejosPreferences.P_FASTMODE, LejosPreferences.D_PORT);
+      store.setDefault(LejosPreferences.P_FASTMODE, LejosPreferences.D_FASTMODE);
    }
 
    /*
@@ -93,10 +95,7 @@ public class LejosPreferencePage extends PreferencePage
       Label portLabel = new Label(group, SWT.NONE);
       portLabel.setText("Port: ");
       _port = new Combo(group, SWT.DROP_DOWN | SWT.READ_ONLY);
-      _port.setItems(new String[]
-      {
-         "USB", "COM1", "COM2", "COM3", "COM4"
-      });
+      _port.setItems(LejosPreferences.getPorts());
       _port.select(store.getInt(LejosPreferences.P_PORT));
 
       Label spacer = new Label(group, SWT.NONE);
@@ -105,6 +104,16 @@ public class LejosPreferencePage extends PreferencePage
       _fastmode = new Button(group, SWT.CHECK | SWT.LEFT);
       _fastmode.setText("Fast mode");
       _fastmode.setSelection(store.getBoolean(LejosPreferences.P_FASTMODE));
+      _fastmode.setVisible(_port.getText().toLowerCase().indexOf("usb") == -1);
+
+      // disable fastmode on usb
+      _port.addModifyListener(new ModifyListener()
+      {
+         public void modifyText (ModifyEvent e)
+         {
+            _fastmode.setVisible(_port.getText().toLowerCase().indexOf("usb") == -1);
+         }
+      });
 
       return result;
    }
