@@ -1,5 +1,6 @@
 TODO
 
+- fix all deprecated warnings
 - New project wizard: Add leJOS default jars to CLASSPATH
 - Fix Compile/Link for Eclipse RC2
 - Create site based deployment, to support feature based deployment
