@@ -6,10 +6,10 @@ import java.util.List;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizard;
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.eclipse.jface.wizard.Wizard;
-import org.lejos.tools.eclipse.plugin.EclipseUtilities;
 import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
 /**
@@ -25,6 +25,8 @@ import org.lejos.tools.eclipse.plugin.LejosPlugin;
  * Additionally, the internal compiler will be set to compile against target
  * 1.1. There will a leJOS nature added to the project.
  * </p>
+ * 
+ * TODO add better a leJOS Container instead of direct file references
  * 
  * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
  * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
@@ -49,7 +51,7 @@ public class LejosRCXProjectWizard extends JavaProjectWizard
       }
       // set leJOS project nature
       IJavaProject project = page.getJavaProject();
-      EclipseUtilities.addLeJOSNature(project.getProject());
+      LejosPlugin.addLeJOSNature(project.getProject());
       // update classpath
       updateClasspath(project);
       // set "target 1.1" option
@@ -72,12 +74,12 @@ public class LejosRCXProjectWizard extends JavaProjectWizard
          // get existing classpath
          IClasspathEntry[] existingClasspath = aProject.getRawClasspath();
          // get classpath entries from preferences
-         IClasspathEntry[] theCPEntries = LejosPlugin.getPreferences()
+         IClasspathEntry[] theRCXCPEntries = LejosPlugin.getPreferences()
             .getRCXClasspathEntries();
 
          // create new classpath with additional leJOS libraries last
          List newClasspath = new ArrayList(existingClasspath.length
-            + theCPEntries.length);
+            + theRCXCPEntries.length);
          for (int i = 0; i < existingClasspath.length; i++)
          {
             // filter out JRE_CONTAINER
@@ -94,9 +96,9 @@ public class LejosRCXProjectWizard extends JavaProjectWizard
             }
          }
          // add the other cp entries
-         for (int i = 0; i < theCPEntries.length; i++)
+         for (int i = 0; i < theRCXCPEntries.length; i++)
          {
-            newClasspath.add(theCPEntries[i]);
+            newClasspath.add(theRCXCPEntries[i]);
          }
 
          IClasspathEntry[] cpEntries = (IClasspathEntry[]) newClasspath
@@ -104,10 +106,9 @@ public class LejosRCXProjectWizard extends JavaProjectWizard
          // set new classpath to project
          aProject.setRawClasspath(cpEntries, null);
       }
-      catch (Exception e)
+      catch (JavaModelException e)
       {
          LejosPlugin.debug(e);
-         e.printStackTrace();
       }
    }
 }

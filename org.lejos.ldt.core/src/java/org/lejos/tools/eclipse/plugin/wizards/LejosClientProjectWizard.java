@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
+import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizard;
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.eclipse.jface.wizard.Wizard;
@@ -12,6 +13,13 @@ import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
 /**
  * Represents a project wizard for leJOS client projects.
+ * 
+ * <p>
+ * A leJOS Client project will have the <code>pcrcxcomm.jar</code> included in
+ * CLASSPATH.
+ * </p>
+ * 
+ * TODO add better a leJOS Container instead of direct file references
  * 
  * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
@@ -40,7 +48,7 @@ public class LejosClientProjectWizard extends JavaProjectWizard
    // private methods
 
    /**
-    * update the project's classpath with additional leJOS libraries.
+    * update the project's classpath with additional leJOS client libraries.
     * 
     * @param aProject a java project
     */
@@ -51,20 +59,20 @@ public class LejosClientProjectWizard extends JavaProjectWizard
          // get existing classpath
          IClasspathEntry[] existingClasspath = aProject.getRawClasspath();
          // get classpath entries from preferences
-         IClasspathEntry[] theCPEntries = LejosPlugin.getPreferences()
+         IClasspathEntry[] theClientCPEntries = LejosPlugin.getPreferences()
             .getClientClasspathEntries();
 
          // create new classpath with additional leJOS libraries last
          List newClasspath = new ArrayList(existingClasspath.length
-            + theCPEntries.length);
+            + theClientCPEntries.length);
          for (int i = 0; i < existingClasspath.length; i++)
          {
             newClasspath.add(existingClasspath[i]);
          }
          // add the other cp entries
-         for (int i = 0; i < theCPEntries.length; i++)
+         for (int i = 0; i < theClientCPEntries.length; i++)
          {
-            newClasspath.add(theCPEntries[i]);
+            newClasspath.add(theClientCPEntries[i]);
          }
 
          IClasspathEntry[] cpEntries = (IClasspathEntry[]) newClasspath
@@ -72,10 +80,9 @@ public class LejosClientProjectWizard extends JavaProjectWizard
          // set new classpath to project
          aProject.setRawClasspath(cpEntries, null);
       }
-      catch (Exception e)
+      catch (JavaModelException e)
       {
          LejosPlugin.debug(e);
-         e.printStackTrace();
       }
    }
 }

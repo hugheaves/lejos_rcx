@@ -176,6 +176,11 @@ public class LejosPreferences
       };
    }
 
+   /**
+    * Get an array with CLASSPATH entries for an leJOS RCX project.
+    * 
+    * @return an arry with classpath entries
+    */
    public IClasspathEntry[] getRCXClasspathEntries ()
    {
       // classes.jar, with sources attached
@@ -243,6 +248,11 @@ public class LejosPreferences
       };
    }
 
+   /**
+    * Get an array with CLASSPATH entries for an leJOS client project.
+    * 
+    * @return an arry with classpath entries
+    */
    public IClasspathEntry[] getClientClasspathEntries ()
    {
       // pcrcxcomm.jar, with sources attached
@@ -273,10 +283,9 @@ public class LejosPreferences
          theEntries = new IClasspathEntry[0];
       }
       return theEntries;
-   } //
+   }
 
    // protected interface
-   // 
 
    /**
     * Get preference store.
