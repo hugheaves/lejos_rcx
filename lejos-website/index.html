@@ -7,9 +7,7 @@
 <center>
 [
 <a href="apidocs/index.html">API Reference</a>
-]
-<br>
-[
+|
 <a href="http://tinyvm.sourceforge.net">TinyVM</a>
 ]
 <br>
@@ -20,6 +18,8 @@
 |
 <a href="http://sourceforge.net/bugs/?group_id=9339">Bug Reports</a>
 |
+<a href="http://sourceforge.net/mail/?group_id=8299">Mailing Lists</a>
+|
 <a href="http://sourceforge.net/cvs/?group_id=9339">CVS Repository</a>
 ]
 </center>
@@ -29,22 +29,20 @@ leJOS is a tiny <a href="http://java.sun.com">Java</a><sup>TM</sup> runtime.
 It functions as replacement firmware for the 
 <a href="http://www.legomindstorms.com">Lego Mindstorms</a><sup>TM</sup> 
 RCX, a programmable brick which is part of Lego's Robotics Invention System<sup>TM</sup> (RIS).
-The RCX contains a Hitachi H8300 processor and 32 Kb of RAM. 
+The RCX contains a Hitachi H8300 processor and 32 Kb of RAM (of which 28 Kb are safe for
+the firmware to use). 
 We have plans to port leJOS to other small devices.
 
-<h3>Availability</h3>
+<h3>Latest Release</h3>
 
-An alpha release is now available:
-<p>
-<center>
 <table border="1">
 <tr>
 <td>
 Unix or CygWin
 </td>
 <td>
-<a href="http://download.sourceforge.net/lejos/lejos_1_0_0alpha1.tar.gz">
-<b>lejos_1_0_0alpha1.tar.gz</b></a>
+<a href="http://download.sourceforge.net/lejos/lejos_1_0_0alpha3.tar.gz">
+<b>lejos_1_0_0alpha3.tar.gz</b></a>
 </td>
 <td>
 <a href="unixinstall.html">Installation Instructions</a>
@@ -55,8 +53,8 @@ Unix or CygWin
 Windows 95/98/2000/NT
 </td> 
 <td>
-<a href="http://download.sourceforge.net/lejos/lejos_win32_1_0_0alpha2.zip">
-    <b>lejos_win32_1_0_0alpha2.zip</b></a>
+<a href="http://download.sourceforge.net/lejos/lejos_win32_1_0_0alpha3.zip">
+    <b>lejos_win32_1_0_0alpha3.zip</b></a>
 </td>
 <td>
 <a href="windowsinstall.html">Installation Instructions</a>
@@ -64,7 +62,6 @@ Windows 95/98/2000/NT
 </tr>
     
 </table>
-</center>
 <p>
 
 This is an early release. Assume that APIs, tool names, firmware behavior,
@@ -73,8 +70,6 @@ and so on, are not stable.
 You can also  
 <a href="http://sourceforge.net/cvs/?group_id=9339">access
 the CVS repository</a>. The module name is <code>lejos</code>.
-If you are unfamiliar with CVS, visit the
-<a href="http://sfdocs.sourceforge.net/sfdocs/">SourceForge Documentation Project</a>.
 <p>
 Do check the README
 file for instructions, but don't expect the information
@@ -91,7 +86,7 @@ of leJOS in the RCX is 16 Kb, but it will probably grow. Additionally,
 TinyVM is stable, while leJOS is somewhat experimental.
 <p>
 The most important features
-missing in TinyVM which are currently supported by leJOS are:
+missing in TinyVM which are currently implemented in leJOS are:
 
 <ul>
 <li>Floating point operations
