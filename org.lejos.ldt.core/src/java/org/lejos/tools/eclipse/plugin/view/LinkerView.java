@@ -1,9 +1,9 @@
 package org.lejos.tools.eclipse.plugin.view;
 
 import js.tinyvm.Binary;
+import js.tinyvm.ClassPath;
 import js.tinyvm.TinyVMException;
 
-import org.apache.bcel.util.ClassPath;
 import org.eclipse.jface.viewers.TreeViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;

@@ -10,11 +10,11 @@ import java.io.Writer;
 
 import js.tinyvm.Binary;
 import js.tinyvm.BinaryReport;
-import js.tinyvm.io.BEDataOutputStream;
+import js.tinyvm.ClassPath;
+import js.tinyvm.io.BEByteWriter;
 import js.tinyvm.io.ByteWriter;
-import js.tinyvm.io.LEDataOutputStream;
+import js.tinyvm.io.LEByteWriter;
 
-import org.apache.bcel.util.ClassPath;
 import org.lejos.tools.api.IRuntimeToolset;
 import org.lejos.tools.api.ToolsetException;
 import org.lejos.tools.impl.AbstractToolsetImpl.Classpath;
@@ -192,11 +192,11 @@ public class LejosLink
          ByteWriter writer = null;
          if (this.byteOrder == IRuntimeToolset.BYTE_ORDER_BIG_ENDIAN)
          {
-            writer = new BEDataOutputStream(os);
+            writer = new BEByteWriter(os);
          }
          else
          {
-            writer = new LEDataOutputStream(os);
+            writer = new LEByteWriter(os);
          }
 
          // now dump the binaries into the stream
