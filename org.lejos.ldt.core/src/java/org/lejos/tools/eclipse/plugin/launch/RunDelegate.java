@@ -19,8 +19,6 @@ import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.swt.widgets.Shell;
 import org.lejos.tools.api.ToolsetException;
 import org.lejos.tools.eclipse.plugin.EclipseProgressMonitorToolsetImpl;
 import org.lejos.tools.eclipse.plugin.EclipseToolsetFacade;
@@ -61,6 +59,10 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
       File outputDir = new File(outputPath.toOSString());
 
       IType type = javaProject.findType(mainClass);
+      if (type == null)
+      {
+        throw new ToolsetException("main class not found");
+      }
       String typeName = type.getFullyQualifiedName();
       String typePath = typeName.replace('.', IPath.SEPARATOR);
       IPath binPathRel = outputPathRel.append(typePath).addFileExtension("bin");
