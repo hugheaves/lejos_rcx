@@ -8,6 +8,9 @@
    <runtime>
       <library name="lib/classes.jar"/>
       <library name="lib/rcxcomm.jar"/>
+      <library name="lib/commons-cli-1.0.jar">
+         <export name="*"/>
+      </library>
       <library name="lib/jtools.jar">
          <export name="*"/>
       </library>
