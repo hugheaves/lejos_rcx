@@ -11,6 +11,7 @@
  *******************************************************************************/
 package org.lejos.tools.eclipse.plugin.util;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,26 +26,21 @@ import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.search.IJavaSearchConstants;
-import org.eclipse.jdt.core.search.ITypeNameRequestor;
-import org.eclipse.jdt.core.search.SearchEngine;
 import org.eclipse.jdt.launching.JavaRuntime;
 import org.eclipse.jface.dialogs.ProgressMonitorDialog;
 import org.eclipse.swt.widgets.Shell;
+import org.osgi.framework.Bundle;
 
 /**
  * Abstract class for Java test projects.
@@ -208,32 +204,24 @@ public abstract class AbstractJavaTestProject {
         workspace.setDescription(desc);
     }
 
-    protected Path findFileInPlugin(String plugin, String file)
+    protected Path findFileInPlugin(String pluginId, String fileName)
             throws MalformedURLException, IOException {
-        IPluginRegistry registry = Platform.getPluginRegistry();
-        IPluginDescriptor descriptor = registry.getPluginDescriptor(plugin);
-        URL pluginURL = descriptor.getInstallURL();
-        URL jarURL = new URL(pluginURL, file);
-        URL localJarURL = Platform.asLocalURL(jarURL);
-        return new Path(localJarURL.getPath());
+        // get the bundle and its location
+        Bundle theBundle = Platform.getBundle(pluginId);
+        String theBundleLocation = theBundle.getLocation();
+
+        // get an entry in bundle as URL, will return bundleentry://nnn/...
+        // resolve the entry as an URL, typically file://...
+        URL theFileAsEntry = theBundle.getEntry(fileName);
+        URL resEntry = Platform.resolve(theFileAsEntry);
+
+        // convert from URL to an IPath
+        Path thePath = new Path(new File(resEntry.getFile()).getAbsolutePath());
+        return thePath;
     }
 
     protected void waitForIndexer() throws JavaModelException {
-        new SearchEngine().searchAllTypeNames(ResourcesPlugin.getWorkspace(),
-                null, null, IJavaSearchConstants.EXACT_MATCH,
-                IJavaSearchConstants.CASE_SENSITIVE,
-                IJavaSearchConstants.CLASS, SearchEngine
-                        .createJavaSearchScope(new IJavaElement[0]),
-                new ITypeNameRequestor() {
-                    public void acceptClass(char[] packageName,
-                            char[] simpleTypeName, char[][] enclosingTypeNames,
-                            String path) {
-                    }
-
-                    public void acceptInterface(char[] packageName,
-                            char[] simpleTypeName, char[][] enclosingTypeNames,
-                            String path) {
-                    }
-                }, IJavaSearchConstants.WAIT_UNTIL_READY_TO_SEARCH, null);
+        // removed for the moment in Eclipse 3
+        // probably see book Gamma/Beck
     }
 }
