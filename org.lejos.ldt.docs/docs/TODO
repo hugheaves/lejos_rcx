@@ -4,6 +4,7 @@ TODO
 - New project wizard: Add leJOS default jars to CLASSPATH
 - Fix Compile/Link for Eclipse RC2
 - Create site based deployment, to support feature based deployment
+- add LDT branding
 
 - Sort out the docs/internal into the new docs plugin TOC
 - write a user guide explaining the steps how to work with LDT
