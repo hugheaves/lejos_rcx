@@ -1,2 +1,3 @@
 dump_config
 platform_config.h
+*.o
