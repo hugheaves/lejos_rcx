@@ -204,7 +204,7 @@
       <shortcut
             label="leJOS"
             icon="icons/run.gif"
-            class="org.lejos.tools.eclipse.plugin.launch.RunShortcut"
+            class="org.lejos.tools.eclipse.plugin.launch.RunRCXShortcut"
             modes="run"
             id="org.lejos.ldt.core.runShortcut">
          <contextualLaunch>
@@ -243,13 +243,13 @@
          point="org.eclipse.debug.ui.launchConfigurationTypeImages">
       <launchConfigurationTypeImage
             icon="icons/runEmulator.gif"
-            configTypeID="org.lejos.ldt.core.RunEmulator"
+            configTypeID="org.lejos.ldt.core.runEmulator"
             id="org.lejos.ldt.core.runEmulatorImage"/>
    </extension>
    <extension
          point="org.eclipse.debug.ui.launchConfigurationTabGroups">
       <launchConfigurationTabGroup
-            type="org.lejos.ldt.core.run"
+            type="org.lejos.ldt.core.runEmulator"
             class="org.lejos.tools.eclipse.plugin.launch.RunTabGroup"
             description="leJOS Emulator"
             id="org.lejos.ldt.core.runEmulatorTabGroup">
@@ -266,7 +266,7 @@
             public="true"
             sourcePathComputerId="org.eclipse.jdt.launching.sourceLookup.javaSourcePathComputer"
             name="leJOS Emulator"
-            id="org.lejos.ldt.core.runEMulator"
+            id="org.lejos.ldt.core.runEmulator"
             modes="run">
          <fileExtension
             default="true"
@@ -277,11 +277,11 @@
    <extension
          point="org.eclipse.debug.ui.launchShortcuts">
       <shortcut
-            label="leJOS"
-            icon="icons/run.gif"
-            class="org.lejos.tools.eclipse.plugin.launch.RunShortcut"
+            label="leJOS Emulator"
+            icon="icons/runEmulator.gif"
+            class="org.lejos.tools.eclipse.plugin.launch.RunEmulatorShortcut"
             modes="run"
-            id="org.lejos.ldt.core.runShortcut">
+            id="org.lejos.ldt.core.runEmulatorShortcut">
          <contextualLaunch>
             <enablement>
                <with variable="selection">
@@ -312,6 +312,7 @@
          </perspective>
       </shortcut>
    </extension>
+
    
    <extension
          point="org.eclipse.ui.preferencePages">

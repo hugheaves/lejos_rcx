@@ -36,7 +36,7 @@ import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 /**
  * Launch shortcut.
  */
-public class RunShortcut implements ILaunchShortcut
+public abstract class RunShortcut implements ILaunchShortcut
 {
    /**
     * @see ILaunchShortcut#launch(IEditorPart, String)
@@ -291,13 +291,10 @@ public class RunShortcut implements ILaunchShortcut
 
    /**
     * Returns the local java launch config type.
+    * 
+    * Has to be defined by subclasses.
     */
-   protected ILaunchConfigurationType getLejosLaunchConfigType ()
-   {
-      // TODO introduce constant
-      ILaunchManager lm = DebugPlugin.getDefault().getLaunchManager();
-      return lm.getLaunchConfigurationType("org.lejos.ldt.core.run");
-   }
+   protected abstract ILaunchConfigurationType getLejosLaunchConfigType ();
 
    /**
     * Convenience method to get the window that owns this action's Shell.
