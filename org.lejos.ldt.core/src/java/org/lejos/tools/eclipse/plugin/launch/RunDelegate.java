@@ -32,122 +32,133 @@ import org.lejos.tools.eclipse.plugin.LejosPlugin;
  */
 public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
 {
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.eclipse.debug.core.ILaunchConfiguration,
-   *      java.lang.String, org.eclipse.debug.core.ILaunch,
-   *      org.eclipse.core.runtime.IProgressMonitor)
-   */
-  public void launch (ILaunchConfiguration configuration, String mode,
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.eclipse.debug.core.model.ILaunchConfigurationDelegate#launch(org.eclipse.debug.core.ILaunchConfiguration,
+    *      java.lang.String, org.eclipse.debug.core.ILaunch,
+    *      org.eclipse.core.runtime.IProgressMonitor)
+    */
+   public void launch (ILaunchConfiguration configuration, String mode,
       ILaunch launch, IProgressMonitor monitor) throws CoreException
-  {
-    IWorkspaceRoot workspace = ResourcesPlugin.getWorkspace().getRoot();
+   {
+      IWorkspaceRoot workspace = ResourcesPlugin.getWorkspace().getRoot();
 
-    try
-    {
-      IJavaProject javaProject = verifyJavaProject(configuration);
-      if (javaProject == null)
+      try
       {
-        throw new ToolsetException("java project not found");
+         IJavaProject javaProject = verifyJavaProject(configuration);
+         if (javaProject == null)
+         {
+            throw new ToolsetException("java project not found");
+         }
+
+         final String mainClass = verifyMainTypeName(configuration);
+         if (mainClass == null)
+         {
+            throw new ToolsetException("main class not found");
+         }
+
+         IPath outputPathRel = javaProject.getOutputLocation();
+         IPath outputPath = workspace.getFile(outputPathRel).getLocation();
+         final File outputDir = new File(outputPath.toOSString());
+
+         IType type = javaProject.findType(mainClass);
+         if (type == null)
+         {
+            throw new ToolsetException("main class not found");
+         }
+         String typeName = type.getFullyQualifiedName();
+         String typePath = typeName.replace('.', IPath.SEPARATOR);
+         IPath binPathRel = outputPathRel.append(typePath).addFileExtension(
+            "bin");
+         IFile binFile = workspace.getFile(binPathRel);
+         final IPath binPath = binFile.getLocation();
+
+         // create bin file
+         binFile.delete(true, false, monitor);
+         binFile.create(null, true, monitor);
+
+         Job job = new Job("leJOS link")
+         {
+            /*
+             * (non-Javadoc)
+             * 
+             * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+             */
+            protected IStatus run (IProgressMonitor monitor)
+            {
+               EclipseToolsetFacade facade = new EclipseToolsetFacade();
+
+               try
+               {
+                  // link
+                  setName("leJOS link");
+                  monitor.beginTask("leJOS link", 1000);
+                  OutputStream output = new FileOutputStream(binPath
+                     .toOSString());
+                  facade
+                     .setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
+                        monitor));
+                  facade.link(outputDir.getAbsolutePath(), mainClass, output);
+                  output.close();
+                  monitor.done();
+               }
+               catch (IOException e)
+               {
+                  String pluginID = LejosPlugin.getDefault().getBundle()
+                     .getSymbolicName();
+                  return new Status(IStatus.ERROR, pluginID, -1,
+                     e.getMessage(), e);
+               }
+               catch (ToolsetException e)
+               {
+                  String pluginID = LejosPlugin.getDefault().getBundle()
+                     .getSymbolicName();
+                  return new Status(IStatus.ERROR, pluginID, -1,
+                     e.getMessage(), e);
+               }
+
+               try
+               {
+                  // download
+                  setName("leJOS program download");
+                  monitor.beginTask("leJOS program download", 1000);
+                  InputStream input = new FileInputStream(binPath.toOSString());
+                  facade
+                     .setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
+                        monitor));
+                  facade.downloadExecutable(input);
+                  input.close();
+                  monitor.done();
+               }
+               catch (IOException e)
+               {
+                  String pluginID = LejosPlugin.getDefault().getBundle()
+                     .getSymbolicName();
+                  return new Status(IStatus.ERROR, pluginID, -1,
+                     e.getMessage(), e);
+               }
+               catch (ToolsetException e)
+               {
+                  if (monitor.isCanceled())
+                  {
+                     return Status.CANCEL_STATUS;
+                  }
+
+                  return new Status(IStatus.ERROR, LejosPlugin.getId(), -1, e
+                     .getMessage(), e);
+               }
+
+               return Status.OK_STATUS;
+            }
+         };
+         job.setUser(true);
+         job.schedule();
       }
-
-      final String mainClass = verifyMainTypeName(configuration);
-      if (mainClass == null)
+      catch (ToolsetException e)
       {
-        throw new ToolsetException("main class not found");
+         abort("Run failed: " + e.getMessage(), e,
+            IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
       }
-
-      IPath outputPathRel = javaProject.getOutputLocation();
-      IPath outputPath = workspace.getFile(outputPathRel).getLocation();
-      final File outputDir = new File(outputPath.toOSString());
-
-      IType type = javaProject.findType(mainClass);
-      if (type == null)
-      {
-        throw new ToolsetException("main class not found");
-      }
-      String typeName = type.getFullyQualifiedName();
-      String typePath = typeName.replace('.', IPath.SEPARATOR);
-      IPath binPathRel = outputPathRel.append(typePath).addFileExtension("bin");
-      IFile binFile = workspace.getFile(binPathRel);
-      final IPath binPath = binFile.getLocation();
-
-      // create bin file
-      binFile.delete(true, false, monitor);
-      binFile.create(null, true, monitor);
-
-      Job job = new Job("leJOS link")
-      {
-        /*
-         * (non-Javadoc)
-         * 
-         * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-         */
-        protected IStatus run (IProgressMonitor monitor)
-        {
-          EclipseToolsetFacade facade = new EclipseToolsetFacade();
-
-          try
-          {
-            // link
-            setName("leJOS link");
-            monitor.beginTask("leJOS link", 1000);
-            OutputStream output = new FileOutputStream(binPath.toOSString());
-            facade.setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
-                monitor));
-            facade.link(outputDir.getAbsolutePath(), mainClass, output);
-            output.close();
-            monitor.done();
-          }
-          catch (IOException e)
-          {
-            String pluginID = LejosPlugin.getDefault().getBundle()
-                .getSymbolicName();
-            return new Status(IStatus.ERROR, pluginID, -1, e.getMessage(), e);
-          }
-          catch (ToolsetException e)
-          {
-            String pluginID = LejosPlugin.getDefault().getBundle()
-                .getSymbolicName();
-            return new Status(IStatus.ERROR, pluginID, -1, e.getMessage(), e);
-          }
-
-          try
-          {
-            // download
-            setName("leJOS program download");
-            monitor.beginTask("leJOS program download", 1000);
-            InputStream input = new FileInputStream(binPath.toOSString());
-            facade.setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
-                monitor));
-            facade.downloadExecutable(input);
-            input.close();
-            monitor.done();
-          }
-          catch (IOException e)
-          {
-            String pluginID = LejosPlugin.getDefault().getBundle()
-                .getSymbolicName();
-            return new Status(IStatus.ERROR, pluginID, -1, e.getMessage(), e);
-          }
-          catch (ToolsetException e)
-          {
-            String pluginID = LejosPlugin.getDefault().getBundle()
-                .getSymbolicName();
-            return new Status(IStatus.ERROR, pluginID, -1, e.getMessage(), e);
-          }
-
-          return Status.OK_STATUS;
-        }
-      };
-      job.setUser(true);
-      job.schedule();
-    }
-    catch (ToolsetException e)
-    {
-      abort("Run failed: " + e.getMessage(), e,
-          IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
-    }
-  }
+   }
 }
