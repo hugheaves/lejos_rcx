@@ -1,15 +1,14 @@
 package org.lejos.tools.eclipse.plugin.actions;
 
-import java.lang.reflect.InvocationTargetException;
-
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
-import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.dialogs.ProgressMonitorDialog;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.lejos.tools.api.ToolsetException;
 import org.lejos.tools.eclipse.plugin.EclipseProgressMonitorToolsetImpl;
 import org.lejos.tools.eclipse.plugin.EclipseToolsetFacade;
+import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
 /**
  * Firmware download action.
@@ -23,37 +22,32 @@ public class FirmwareDownloadAction extends AbstractAction
    */
   public void run (IAction action)
   {
-    final EclipseToolsetFacade facade = new EclipseToolsetFacade();
-    ProgressMonitorDialog dialog = new ProgressMonitorDialog(getShell());
-    facade.setProgressMonitor(new EclipseProgressMonitorToolsetImpl(dialog.getProgressMonitor()));
-
-    try
+    Job job = new Job("leJOS Firmware download")
     {
-      // fork as process, allow cancel
-      dialog.run(true, true, new IRunnableWithProgress()
+      /*
+       * (non-Javadoc)
+       * 
+       * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
+       */
+      protected IStatus run (IProgressMonitor monitor)
       {
-        public void run (IProgressMonitor monitor)
-            throws InvocationTargetException, InterruptedException
+        final EclipseToolsetFacade facade = new EclipseToolsetFacade();
+        facade
+            .setProgressMonitor(new EclipseProgressMonitorToolsetImpl(monitor));
+        try
         {
-          try
-          {
-            facade.installFirmware();
-          }
-          catch (ToolsetException e)
-          {
-            e.printStackTrace();
-            throw new InvocationTargetException(e);
-          }
+          facade.installFirmware();
         }
-      });
-    }
-    catch (InvocationTargetException e)
-    {
-      MessageDialog.openError(getShell(), "Firmware download failed", e.getCause().getMessage());
-    }
-    catch (InterruptedException e)
-    {
-      MessageDialog.openError(getShell(), "Firmware download cancelled", "Firmware download cancelled");
-    }
+        catch (ToolsetException e)
+        {
+          String pluginID = LejosPlugin.getDefault().getBundle()
+              .getSymbolicName();
+          return new Status(IStatus.ERROR, pluginID, -1, e.getMessage(), e);
+        }
+
+        return Status.OK_STATUS;
+      }
+    };
+    job.schedule();
   }
 }
