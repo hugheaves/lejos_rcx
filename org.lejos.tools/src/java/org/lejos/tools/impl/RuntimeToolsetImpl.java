@@ -215,9 +215,18 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
       }
    }
 
-   //
+   /**
+    * Download an executable into emulator.
+    * 
+    * @param stream stream to read binary from
+    * @throws ToolsetException will be raised in any error case
+    */
+   public void downloadEmulator (InputStream stream) throws ToolsetException
+   {
+
+   }
+
    // private methods
-   //
 
    /**
     * Check for existence and writable files.

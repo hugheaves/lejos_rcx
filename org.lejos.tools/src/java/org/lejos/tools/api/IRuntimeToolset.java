@@ -184,4 +184,12 @@ public interface IRuntimeToolset
    // void deleteFirmware () throws ToolsetException;
    // void downloadFirmware () throws ToolsetException;
    // void unlockFirmware () throws ToolsetException;
+
+   /**
+    * Download an executable into emulator.
+    * 
+    * @param stream stream to read binary from
+    * @throws ToolsetException will be raised in any error case
+    */
+   public void downloadEmulator (InputStream stream) throws ToolsetException;
 }
