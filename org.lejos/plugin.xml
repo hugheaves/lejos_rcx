@@ -17,9 +17,11 @@
       <library name="lib/vision.jar">
          <export name="*"/>
       </library>
+      <library name="lib/jtools.jar">
+         <export name="*"/>
+      </library>
    </runtime>
    <requires>
-      <import plugin="lejos" export="true"/>
    </requires>
 
 </plugin>
