@@ -11,8 +11,8 @@ import js.tinyvm.TinyVMException;
 import js.tinyvm.TinyVMTool;
 import js.tools.FirmdlException;
 import js.tools.FirmdlTool;
-import js.tools.Lejosdl;
 import js.tools.LejosdlException;
+import js.tools.LejosdlTool;
 
 import org.lejos.tools.api.IRuntimeToolset;
 import org.lejos.tools.api.ToolsetException;
@@ -173,7 +173,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
   {
     try
     {
-      Lejosdl lejosdl = new Lejosdl(new ToolProgressListenerImpl(
+      LejosdlTool lejosdl = new LejosdlTool(new ToolProgressListenerImpl(
           getProgressMonitor()));
       lejosdl.start(stream, port, true);
     }
