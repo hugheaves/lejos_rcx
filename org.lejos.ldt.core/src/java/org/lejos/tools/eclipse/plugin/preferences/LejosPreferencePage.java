@@ -29,9 +29,6 @@ import org.lejos.tools.eclipse.plugin.LejosPlugin;
 public class LejosPreferencePage extends PreferencePage
    implements IWorkbenchPreferencePage
 {
-   public static final String P_PORT = "org.lejos.port";
-   public static final String P_FASTMODE = "org.lejos.fastmode";
-
    private Combo _port;
    private Button _fastmode;
 
@@ -49,8 +46,8 @@ public class LejosPreferencePage extends PreferencePage
    {
       IPreferenceStore store = getPreferenceStore();
       // TODO fix defaults
-      store.setDefault(P_PORT, 0);
-      store.setDefault(P_FASTMODE, false);
+      store.setDefault(LejosPreferences.P_PORT, LejosPreferences.D_PORT);
+      store.setDefault(LejosPreferences.P_FASTMODE, LejosPreferences.D_PORT);
    }
 
    /*
@@ -62,8 +59,8 @@ public class LejosPreferencePage extends PreferencePage
    {
       IPreferenceStore store = getPreferenceStore();
 
-      store.setValue(P_PORT, _port.getSelectionIndex());
-      store.setValue(P_FASTMODE, _fastmode.getSelection());
+      store.setValue(LejosPreferences.P_PORT, _port.getSelectionIndex());
+      store.setValue(LejosPreferences.P_FASTMODE, _fastmode.getSelection());
 
       return true;
    }
@@ -100,14 +97,14 @@ public class LejosPreferencePage extends PreferencePage
       {
          "USB", "COM1", "COM2", "COM3", "COM4"
       });
-      _port.select(store.getInt(P_PORT));
+      _port.select(store.getInt(LejosPreferences.P_PORT));
       
       Label spacer = new Label(group, SWT.NONE);
   		spacer.setText(" ");
 
       _fastmode = new Button(group, SWT.CHECK | SWT.LEFT);
       _fastmode.setText("Fast mode");
-      _fastmode.setSelection(store.getBoolean(P_FASTMODE));
+      _fastmode.setSelection(store.getBoolean(LejosPreferences.P_FASTMODE));
 
       return result;
    }

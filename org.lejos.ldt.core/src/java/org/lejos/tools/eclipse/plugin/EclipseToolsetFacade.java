@@ -14,6 +14,7 @@ import org.lejos.tools.api.IProgressMonitorToolset;
 import org.lejos.tools.api.IRuntimeToolset;
 import org.lejos.tools.api.ToolsetException;
 import org.lejos.tools.api.ToolsetFactory;
+import org.lejos.tools.eclipse.plugin.preferences.LejosPreferences;
 
 /**
  * The <code>EclipseToolsetFacade</code> provides the services of the
@@ -341,8 +342,10 @@ public class EclipseToolsetFacade
   public void downloadExecutable (InputStream stream) throws ToolsetException
   {
     IRuntimeToolset toolset = createToolset();
-    // TODO get port and fast mode from preferences
-    toolset.downloadExecutable(stream, "usb", false);
+
+    String port = LejosPreferences.getPort();
+    boolean fastMode = LejosPreferences.isFastMode();
+    toolset.downloadExecutable(stream, port, fastMode);
   }
 
   /**
@@ -351,8 +354,10 @@ public class EclipseToolsetFacade
   public void installFirmware () throws ToolsetException
   {
     IRuntimeToolset toolset = createToolset();
-    // TODO get port and fast mode from preferences
-    toolset.installFirmware("usb", false);
+    
+    String port = LejosPreferences.getPort();
+    boolean fastMode = LejosPreferences.isFastMode();
+    toolset.installFirmware(port, fastMode);
   }
 
   /**

@@ -6,6 +6,7 @@ import java.util.ResourceBundle;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
+import org.lejos.tools.eclipse.plugin.preferences.LejosPreferences;
 
 /**
  * The main plugin class to be used in the desktop.
