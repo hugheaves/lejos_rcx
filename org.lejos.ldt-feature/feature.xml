@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.lejos.ldt"
+      label="%featureName"
+      version="1.2.0"
+      provider-name="%providerName"
+      image="eclipse_update_120.jpg">
+
+   <copyright>
+      %copyright
+   </copyright>
+
+   <description>
+      %description
+   </description>
+
+   <license url="%licenseURL">
+     %license
+   </license>
+   
+   <url>
+      <update label="%updateSiteName" url="http://lejos.sourceforge.net/ldt/update"/>
+   </url>
+
+   <requires>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+   </requires>
+
+   <plugin
+         id="org.lejos"
+         download-size="0"
+         install-size="0"
+         version="3.0.0"/>
+
+   <plugin
+         id="org.lejos.tools"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"/>
+
+   <plugin
+         id="org.lejos.ldt.core"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"/>
+
+   <plugin
+         id="org.lejos.ldt.docs"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"/>
+
+</feature>
