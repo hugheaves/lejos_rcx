@@ -28,8 +28,12 @@
       <import plugin="org.eclipse.jdt.junit.runtime"/>
    </requires>
 
-<extension
+   <extension
          point="org.eclipse.ui.newWizards">
+      <category
+            name="%newWizardCategoryName"
+            id="org.lejos.ldt.core">
+      </category>
       <wizard
             name="leJOS project"
             icon="icons/wizard.gif"
@@ -38,7 +42,7 @@
             project="true"
             id="org.lejos.tools.eclipse.plugin.wizards.LejosProjectWizard">
          <description>
-            Creates a Lejos project
+            Creates a leJOS RCX project
          </description>
       </wizard>
    </extension>
