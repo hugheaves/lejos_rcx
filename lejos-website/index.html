@@ -6,11 +6,21 @@
 </center>
 <center>
 [
+<a href="apidocs/index.html">API Reference</a>
+]
+<br>
+[
+<a href="http://tinyvm.sourceforge.net">TinyVM</a>
+]
+<br>
+[
 <a href="http://sourceforge.net/projects/lejos">leJOS at SourceForge</a>
 |
-<a href="http://tinyvm.sourceforge.net">TinyVM</a>
+<a href="http://sourceforge.net/project/showfiles.php?group_id=9339">Download Area</a>
 |
-<a href="apidocs/index.html">API Reference</a>
+<a href="http://sourceforge.net/bugs/?group_id=9339">Bug Reports</a>
+|
+<a href="http://sourceforge.net/cvs/?group_id=9339">CVS Repository</a>
 ]
 </center>
 <p>
@@ -18,30 +28,11 @@ Like its predecessor (<a href="http://sourceforge.net/projects/tinyvm">TinyVM</a
 leJOS is a tiny <a href="http://java.sun.com">Java</a><sup>TM</sup> runtime. 
 It functions as replacement firmware for the 
 <a href="http://www.legomindstorms.com">Lego Mindstorms</a><sup>TM</sup> 
-RCX microcontroller, which is part of Lego's Robotics Invention System<sup>TM</sup> (RIS).
-The RCX brick contains a Hitachi H8300 processor and 32 Kb of RAM. 
+RCX, a programmable brick which is part of Lego's Robotics Invention System<sup>TM</sup> (RIS).
+The RCX contains a Hitachi H8300 processor and 32 Kb of RAM. 
 We have plans to port leJOS to other small devices.
 
-<h3>TinyVM vs. leJOS</h3>
-
-TinyVM is about 6 Kb smaller than leJOS in the RCX. The most important features
-missing in TinyVM which are currently supported by leJOS are:
-
-<ul>
-<li>Floating point operations
-<li>String constants
-<li>Thread.sleep (native) and System.currentTimeMillies
-<li>Other APIs
-</ul>
-
-Additionally, all references in the operand stack are marked as such in leJOS.
-This means that garbage collection can be implemented without much extra
-effort. Other planned enhancements include: Multi-program
-downloading, program arguments, auto power off, a fairly complete
-<code>java.lang.Math</code> class, <code>java.io</code> APIs, 
-<code>java.net</code> APIs, etc.
-
-<h3>Downloading</h3>
+<h3>Availability</h3>
 
 An alpha release is now available:
 <p>
@@ -88,6 +79,34 @@ If you are unfamiliar with CVS, visit the
 Do check the README
 file for instructions, but don't expect the information
 in there to be reliable or up to date at this stage.
+
+<h3>TinyVM vs. leJOS</h3>
+
+TinyVM's focus differs from
+that of leJOS. TinyVM is a low footprint replacement firmware (< 10 Kb), 
+whereas the focus in leJOS
+is completeness, and performance to some extent (although
+TinyVM performs better than early leJOS versions). The current footprint
+of leJOS in the RCX is 16 Kb, but it will probably grow. Additionally,
+TinyVM is stable, while leJOS is somewhat experimental.
+<p>
+The most important features
+missing in TinyVM which are currently supported by leJOS are:
+
+<ul>
+<li>Floating point operations
+<li>String constants
+<li>Thread.sleep (native) and System.currentTimeMillies
+<li>ButtonListener support
+<li>Other APIs
+</ul>
+
+Additionally, all references in the operand stack are marked as such in leJOS.
+This means that garbage collection can be implemented without much extra
+effort. Other planned enhancements include: Multi-program
+downloading, program arguments, auto power off, a fairly complete
+<code>java.lang.Math</code> class, <code>java.io</code> APIs, 
+<code>java.net</code> APIs, etc.
 
 <h3>Comments? Questions?</h3>
 
