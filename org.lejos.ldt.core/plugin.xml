@@ -17,8 +17,8 @@
       <import plugin="org.eclipse.ui"/>
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.jdt.core"/>
-      <import plugin="org.eclipse.jdt.ui"/>
       <import plugin="org.lejos.tools"/>
+      <import plugin="org.eclipse.jdt.launching"/>
    </requires>
 
 
@@ -50,8 +50,8 @@
          </menu>
          <action
                label="Link"
-               tooltip="Links as leJOS binary"
                class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
+               tooltip="Links as leJOS binary"
                menubarPath="leJOSMenu/leJOSGroup"
                enablesFor="1"
                id="org.lejos.ldt.core.LinkAction">
