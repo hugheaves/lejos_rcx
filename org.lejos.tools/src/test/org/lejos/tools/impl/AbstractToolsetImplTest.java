@@ -84,7 +84,7 @@ public class AbstractToolsetImplTest extends TestCase {
         // e.g. as LEJOS_HOME as part of the toolset
         //TODO this also does NOT work, if starting with PDE JUnit
         copyFile("../org.lejos/lib/classes.jar", binDir + "/classes.jar");
-        copyFile("tools.jar", binDir + "/tools.jar");
+        copyFile("../org.lejos/lib/jtools.jar", binDir + "/jtools.jar");
 
         // check for lookup using a directory
         cp = toolset.new Classpath(binDir);
