@@ -16,6 +16,8 @@ import js.classfile.JClassFile;
 import js.classfile.JConstantPool;
 import js.classfile.JConstantPoolEntry;
 import js.classfile.JMethod;
+import js.tinyvm.util.Assertion;
+import js.tinyvm.util.HashVector;
 
 /**
  * Abstraction for a class record (see vmsrc/language.h).

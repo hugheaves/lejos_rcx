@@ -30,7 +30,7 @@ public class ToolsetExceptionTest extends TestCase {
 
 	public void testConstructorsInvalid() {
 		try {
-			new ToolsetException (null);
+			new ToolsetException ((String) null);
 			fail ("Oops, exception expected");
 		} catch (IllegalArgumentException ex) {
 			// will be expected here
@@ -52,11 +52,11 @@ public class ToolsetExceptionTest extends TestCase {
 	public void testGetters() {
 		ToolsetException ex = new ToolsetException ("abc");
 		assertEquals ("abc", ex.getMessage());
-		assertNull (ex.getOriginationException());
+		assertNull (ex.getCause());
 
 		Exception rtex = new RuntimeException ();
 		ex = new ToolsetException ("def", rtex);
 		assertEquals ("def", ex.getMessage());
-		assertTrue (rtex == ex.getOriginationException());
+		assertTrue (rtex == ex.getCause());
 	}
 }

@@ -1,10 +1,13 @@
 package org.lejos.tools.impl;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import js.tinyvm.TinyVM;
+import js.tinyvm.TinyVMException;
 import js.tools.Firmdl;
 import js.tools.ToolException;
 
@@ -134,20 +137,50 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
     this.getProgressMonitor().done();
   } // compile ()
 
-
-  /* (non-Javadoc)
-   * @see org.lejos.tools.api.IRuntimeToolset#installFirmware()
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.lejos.tools.api.IRuntimeToolset#link(java.lang.String,
+   *      java.lang.String, boolean, java.io.OutputStream, boolean)
    */
-  public void installFirmware () throws ToolsetException
+  public void link (String classpath, String classname, boolean all,
+      OutputStream stream, boolean bigEndian) throws ToolsetException
   {
-    Firmdl firmdl = new Firmdl(new ToolProgressListenerImpl(getProgressMonitor()));
     try
     {
-      firmdl.start("usb", true, false);
+      // TODO get correct classes.jar
+      TinyVM tinyVM = new TinyVM(new ToolProgressListenerImpl(
+          getProgressMonitor()));
+      classpath = "g:/workspace/lejos/lib/classes.jar" + File.pathSeparator
+          + classpath;
+      tinyVM.link(classpath, new String[]
+      {classname}, false, stream, true);
+    }
+    catch (TinyVMException e)
+    {
+      throw new ToolsetException("Failed to link binary:\n" + e.getMessage(), e);
+    }
+  }
+
+  /*
+   * (non-Javadoc)
+   * 
+   * @see org.lejos.tools.api.IRuntimeToolset#installFirmware(java.lang.String,
+   *      boolean)
+   */
+  public void installFirmware (String port, boolean fastMode)
+      throws ToolsetException
+  {
+    Firmdl firmdl = new Firmdl(new ToolProgressListenerImpl(
+        getProgressMonitor()));
+    try
+    {
+      firmdl.start(port, true, fastMode);
     }
     catch (ToolException e)
     {
-      throw new ToolsetException("Failed to install firmware:\n" + e.getMessage(), e);
+      throw new ToolsetException("Failed to install firmware:\n"
+          + e.getMessage(), e);
     }
   }
 

@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.Vector;
 
+import js.tinyvm.util.Assertion;
+
 /**
  * This class overrides some specific parts of class <code>Binary</code>.
  * 

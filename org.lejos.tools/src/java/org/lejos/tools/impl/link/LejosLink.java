@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Vector;
 
-import js.tinyvm.BEDataOutputStream;
-import js.tinyvm.ByteWriter;
+import js.tinyvm.io.BEDataOutputStream;
+import js.tinyvm.io.ByteWriter;
 import js.tinyvm.ClassPath;
-import js.tinyvm.LEDataOutputStream;
+import js.tinyvm.io.LEDataOutputStream;
 import js.tinyvm.PatchedBinary;
 
 import org.lejos.tools.api.IRuntimeToolset;

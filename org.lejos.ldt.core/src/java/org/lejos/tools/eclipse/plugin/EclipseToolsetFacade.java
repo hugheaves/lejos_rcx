@@ -2,6 +2,7 @@ package org.lejos.tools.eclipse.plugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -18,8 +19,8 @@ public class EclipseToolsetFacade
 {
   // attributes
 
-  /** 
-   * a progress monitor to use 
+  /**
+   * a progress monitor to use
    */
   private IProgressMonitorToolset progressMonitor;
 
@@ -305,14 +306,40 @@ public class EclipseToolsetFacade
    */
   public void installFirmware () throws ToolsetException
   {
+    IRuntimeToolset toolset = createToolset();
+    // TODO get port and fas mode from preferences
+    toolset.installFirmware("usb", true);
+  }
+
+  /**
+   * Dump binary.
+   * 
+   * @param classdir dir with all classes
+   * @param classname main class
+   * @param stream output stream to write binary to
+   * @throws ToolsetException
+   */
+  public void link (String classdir, String classname, OutputStream stream)
+      throws ToolsetException
+  {
+    IRuntimeToolset toolset = createToolset();
+    toolset.link(classdir, classname, false, stream, true);
+  }
+  
+  /**
+   * 
+   */
+  protected IRuntimeToolset createToolset ()
+  {
     // set progress monitor at need
     ToolsetFactory factory = ToolsetFactory.newInstance();
-    IRuntimeToolset toolset = factory.newRuntimeToolset();
+    IRuntimeToolset result = factory.newRuntimeToolset();
     if (progressMonitor != null)
     {
-      toolset.setProgressMonitor(progressMonitor);
+      result.setProgressMonitor(progressMonitor);
     }
     
-    toolset.installFirmware();
+    assert result != null : "Postconditon: result != null";
+    return result;
   }
 }

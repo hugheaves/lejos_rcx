@@ -1,6 +1,7 @@
 package org.lejos.tools.api;
 
 import java.io.File;
+import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
@@ -34,18 +35,18 @@ public interface IRuntimeToolset
    */
   int LINK_METHOD_OPTIMIZING = 2;
 
-  /** 
-   * indicates an unknown byte order 
+  /**
+   * indicates an unknown byte order
    */
   int BYTE_ORDER_UNKNOWN = 0;
 
-  /** 
-   * indicates the byte order for little endian. 
+  /**
+   * indicates the byte order for little endian.
    */
   int BYTE_ORDER_LITTLE_ENDIAN = 1;
 
-  /** 
-   * indicates the byte order for little endian. 
+  /**
+   * indicates the byte order for little endian.
    */
   int BYTE_ORDER_BIG_ENDIAN = 2;
 
@@ -138,18 +139,28 @@ public interface IRuntimeToolset
    *          empty list.
    * @throws ToolsetException will be raised in any error case
    */
-  public void link (File outputFile, int linkMethod, boolean createSignatureFile,
-      String classpath, String[] classFiles, String[] args)
-      throws ToolsetException;
+  public void link (File outputFile, int linkMethod,
+      boolean createSignatureFile, String classpath, String[] classFiles,
+      String[] args) throws ToolsetException;
 
   // TODO ENH download
   // void downloadExecutable () throws ToolsetException;
+  /**
+   * Link binary.
+   */
+  public void link (String classpath, String classname, boolean all,
+      OutputStream stream, boolean bigEndian) throws ToolsetException;
 
   /**
    * Download firmware.
+   * 
+   * @param port port
+   * @param fastMode use fast mode?
+   * @throws ToolsetException
    */
-  public void installFirmware () throws ToolsetException;
-  
+  public void installFirmware (String port, boolean fastMode)
+      throws ToolsetException;
+
   // TODO ENH firmware download
   // void deleteFirmware () throws ToolsetException;
   // void downloadFirmware () throws ToolsetException;
