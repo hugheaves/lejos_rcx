@@ -19,7 +19,7 @@ public class LejosPreferences
    public static final String P_PORT = "org.lejos.port";
    public static final int D_PORT = 0;
    public static final String P_FASTMODE = "org.lejos.fastmode";
-   public static final boolean D_FASTMODE = false;
+   public static final boolean D_FASTMODE = true;
 
    private static final String[] D_PORTS_WIN = new String[]
    {
