@@ -33,14 +33,27 @@
    </extension>
    
    <extension
-         id="lejosprojectnature"
-         name="LeJOS nature"
+         id="lejosNature"
+         name="leJOS Nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
                class="org.lejos.tools.eclipse.plugin.natures.LejosProjectNature">
          </run>
       </runtime>
+      <requires-nature id="org.eclipse.jdt.core.javanature" />
+      <builder id="org.lejos.ldt.core.lejosBuilder" />
+   </extension>
+
+   <extension
+         id="lejosBuilder"
+         name="leJOS Builder"
+         point="org.eclipse.core.resources.builders">
+      <builder>
+         <run
+               class="org.lejos.tools.eclipse.plugin.builders.LejosBuilder">
+         </run>
+      </builder>
    </extension>
 
    <extension
