@@ -4,13 +4,9 @@ import js.tinyvm.Binary;
 import js.tinyvm.TinyVMException;
 
 import org.apache.bcel.util.ClassPath;
-import org.eclipse.jface.viewers.ITreeContentProvider;
 import org.eclipse.jface.viewers.TreeViewer;
-import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.part.ViewPart;
-import org.lejos.tools.eclipse.plugin.LejosPlugin;
 import org.lejos.tools.eclipse.plugin.view.model.BinaryElement;
 
 /**
