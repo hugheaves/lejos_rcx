@@ -23,169 +23,187 @@ import org.lejos.tools.eclipse.plugin.EclipseUtilities;
 /**
  * represents a compile action for object for the leJOS plugin.
  * 
- * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz</a>
+ * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
  */
-public class CompileAction
-	implements IObjectActionDelegate, IWorkbenchWindowActionDelegate {
+public class CompileAction implements IObjectActionDelegate,
+    IWorkbenchWindowActionDelegate
+{
 
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
-    // fields
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-	/** the current selection */
-	private ISelection fSelection = null;
+  // fields
 
-	/** an workbench part */
-	private IWorkbenchPart fWorkbenchPart = null;
+  /** the current selection */
+  private ISelection fSelection = null;
 
-	/** a workbench window */
-	private IWorkbenchWindow fWorkbenchWindow = null;
+  /** an workbench part */
+  private IWorkbenchPart fWorkbenchPart = null;
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-	// implementations of <IWorkbenchWindowActionDelegate>,
-    // <IObjectActionDelegate> and <IActionDelegate>
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 * Disposes this action delegate. The implementor should unhook any
-	 * references to itself so that garbage collection can occur.
-	 */
-	public void dispose() {
-		// nothing to dispose of here
-	}
+  /** a workbench window */
+  private IWorkbenchWindow fWorkbenchWindow = null;
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 * Stores the current workbench window for later usage.
-	 * @param aWindow the window that provides the context for this delegate
-	 */
-	public void init(IWorkbenchWindow aWindow) {
-		this.fWorkbenchWindow = aWindow;
-	}
+  // implementations of <IWorkbenchWindowActionDelegate>,
+  // <IObjectActionDelegate> and <IActionDelegate>
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 * Sets the active part for the delegate
-	 * @param action the action proxy that handles presentation portion of the
-	 *            action
-	 * @param targetPart the new part target
-	 */
-	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
-		this.fWorkbenchPart = targetPart;
-	}
+  /**
+   * Disposes this action delegate. The implementor should unhook any references
+   * to itself so that garbage collection can occur.
+   */
+  public void dispose()
+  {
+    // nothing to dispose of here
+  }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 * runs the compile action
-	 * <p>
-	 * This method will check, whether there are compilation units selected. If
-	 * not, a message will be displayed, who indicates "nosource files" available.
-	 * If there are compilation units, the compile will be started for each of them.
-	 * </p>
-	 * 
-	 * @param action the action proxy that handles the presentation portion of
-	 *            the action
-	 */
-	public void run(IAction action) {
-		// is there a structured selection?
-		if (!(this.fSelection instanceof IStructuredSelection)) {
-			return;
-		} // if
-        // get selection
-		final IJavaElement[] elems = EclipseUtilities.getSelectedJavaElements(this.fSelection);
-        // something selected at all?
-        if((elems==null)||(elems.length==0)) {
-            System.out.println("nothing selected");
-            return;
-        } //if
-        // create a shell based on the current workbench window
-        Shell shell = null;
-        if (this.fWorkbenchPart != null) {
-            shell = this.fWorkbenchPart.getSite().getShell();
-        } //if
-        if (this.fWorkbenchWindow != null) {
-            shell = this.fWorkbenchWindow.getShell();
-        } //if
-        // get project (all elements are in one project)
-        IJavaElement elem = elems[0];
-        IProject project = elem.getJavaProject().getProject();
-        // build
-        try {
-            IProgressMonitor myProgressMonitor = new ProgressMonitorPart(shell,null);
-            project.build(IncrementalProjectBuilder.FULL_BUILD, myProgressMonitor);   
-            // set "target 1.1" option
-            Hashtable options = JavaCore.getOptions();
-            options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM,
-                    JavaCore.VERSION_1_1);
-            JavaCore.setOptions(options);
-        } catch(CoreException exc) {
-            exc.printStackTrace();
-            // show error
-            MessageDialog.openInformation(null, null,
-                    "error: " + exc.getMessage());
-        } // catch
-	}
+  /**
+   * Stores the current workbench window for later usage.
+   * 
+   * @param aWindow
+   *          the window that provides the context for this delegate
+   */
+  public void init(IWorkbenchWindow aWindow)
+  {
+    this.fWorkbenchWindow = aWindow;
+  }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-	/**
-	 * selection changed
-	 * 
-	 * <p>
-	 * accepted selections: of types
-	 * <ul>
-	 * <li>@{link org.eclipse.jdt.core.IJavaElement#PACKAGE_FRAGMENT_ROOT}
-	 * </li>
-	 * <li>@{link org.eclipse.jdt.core.IJavaElement#PACKAGE_FRAGMENT}</li>
-	 * <li>@{link org.eclipse.jdt.core.IJavaElement#COMPILATION_UNIT}</li>
-	 * <li>@{link org.eclipse.jdt.core.IJavaElement#TYPE}</li>
-	 * </ul>
-     * only.
-	 * </p>
-	 * @param action the action proxy that handles presentation portion of the
-	 *            action
-	 * @param aSelection the current selection, or <code>null</code> if there
-	 *            is no selection.
-	 */
-	public void selectionChanged(IAction action, ISelection aSelection) {
-		this.fSelection = aSelection;
-		// we require a structured selection
-		if (!(this.fSelection instanceof IStructuredSelection)) {
-			return;
-		} //if
-		IJavaElement[] elems = EclipseUtilities.getSelectedJavaElements(this.fSelection);
-        boolean enabled = false;
-        if((elems==null)||(elems.length==0)) {
-            enabled = false;
-        } else {
-            // check for leJOS project nature
-            IJavaElement firstElem = elems[0];
-            IProject project = firstElem.getJavaProject().getProject();
-            try {
-            	enabled = EclipseUtilities.checkForLeJOSNature(project);
-            } catch (CoreException exc) {
-                exc.printStackTrace();
-                enabled = false;
-            }  // catch      
-             if(enabled) {
-        		// now check for valid types
-        		for (int i = 0; i < elems.length; i++) {
-        			IJavaElement elem = elems[i];
-        			// all other types are INVALID
-        			if (!(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT)
-        				&& !(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT)
-        				&& !(elem.getElementType() == IJavaElement.COMPILATION_UNIT)
-        				&& !(elem.getElementType() == IJavaElement.TYPE)) {
-        				enabled = false;
-        			} // if
-                } // for
-            } // if
-		} // else
-        action.setEnabled(enabled);
+  /**
+   * Sets the active part for the delegate
+   * 
+   * @param action
+   *          the action proxy that handles presentation portion of the action
+   * @param targetPart
+   *          the new part target
+   */
+  public void setActivePart(IAction action, IWorkbenchPart targetPart)
+  {
+    this.fWorkbenchPart = targetPart;
+  }
+
+  /**
+   * runs the compile action
+   * <p>
+   * This method will check, whether there are compilation units selected. If
+   * not, a message will be displayed, who indicates "nosource files" available.
+   * If there are compilation units, the compile will be started for each of
+   * them.
+   * </p>
+   * 
+   * @param action
+   *          the action proxy that handles the presentation portion of the
+   *          action
+   */
+  public void run(IAction action)
+  {
+    // is there a structured selection?
+    if (!(this.fSelection instanceof IStructuredSelection))
+    {
+      return;
     }
+    // get selection
+    final IJavaElement[] elems = EclipseUtilities
+        .getSelectedJavaElements(this.fSelection);
+    // something selected at all?
+    if ((elems == null) || (elems.length == 0))
+    {
+      System.out.println("nothing selected");
+      return;
+    }
+    // create a shell based on the current workbench window
+    Shell shell = null;
+    if (this.fWorkbenchPart != null)
+    {
+      shell = this.fWorkbenchPart.getSite().getShell();
+    }
+    if (this.fWorkbenchWindow != null)
+    {
+      shell = this.fWorkbenchWindow.getShell();
+    }
+    // get project (all elements are in one project)
+    IJavaElement elem = elems[0];
+    IProject project = elem.getJavaProject().getProject();
+    // build
+    try
+    {
+      IProgressMonitor myProgressMonitor = new ProgressMonitorPart(shell, null);
+      project.build(IncrementalProjectBuilder.FULL_BUILD, myProgressMonitor);
+      // set "target 1.1" option
+      Hashtable options = JavaCore.getOptions();
+      options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM,
+          JavaCore.VERSION_1_1);
+      JavaCore.setOptions(options);
+    } catch (CoreException exc)
+    {
+      exc.printStackTrace();
+      // show error
+      MessageDialog.openInformation(null, null, "error: " + exc.getMessage());
+    }
+  }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-	// private methods
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////
-    
+  /**
+   * selection changed
+   * 
+   * <p>
+   * accepted selections: of types
+   * <ul>
+   * <li>
+   * 
+   * @{link org.eclipse.jdt.core.IJavaElement#PACKAGE_FRAGMENT_ROOT}</li>
+   *        <li>
+   * @{link org.eclipse.jdt.core.IJavaElement#PACKAGE_FRAGMENT}</li>
+   *        <li>
+   * @{link org.eclipse.jdt.core.IJavaElement#COMPILATION_UNIT}</li>
+   *        <li>
+   * @{link org.eclipse.jdt.core.IJavaElement#TYPE}</li>
+   *        </ul>
+   *        only.
+   *        </p>
+   * @param action
+   *          the action proxy that handles presentation portion of the action
+   * @param aSelection
+   *          the current selection, or <code>null</code> if there is no
+   *          selection.
+   */
+  public void selectionChanged(IAction action, ISelection aSelection)
+  {
+    this.fSelection = aSelection;
+    // we require a structured selection
+    if (!(this.fSelection instanceof IStructuredSelection))
+    {
+      return;
+    }
+    IJavaElement[] elems = EclipseUtilities
+        .getSelectedJavaElements(this.fSelection);
+    boolean enabled = false;
+    if ((elems == null) || (elems.length == 0))
+    {
+      enabled = false;
+    } else
+    {
+      // check for leJOS project nature
+      IJavaElement firstElem = elems[0];
+      IProject project = firstElem.getJavaProject().getProject();
+      try
+      {
+        enabled = EclipseUtilities.checkForLeJOSNature(project);
+      } catch (CoreException exc)
+      {
+        exc.printStackTrace();
+        enabled = false;
+      }
+      if (enabled)
+      {
+        // now check for valid types
+        for (int i = 0; i < elems.length; i++)
+        {
+          IJavaElement elem = elems[i];
+          // all other types are INVALID
+          if (!(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT_ROOT)
+              && !(elem.getElementType() == IJavaElement.PACKAGE_FRAGMENT)
+              && !(elem.getElementType() == IJavaElement.COMPILATION_UNIT)
+              && !(elem.getElementType() == IJavaElement.TYPE))
+          {
+            enabled = false;
+          }
+        }
+      }
+    }
+    action.setEnabled(enabled);
+  }
 }

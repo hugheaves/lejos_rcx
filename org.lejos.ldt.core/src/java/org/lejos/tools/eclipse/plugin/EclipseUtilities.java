@@ -34,18 +34,18 @@ import org.osgi.framework.Bundle;
  */
 public final class EclipseUtilities extends ToolsetFactory
 {
-
   // static methods
 
   /**
    * Get the output folder for the compilation unit.
    * 
-   * @param cu the compilation unit
+   * @param cu
+   *          the compilation unit
    * @return a file specifiying the output directory
-   * @throws JavaModelException will be raised, if output location cannot be
-   *           determined
+   * @throws JavaModelException
+   *           will be raised, if output location cannot be determined
    */
-  public static File getOutputFolder (ICompilationUnit cu)
+  public static File getOutputFolder(ICompilationUnit cu)
       throws JavaModelException
   {
     // from CU to java project, from java project to output folder
@@ -62,13 +62,15 @@ public final class EclipseUtilities extends ToolsetFactory
    * Get a file reference for the compilation unit, within output folder, wit
    * the given extension.
    * 
-   * @param cu the compilation unit
-   * @param anExtension the given extension
+   * @param cu
+   *          the compilation unit
+   * @param anExtension
+   *          the given extension
    * @return a file reference to the output file
-   * @throws JavaModelException will be raised, if output location cannot be
-   *           determined
+   * @throws JavaModelException
+   *           will be raised, if output location cannot be determined
    */
-  public static File getOutputFile (ICompilationUnit cu, String anExtension)
+  public static File getOutputFile(ICompilationUnit cu, String anExtension)
       throws JavaModelException
   {
     // from CU to java project, from java project to output folder
@@ -101,11 +103,13 @@ public final class EclipseUtilities extends ToolsetFactory
   /**
    * Get an absolute file reference for a resource within the project.
    * 
-   * @param aProject the project to be used
-   * @param aResourcePath the path of the resource
+   * @param aProject
+   *          the project to be used
+   * @param aResourcePath
+   *          the path of the resource
    * @return an IPath, representing the path to the resource
    */
-  public static File getAbsoluteLocationForResource (IProject aProject,
+  public static File getAbsoluteLocationForResource(IProject aProject,
       IPath aResourcePath)
   {
     // we have to know the physical project location
@@ -125,12 +129,13 @@ public final class EclipseUtilities extends ToolsetFactory
   /**
    * Get the Full Qualified Class Name (FQCN) for the compilation unit.
    * 
-   * @param cu the compilation unit
+   * @param cu
+   *          the compilation unit
    * @return a full qualified class name in "." notation
-   * @throws JavaModelException will be raised, if package declarations cannot
-   *           be determined
+   * @throws JavaModelException
+   *           will be raised, if package declarations cannot be determined
    */
-  public static String getFQCN (ICompilationUnit cu) throws JavaModelException
+  public static String getFQCN(ICompilationUnit cu) throws JavaModelException
   {
     // get the declared package
     IPackageDeclaration[] packages;
@@ -148,17 +153,17 @@ public final class EclipseUtilities extends ToolsetFactory
     return packageName + "." + className;
   }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
   /**
    * delivers the full qualified source file name for the compilation unit
    * 
    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
-   * @param aCompilationUnit the compilation unit
+   * @param aCompilationUnit
+   *          the compilation unit
    * @return a full qualified source file name in "/" notation
-   * @throws JavaModelException will be raised, if package declarations cannot
-   *           be determined
+   * @throws JavaModelException
+   *           will be raised, if package declarations cannot be determined
    */
-  public static String getFQSFN (ICompilationUnit aCompilationUnit)
+  public static String getFQSFN(ICompilationUnit aCompilationUnit)
       throws JavaModelException
   {
     // get the declared package
@@ -168,23 +173,24 @@ public final class EclipseUtilities extends ToolsetFactory
     if (packages.length > 0)
     {
       packageName = packages[0].getElementName();
-    } //if
+    }
     String packagePath = packageName.replace('.', '/');
     // source file name
     String sourceFileName = aCompilationUnit.getElementName();
     // add
     return packagePath + "/" + sourceFileName;
-  } // getFQSFN()
+  }
 
   /**
    * Checks, whether a compilation unit has a main methids,
    * 
-   * @param cu the compilation unit
+   * @param cu
+   *          the compilation unit
    * @return true, if the compilation unit has a main method
-   * @throws JavaModelException will be raised, if output location cannot be
-   *           determined
+   * @throws JavaModelException
+   *           will be raised, if output location cannot be determined
    */
-  public static boolean hasMain (ICompilationUnit cu) throws JavaModelException
+  public static boolean hasMain(ICompilationUnit cu) throws JavaModelException
   {
     String javaFile = cu.getElementName();
     String javaName = javaFile.substring(0, javaFile.indexOf(".java"));
@@ -213,12 +219,13 @@ public final class EclipseUtilities extends ToolsetFactory
    * The method will do this using a recursive approach.
    * </p>
    * 
-   * @param javaElem the given java element
+   * @param javaElem
+   *          the given java element
    * @return an array with compilation units
-   * @throws JavaModelException will be raised, if output location cannot be
-   *           determined
+   * @throws JavaModelException
+   *           will be raised, if output location cannot be determined
    */
-  public static ICompilationUnit[] collectLinkClasses (IJavaElement javaElem)
+  public static ICompilationUnit[] collectLinkClasses(IJavaElement javaElem)
       throws JavaModelException
   {
     // first, collect all cu's
@@ -226,26 +233,26 @@ public final class EclipseUtilities extends ToolsetFactory
     switch (javaElem.getElementType())
     {
 
-      case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-        collectCU(allCU, (IPackageFragmentRoot) javaElem);
-        break;
+    case IJavaElement.PACKAGE_FRAGMENT_ROOT:
+      collectCU(allCU, (IPackageFragmentRoot) javaElem);
+      break;
 
-      case IJavaElement.PACKAGE_FRAGMENT :
-        collectCU(allCU, (IPackageFragment) javaElem);
-        break;
+    case IJavaElement.PACKAGE_FRAGMENT:
+      collectCU(allCU, (IPackageFragment) javaElem);
+      break;
 
-      case IJavaElement.COMPILATION_UNIT :
-        collectCU(allCU, (ICompilationUnit) javaElem);
-        break;
+    case IJavaElement.COMPILATION_UNIT:
+      collectCU(allCU, (ICompilationUnit) javaElem);
+      break;
 
-      case IJavaElement.TYPE :
-        collectCU(allCU, (IType) javaElem);
-        break;
+    case IJavaElement.TYPE:
+      collectCU(allCU, (IType) javaElem);
+      break;
 
-      default :
-        LejosPlugin.debug("selected object of type "
-            + String.valueOf(javaElem.getElementType()) + " not supported");
-        return new ICompilationUnit[0];
+    default:
+      LejosPlugin.debug("selected object of type "
+          + String.valueOf(javaElem.getElementType()) + " not supported");
+      return new ICompilationUnit[0];
     }
     ICompilationUnit[] cus = new ICompilationUnit[allCU.size()];
     allCU.toArray(cus);
@@ -255,12 +262,14 @@ public final class EclipseUtilities extends ToolsetFactory
   /**
    * Add all compilation units for a type.
    * 
-   * @param aSetToCollect a set to add the CUs for
-   * @param aType a type, e.g. a class
-   * @throws JavaModelException will be raised in any internal access to java
-   *           model
+   * @param aSetToCollect
+   *          a set to add the CUs for
+   * @param aType
+   *          a type, e.g. a class
+   * @throws JavaModelException
+   *           will be raised in any internal access to java model
    */
-  private static void collectCU (Set aSetToCollect, IType aType)
+  private static void collectCU(Set aSetToCollect, IType aType)
       throws JavaModelException
   {
     ICompilationUnit cu = aType.getCompilationUnit();
@@ -277,12 +286,14 @@ public final class EclipseUtilities extends ToolsetFactory
    * This method is trivial, but done to be compliant to other collect methods.
    * </p>
    * 
-   * @param aSetToCollect a set to add the CUs for
-   * @param aCompilationUnit a compilation unit
-   * @throws JavaModelException will be raised in any internal access to java
-   *           model
+   * @param aSetToCollect
+   *          a set to add the CUs for
+   * @param aCompilationUnit
+   *          a compilation unit
+   * @throws JavaModelException
+   *           will be raised in any internal access to java model
    */
-  private static void collectCU (Set aSetToCollect,
+  private static void collectCU(Set aSetToCollect,
       ICompilationUnit aCompilationUnit) throws JavaModelException
   {
     if (hasMain(aCompilationUnit))
@@ -294,12 +305,14 @@ public final class EclipseUtilities extends ToolsetFactory
   /**
    * Add all compilation units for a package fragment.
    * 
-   * @param aSetToCollect a set to add the CUs for
-   * @param aFragment the given package fragment
-   * @throws JavaModelException will be raised in any internal access to java
-   *           model
+   * @param aSetToCollect
+   *          a set to add the CUs for
+   * @param aFragment
+   *          the given package fragment
+   * @throws JavaModelException
+   *           will be raised in any internal access to java model
    */
-  private static void collectCU (Set aSetToCollect, IPackageFragment aFragment)
+  private static void collectCU(Set aSetToCollect, IPackageFragment aFragment)
       throws JavaModelException
   {
     ICompilationUnit[] children = aFragment.getCompilationUnits();
@@ -339,12 +352,14 @@ public final class EclipseUtilities extends ToolsetFactory
   /**
    * Add all compilation units for a package fragment root.
    * 
-   * @param aSetToCollect a set to add the CUs for
-   * @param aFragmentRoot the given fragment root
-   * @throws JavaModelException will be raised in any internal access to java
-   *           model
+   * @param aSetToCollect
+   *          a set to add the CUs for
+   * @param aFragmentRoot
+   *          the given fragment root
+   * @throws JavaModelException
+   *           will be raised in any internal access to java model
    */
-  private static void collectCU (Set aSetToCollect,
+  private static void collectCU(Set aSetToCollect,
       IPackageFragmentRoot aFragmentRoot) throws JavaModelException
   {
     IJavaElement[] elems = aFragmentRoot.getChildren();
@@ -362,56 +377,68 @@ public final class EclipseUtilities extends ToolsetFactory
   /**
    * Find a file within a plugin.
    * 
-   * @param pluginId the id of the plugin
-   * @param fileName the name of the file
-   * @return the path to the file
-   * @throws MalformedURLException will be raised in any URL problme
-   * @throws IOException will be raised in problem accessing ressource
+   * @param pluginId
+   *          the id of the plugin
+   * @param fileName
+   *          the name of the file
+   * @return the path to the file of null, if not found
+   * @throws IOException
+   *           will be raised in problem accessing ressource
    */
-  public static IPath findFileInPlugin (String pluginId, String fileName)
-    throws MalformedURLException, IOException
+  public static IPath findFileInPlugin(String pluginId, String fileName)
   {
-      // get the bundle and its location
-      Bundle theBundle = Platform.getBundle(pluginId);
-      String theBundleLocation = theBundle.getLocation();
+    // get the bundle and its location
+    Bundle theBundle = Platform.getBundle(pluginId);
+    String theBundleLocation = theBundle.getLocation();
 
-      // get an entry in bundle as URL, will return bundleentry://nnn/...
-      // resolve the entry as an URL, typically file://...
-      URL theFileAsEntry = theBundle.getEntry(fileName);
+    // get an entry in bundle as URL, will return bundleentry://nnn/...
+    // resolve the entry as an URL, typically file://...
+    URL theFileAsEntry = theBundle.getEntry(fileName);
+    try
+    {
       URL resEntry = Platform.resolve(theFileAsEntry);
-
       // convert from URL to an IPath
       IPath thePath = new Path(new File(resEntry.getFile()).getAbsolutePath());
       return thePath;
+    } catch (IOException ex)
+    {
+      LejosPlugin.debug("Could not find " + String.valueOf(fileName)
+          + " in plugin " + String.valueOf(pluginId));
+      LejosPlugin.debug(ex);
+      return null;
+    }
   }
-  
+
   /**
    * Find a lejos lib.
    * 
-   * @param libname the name of the lib (without any path)
+   * @param libname
+   *          the name of the lib (without any path)
    * @return the path to the lib
-   * @throws MalformedURLException will be raised in any URL problme
-   * @throws IOException will be raised in problem accessing ressource
+   * @throws MalformedURLException
+   *           will be raised in any URL problme
+   * @throws IOException
+   *           will be raised in problem accessing ressource
    */
-  public static IPath findLejosLib (String libname)
-    throws MalformedURLException, IOException
+  public static IPath findLejosLib(String libname)
+      throws MalformedURLException, IOException
   {
     assert libname != null : "Precondition: libname != null";
-    
+
     String lib = "lib" + File.separator + libname;
     return findFileInPlugin("org.lejos", lib);
   }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
   /**
    * checks a project for leJOS nature
    * 
-   * @param IProject the project
+   * @param IProject
+   *          the project
    * @return boolean true, if the project has leJOS nature
    * @throws CoreException
    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
    */
-  public static boolean checkForLeJOSNature (IProject aProject)
+  public static boolean checkForLeJOSNature(IProject aProject)
       throws CoreException
   {
     // check project's natures
@@ -423,17 +450,17 @@ public final class EclipseUtilities extends ToolsetFactory
         return true;
     }
     return false;
-  } // checkForLeJOSNature()
+  }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
   /**
    * sets a project's nature to "leJOS project"
    * 
-   * @param IProject the project
+   * @param IProject
+   *          the project
    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
    * @throws CoreException
    */
-  public static void setLeJOSNature (IProject aProject)
+  public static void addLeJOSNature(IProject aProject)
   {
     try
     {
@@ -444,24 +471,23 @@ public final class EclipseUtilities extends ToolsetFactory
       newNatures[natures.length] = "org.lejos.ldt.core.lejosprojectnature";
       description.setNatureIds(newNatures);
       aProject.getProject().setDescription(description, null);
-    }
-    catch (CoreException e)
+    } catch (CoreException e)
     {
       LejosPlugin.debug(e);
       e.printStackTrace();
-    } // catch
-  } //setLeJOSNature()
+    }
+  }
 
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////
   /**
    * get structured selections of java elements from the current selection
    * 
-   * @param aSelection the current selection
+   * @param aSelection
+   *          the current selection
    * @return an array with all java elements selected. Is always not null. If no
    *         valid structured selections are available, an array with size = 0
    *         will be returned.
    */
-  public static IJavaElement[] getSelectedJavaElements (ISelection aSelection)
+  public static IJavaElement[] getSelectedJavaElements(ISelection aSelection)
   {
     IStructuredSelection structured = (IStructuredSelection) aSelection;
     Object[] oElems = structured.toArray();
@@ -473,8 +499,8 @@ public final class EclipseUtilities extends ToolsetFactory
       if (elem instanceof IJavaElement)
       {
         noOfJavaElements++;
-      } //if
-    } //for
+      }
+    }
     // copy into type safe array
     IJavaElement[] elems = new IJavaElement[noOfJavaElements];
     int counter = 0;
@@ -484,15 +510,15 @@ public final class EclipseUtilities extends ToolsetFactory
       if (elem instanceof IJavaElement)
       {
         elems[counter++] = (IJavaElement) elem;
-      } //if
-    } //for
+      }
+    }
     return elems;
   }
 
   // constructor
 
   /**
-   * Make constructor private, as this is a utilits class only.
+   * Make constructor private, as this is a utility class only.
    */
   private EclipseUtilities()
   {

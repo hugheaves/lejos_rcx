@@ -115,7 +115,7 @@ public class EclipseUtilitiesTest extends TestCase {
         String fqsfn =
             EclipseUtilities.getFQSFN(sjp.getPackage1Package2Class1CU());
         assertEquals("package1/package2/Class1.java", fqsfn);
-    } //testGetFQSFN() 
+    }
     
     public void testHasMain() throws JavaModelException {
 		boolean hasMain =
@@ -153,7 +153,7 @@ public class EclipseUtilitiesTest extends TestCase {
     public void testSetAndCheckForLeJOSNature()
         throws CoreException {
         IProject project = sjp.getJavaProject().getProject();
-        EclipseUtilities.setLeJOSNature(project);
+        EclipseUtilities.addLeJOSNature(project);
         assertTrue(EclipseUtilities.checkForLeJOSNature(project));
     }
 }

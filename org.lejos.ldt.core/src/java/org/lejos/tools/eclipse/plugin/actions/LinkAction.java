@@ -206,10 +206,10 @@ public class LinkAction
         				&& !(elem.getElementType() == IJavaElement.TYPE)) {
         				enabled = false;
                         enabled = false;
-                    } // if
-                } // for
-            } // if
-        } // else
+                    }
+                }
+            }
+        }
         action.setEnabled(enabled);
     }
 
