@@ -1,8 +1,8 @@
 package org.lejos.tools.impl;
 
-import org.lejos.tools.api.IProgressMonitorToolset;
+import js.common.ToolProgressListener;
 
-import js.tools.ToolProgressListener;
+import org.lejos.tools.api.IProgressMonitorToolset;
 
 /**
  * Implementation of ToolProgressListener for eclipse progress monitoring.
@@ -11,19 +11,20 @@ public class ToolProgressListenerImpl implements ToolProgressListener
 {
   private IProgressMonitorToolset _monitor;
   private int _progress;
-  
+
   /**
    * Constructor.
    */
   public ToolProgressListenerImpl(IProgressMonitorToolset monitor)
   {
     assert monitor != null : "Precondition: monitor != null";
-    
+
     _monitor = monitor;
   }
 
   /*
    * (non-Javadoc)
+   * 
    * @see js.tools.ToolProgressListener#operation(java.lang.String)
    */
   public void operation (String operation)
@@ -34,6 +35,7 @@ public class ToolProgressListenerImpl implements ToolProgressListener
 
   /*
    * (non-Javadoc)
+   * 
    * @see js.tools.ToolProgressListener#log(java.lang.String)
    */
   public void log (String message)
@@ -43,6 +45,7 @@ public class ToolProgressListenerImpl implements ToolProgressListener
 
   /*
    * (non-Javadoc)
+   * 
    * @see js.tools.ToolProgressListener#progress(int)
    */
   public void progress (int progress)

@@ -7,11 +7,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import js.tinyvm.TinyVM;
+import js.common.ToolException;
 import js.tinyvm.TinyVMException;
+import js.tinyvm.TinyVMTool;
 import js.tools.Firmdl;
 import js.tools.Lejosdl;
-import js.tools.ToolException;
 
 import org.lejos.tools.api.IRuntimeToolset;
 import org.lejos.tools.api.ToolsetException;
@@ -150,7 +150,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
   {
     try
     {
-      TinyVM tinyVM = new TinyVM(new ToolProgressListenerImpl(
+      TinyVMTool tinyVM = new TinyVMTool(new ToolProgressListenerImpl(
           getProgressMonitor()));
       tinyVM.link(classpath, new String[]
       {classname}, false, stream, true);
@@ -178,7 +178,8 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
     }
     catch (ToolException e)
     {
-      throw new ToolsetException("Failed to download binary:\n" + e.getMessage(), e);
+      throw new ToolsetException("Failed to download binary:\n"
+          + e.getMessage(), e);
     }
   }
 
