@@ -5,16 +5,27 @@
    <extension
          point="org.eclipse.ui.newWizards">
       <category
-            name="%newWizardCategoryName"
-            id="org.lejos.ldt.core">
+            name="leJOS"
+            id="org.lejos.ldt.core.ui.new">
       </category>
       <wizard
-            name="leJOS project"
+            name="leJOS RCX project"
             icon="icons/wizard.gif"
-            category="org.eclipse.jdt.ui.java"
-            class="org.lejos.tools.eclipse.plugin.wizards.LejosProjectWizard"
+            category="org.lejos.ldt.core.ui.new"
+            class="org.lejos.tools.eclipse.plugin.wizards.LejosRCXProjectWizard"
             project="true"
-            id="org.lejos.tools.eclipse.plugin.wizards.LejosProjectWizard">
+            id="org.lejos.tools.eclipse.plugin.wizards.LejosRCXProjectWizard">
+         <description>
+            Creates a leJOS RCX project
+         </description>
+      </wizard>
+      <wizard
+            name="leJOS Client project"
+            icon="icons/wizard.gif"
+            category="org.lejos.ldt.core.ui.new"
+            class="org.lejos.tools.eclipse.plugin.wizards.LejosClientProjectWizard"
+            project="true"
+            id="org.lejos.tools.eclipse.plugin.wizards.LejosClientProjectWizard">
          <description>
             Creates a leJOS RCX project
          </description>
