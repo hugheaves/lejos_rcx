@@ -1,7 +1,18 @@
 TODO
 
-- Fix all tests
-	- Patch leJOS: Binary, ClassRecord, to use other impls of assertion, System.out
+- newWizards: Post bug to Eclipse, as schema is invalid
+- Markus:
+	- lejos ist jetzt auch ein plugin
+	- org.lejos: jtools.jar rausgenommen, jetzt in lejos
+	- andere Plugins: Re-Export von leJOS
+	- lejos: Patches in js.tinyvm aufgenommen
+	- Anforderung:
+		- Abstraktion von Writer (System.out, und writer mit verschiedenen Kategorien 
+		  und/oder Leveln), und von Assertion: In Toolset Meldung, aber kein Exit, und
+		  Cmdline tools mit Meldung auf System.out/err und Exit.
+	- Code Conventions:
+		- Java Defaults, Tab size = 4, use spaces, auto format, ...
+
 - fix all deprecated warnings
 
 - New project wizard: Add leJOS default jars to CLASSPATH

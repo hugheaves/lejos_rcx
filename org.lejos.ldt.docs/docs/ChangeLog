@@ -1,5 +1,9 @@
 ChangeLog:
 
+2004-06-19 (jhi):
+- Consolidated all tests again.
+- Moved patched code for js.tinyvm into lejos project
+
 2004-06-16 (jhi):
 - Refactored the docs plugin. Now using a toc.xml, created "theplan.html",
   using standard Eclipse stylesheets, added licenses
