@@ -1,6 +1,6 @@
 <%@ page contentType="text/html" language='java' import='josx.rcxcomm.*'%>
 <jsp:useBean id='rcx' class='josx.rcxcomm.RCXBean' scope='application'>
-  <jsp:setProperty name='rcx' property='comPort' value='usb'/>
+  <jsp:setProperty name='rcx' property='comPort' value='COM2'/>
 </jsp:useBean>
 <HTML>
 <HEAD><TITLE>JSP Page</TITLE></HEAD>
@@ -20,7 +20,8 @@
       int sensorID = Integer.decode(sensorIDString).intValue();
       rcx.lock(request);
       rcx.send((byte)sensorID);
-      int value = rcx.receiveInt();
+      int i=0, value = rcx.receive()*256;
+      value += ((i=rcx.receive()) < 0 ? i+256 : i);
       out.println("The RCX returned the following value from 'Sensor "+
         (sensorID+1)+"':&nbsp;&nbsp;<b>"+value+"</b>");
     }
