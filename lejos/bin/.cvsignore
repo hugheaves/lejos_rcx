@@ -1,2 +1,4 @@
 *.so
-
+emu-dump
+emu-lejos
+emu-lejosrun
