@@ -17,65 +17,65 @@ import org.lejos.tools.eclipse.plugin.LejosPlugin;
  */
 public class LejosClientProjectWizard extends JavaProjectWizard
 {
-  // public methods
+   // public methods
 
-  /**
-   * @see Wizard#performFinish
-   */
-  public boolean performFinish()
-  {
-    boolean rc = super.performFinish();
-    // get project
-    JavaCapabilityConfigurationPage page = (JavaCapabilityConfigurationPage) getPage("JavaCapabilityConfigurationPage");
-    if (page == null)
-    {
+   /**
+    * @see Wizard#performFinish
+    */
+   public boolean performFinish ()
+   {
+      boolean rc = super.performFinish();
+      // get project
+      JavaCapabilityConfigurationPage page = (JavaCapabilityConfigurationPage) getPage("JavaCapabilityConfigurationPage");
+      if (page == null)
+      {
+         return rc;
+      }
+      // update classpath
+      IJavaProject project = page.getJavaProject();
+      updateClasspath(project);
       return rc;
-    }
-    // update classpath
-    IJavaProject project = page.getJavaProject();
-    updateClasspath(project);
-    return rc;
-  }
+   }
 
-  // private methods
+   // private methods
 
-  /**
-   * update the project's classpath with additional leJOS libraries.
-   * 
-   * @param aProject
-   *          a java project
-   */
-  private void updateClasspath(IJavaProject aProject)
-  {
-    try
-    {
-      // get existing classpath
-      IClasspathEntry[] existingClasspath = aProject.getRawClasspath();
-      // get classpath entries from preferences
-      IClasspathEntry[] theCPEntries = LejosPlugin.getPreferences()
-          .getClientClasspathEntries();
-
-      // create new classpath with additional leJOS libraries last
-      List newClasspath = new ArrayList(existingClasspath.length
-          + theCPEntries.length);
-      for (int i = 0; i < existingClasspath.length; i++)
+   /**
+    * update the project's classpath with additional leJOS libraries.
+    * 
+    * @param aProject a java project
+    */
+   private void updateClasspath (IJavaProject aProject)
+   {
+      try
       {
-          newClasspath.add(existingClasspath[i]);
-      }
-      // add the other cp entries
-      for (int i = 0; i < theCPEntries.length; i++)
-      {
-        newClasspath.add(theCPEntries[i]);
-      }
+         // get existing classpath
+         IClasspathEntry[] existingClasspath = aProject.getRawClasspath();
+         // get classpath entries from preferences
+         IClasspathEntry[] theCPEntries = LejosPlugin.getPreferences()
+            .getClientClasspathEntries();
 
-      IClasspathEntry[] cpEntries = (IClasspathEntry[]) newClasspath
-          .toArray(new IClasspathEntry[0]);
-      // set new classpath to project
-      aProject.setRawClasspath(cpEntries, null);
-    } catch (Exception e)
-    {
-      LejosPlugin.debug(e);
-      e.printStackTrace();
-    }
-  }
+         // create new classpath with additional leJOS libraries last
+         List newClasspath = new ArrayList(existingClasspath.length
+            + theCPEntries.length);
+         for (int i = 0; i < existingClasspath.length; i++)
+         {
+            newClasspath.add(existingClasspath[i]);
+         }
+         // add the other cp entries
+         for (int i = 0; i < theCPEntries.length; i++)
+         {
+            newClasspath.add(theCPEntries[i]);
+         }
+
+         IClasspathEntry[] cpEntries = (IClasspathEntry[]) newClasspath
+            .toArray(new IClasspathEntry[0]);
+         // set new classpath to project
+         aProject.setRawClasspath(cpEntries, null);
+      }
+      catch (Exception e)
+      {
+         LejosPlugin.debug(e);
+         e.printStackTrace();
+      }
+   }
 }
