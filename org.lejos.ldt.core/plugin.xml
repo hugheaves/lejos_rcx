@@ -224,5 +224,17 @@
             name="leJOS"
             id="org.lejos.ldt.core.preferences"/>
    </extension>
+   <extension
+         point="org.eclipse.ui.views">
+      <view
+            icon="icons/view.gif"
+            class="org.lejos.tools.eclipse.plugin.view.LinkerView"
+            category="org.lejos.ldt.core.category"
+            name="leJOS Linker"
+            id="org.lejos.ldt.core.linkerView"/>
+      <category
+            name="leJOS"
+            id="org.lejos.ldt.core.category"/>
+   </extension>
 
 </plugin>
