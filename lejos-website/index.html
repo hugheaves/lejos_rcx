@@ -9,12 +9,16 @@
 <a href="apidocs/index.html">API Reference</a>
 |
 <a href="http://tinyvm.sourceforge.net">TinyVM</a>
+|
+<a href="http://tinyvm.sourceforge.net/thanks.html">Thanks</a>
 ]
 <br>
 [
 <a href="http://sourceforge.net/projects/lejos">leJOS at SourceForge</a>
 |
 <a href="http://sourceforge.net/project/showfiles.php?group_id=9339">Download Area</a>
+|
+<a href="http://sourceforge.net/news/?group_id=9339">News</a>
 |
 <a href="http://sourceforge.net/bugs/?group_id=9339">Bug Reports</a>
 |
@@ -41,8 +45,8 @@ We have plans to port leJOS to other small devices.
 Unix or CygWin
 </td>
 <td>
-<a href="http://download.sourceforge.net/lejos/lejos_1_0_0alpha3.tar.gz">
-<b>lejos_1_0_0alpha3.tar.gz</b></a>
+<a href="http://download.sourceforge.net/lejos/lejos_1_0_0alpha4.tar.gz">
+<b>lejos_1_0_0alpha4.tar.gz</b></a>
 </td>
 <td>
 <a href="unixinstall.html">Installation Instructions</a>
@@ -53,8 +57,8 @@ Unix or CygWin
 Windows 95/98/2000/NT
 </td> 
 <td>
-<a href="http://download.sourceforge.net/lejos/lejos_win32_1_0_0alpha3.zip">
-    <b>lejos_win32_1_0_0alpha3.zip</b></a>
+<a href="http://download.sourceforge.net/lejos/lejos_win32_1_0_0alpha4.zip">
+    <b>lejos_win32_1_0_0alpha4.zip</b></a>
 </td>
 <td>
 <a href="windowsinstall.html">Installation Instructions</a>
@@ -63,17 +67,22 @@ Windows 95/98/2000/NT
     
 </table>
 <p>
-
+Downloading the Windows distribution may take around 10 minutes,
+depending on your connection. The Unix distribution is considerably
+smaller, and it should run under CygWin (B20.1 preferably).
+Other releases, notes, dates and sizes are available at the
+SourceForge 
+<a href="http://sourceforge.net/project/showfiles.php?group_id=9339">download area</a>.
+<p>
 This is an early release. Assume that APIs, tool names, firmware behavior,
-and so on, are not stable. 
+and so on, are not stable. Check the README
+file for further instructions.
 <p>
 You can also  
 <a href="http://sourceforge.net/cvs/?group_id=9339">access
 the CVS repository</a>. The module name is <code>lejos</code>.
 <p>
-Do check the README
-file for instructions, but don't expect the information
-in there to be reliable or up to date at this stage.
+
 
 <h3>TinyVM vs. leJOS</h3>
 
@@ -90,6 +99,7 @@ missing in TinyVM which are currently implemented in leJOS are:
 
 <ul>
 <li>Floating point operations
+<li>Mathematical functions (java.lang.Math) 
 <li>String constants
 <li>Thread.sleep (native) and System.currentTimeMillies
 <li>ButtonListener support
@@ -99,8 +109,7 @@ missing in TinyVM which are currently implemented in leJOS are:
 Additionally, all references in the operand stack are marked as such in leJOS.
 This means that garbage collection can be implemented without much extra
 effort. Other planned enhancements include: Multi-program
-downloading, program arguments, auto power off, a fairly complete
-<code>java.lang.Math</code> class, <code>java.io</code> APIs, 
+downloading, program arguments, auto power off, <code>java.io</code> APIs, 
 <code>java.net</code> APIs, etc.
 
 <h3>Comments? Questions?</h3>
