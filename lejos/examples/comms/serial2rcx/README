@@ -1,9 +1,0 @@
-This example was contributed by Brian Bagnall
-(bbagnall <at> users.sourceforge.net)
-It allows two RCXs to communicate with each other. 
-
-% make
-
-Load each class onto 2 RCX bricks. Hit RUN on both 
-RCX bricks. Press RUN repeatedly to send a new byte 
-to the receiver.
