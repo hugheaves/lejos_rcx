@@ -25,6 +25,9 @@ public class LejosPlugin extends AbstractUIPlugin
    /** the builder id. */
    public static final String LEJOS_BUILDER = "org.lejos.ldt.core.lejosBuilder";
 
+   /** the nature id. */
+   public static final String LEJOS_MARKER_LINKER = "org.lejos.ldt.core.linkFailure";
+   
    /** The shared instance. */
    private static LejosPlugin plugin;
 

@@ -1,13 +1,17 @@
 package org.lejos.tools.eclipse.plugin.builders;
 
+import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaModelMarker;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
@@ -39,16 +43,28 @@ public class LejosBuilder extends IncrementalProjectBuilder
    {
       LejosPlugin.debug("Builder has been running");
 
+      if (hasBuildErrors())
+      {
+         return null;
+      }
+
+      clearLinkMarkers(getProject());
       linkAll(monitor);
-      // WAS HERE
+
+      // TODO jhi make build later a delta based builder,
+      // so only link the modified main classes
       // Object o = getDelta(getProject());
-      // TODO Auto-generated method stub
       return null;
    }
 
    // private methods
 
-private void linkAll (IProgressMonitor monitor)
+   /**
+    * Link all compilation units with a main method.
+    * 
+    * @param monitor the progress monitor to use
+    */
+   private void linkAll (IProgressMonitor monitor)
    {
       IProject p = getProject();
       IJavaProject jp = JavaCore.create(p);
@@ -73,9 +89,20 @@ private void linkAll (IProgressMonitor monitor)
                      facade
                         .setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
                            monitor));
-                     monitor.subTask("Linking " + String.valueOf(cu.getPath()));
+                     String cuName = String.valueOf(cu.getPath());
+                     // remove leading slash
+                     cuName = cuName.substring(1);
+                     monitor.subTask("Linking " + cuName);
                      monitor.worked(j);
-                     facade.linkJavaElement(cu, LejosPlugin.getPreferences());
+                     try
+                     {
+                        facade
+                           .linkJavaElement(cu, LejosPlugin.getPreferences());
+                     }
+                     catch (ToolsetException ex1)
+                     {
+                        createMarker(getProject(), cu, ex1);
+                     }
                   }
                }
                monitor.done();
@@ -87,10 +114,58 @@ private void linkAll (IProgressMonitor monitor)
          // TODO Auto-generated catch block
          ex.printStackTrace();
       }
-      catch (ToolsetException ex)
+   }
+
+   /**
+    * Checks for any severy build errors
+    * 
+    * @return true, if there are severy build erros
+    * @throws CoreException will be raised if markers could not be read
+    */
+   private boolean hasBuildErrors () throws CoreException
+   {
+      IMarker[] markers = getProject().findMarkers(
+         IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, false,
+         IResource.DEPTH_INFINITE);
+      for (int i = 0; i < markers.length; i++)
+      {
+         IMarker marker = markers[i];
+         if (marker.getAttribute(IMarker.SEVERITY, 0) == IMarker.SEVERITY_ERROR)
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
+   /**
+    * Create a marker for a given exception.
+    */
+   private void createMarker (IProject project, ICompilationUnit cu,
+      Exception anException)
+   {
+      try
+      {
+         IResource resource = cu.getUnderlyingResource();
+         IMarker newMarker = resource
+            .createMarker(LejosPlugin.LEJOS_MARKER_LINKER);
+         Map map = new HashMap();
+         map.put(IMarker.SEVERITY, new Integer(IMarker.SEVERITY_ERROR));
+         String message = "Link failed due to exception: ";
+         message = message + anException.getMessage();
+         map.put(IMarker.MESSAGE, message);
+         newMarker.setAttributes(map);
+      }
+      catch (CoreException ex)
       {
          // TODO Auto-generated catch block
          ex.printStackTrace();
       }
+   }
 
-   }}
+   private void clearLinkMarkers (IProject project) throws CoreException
+   {
+      project.getProject().deleteMarkers(LejosPlugin.LEJOS_MARKER_LINKER,
+         false, IResource.DEPTH_INFINITE);
+   }
+}
