@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site-build
+      feature-location="features"
+      plugin-location="plugins"
+      autobuild="false"
+      scrub-output="false"
+      use-console="true">
+</site-build>

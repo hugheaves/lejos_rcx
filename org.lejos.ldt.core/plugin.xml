@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.lejos.ldt.core"
+   name="leJOS Development Tools"
+   version="1.2.0"
+   provider-name="lejos.org"
+   class="org.lejos.tools.eclipse.plugin.LejosPlugin">
+
+   <runtime>
+      <library name="ldt-core.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
+   <requires>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.lejos.tools"/>
+   </requires>
+
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="leJOS"
+            id="org.lejos.ldt.core.actionSet">
+         <action
+               label="Link"
+               class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
+               toolbarPath="leJOSGroup"
+               id="org.lejos.ldt.core.LinkAction">
+         </action>
+      </actionSet>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.IJavaElement"
+            id="org.lejos.ldt.core.link">
+         <menu
+               label="leJOS"
+               path="additions"
+               id="leJOSMenu">
+            <separator
+                  name="leJOSGroup">
+            </separator>
+         </menu>
+         <action
+               label="Link"
+               tooltip="Links as leJOS binary"
+               class="org.lejos.tools.eclipse.plugin.actions.LinkAction"
+               menubarPath="leJOSMenu/leJOSGroup"
+               enablesFor="1"
+               id="org.lejos.ldt.core.LinkAction">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>

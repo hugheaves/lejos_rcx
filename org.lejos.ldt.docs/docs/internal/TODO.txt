@@ -1,0 +1,22 @@
+Open Issues for leJOS plugin:
+
+
+1. Functionality
+- patch js.tools for creation of signature file
+	- or clone functionality for the moment
+- hierarchical link: write and check the tests
+
+2. Development infrastructure
+- Plugin folder structure
+	- Why can an Eclipse plugin not use a directory structure like
+		- src/java
+		- src/test
+	- Did not work for me !
+
+3. Refactoring
+- Use BCEL instead of js.tools classes, or extract the leJOS specific code
+	==> Support of JDK 1.4 class file format too !!!
+
+4. UI
+- put leJOS in popupMenus after "Refresh"
+- give toolbar good icons

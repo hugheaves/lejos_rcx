@@ -1,0 +1,136 @@
+leJOS Eclipse plugin - specification proposal
+
+Version: 1.0 / 2000-10-14 / Jochen Hiller
+
+
+Functional requirements:
+
+1. Static menu structure
+- Provide a static menu structure:
+- leJOS
+	- Compile
+	- Link
+	- Download
+	- Run in Emulator
+	- Show Signature
+	- ========
+	- Compile Project
+	- Link Project
+	- Run Project in Emulator
+	- ========
+	- Download Firmware
+	- Preferences
+	- ========
+
+- "leJOS" will always be enabled, independent of current editor 
+  selection
+- "Compile" will be enabled when editing a Java file
+- "Link", "Download", "Run in Emulator", "Show Signature"
+  will be enabled when editing a Java file with a main method
+- "Compile Project", "Link Project", "Download Firmware", 
+  "Run Project in Emulator" and "Preferences" will always be enabled 
+- Necessary intermediate steps will be done automatically.
+  E.g. if downloading a program, compile and link will be done
+  automatically if required.
+
+- "Compile" will NOT necessarily call lejosc.exe/.bat, as the standard
+  Java compiler will be sufficient. It only has to care about 
+  the "-target 1.1" option to ensure 1.1 compliant byte code.
+- "Link" will create the binary file, named like the main program 
+  with the suffix ".leJOS". E.g. a file named "mypackage/MyRobot.java" 
+  will result in a linked output file named "mypackage/MyRobot.leJOS".
+  If selected at preference page, the signature file will be created 
+  too with the name "mapackage/MyRobot.leJOS.signature"
+- All generated output files will be stored at Eclipse output folder,
+  e.g. "./bin", "./build/classes" or similar. Eclipse settings 
+  will be used.
+- "Compile Project" will compile the whole project
+- "Link Project" will link the whole project, means all Java classes 
+  with a main(String[]) method into .leJOS files
+- "Download" will download the program into the RCX
+- "Run in Emulator" will start the emulator with the emulator program.
+  If required, the program will be linked with the "emu-*" tools,
+  as the binary file is currently different.
+  The name of the file is "mypackage/MyRobot.leJOS.emu", the 
+  signature is the same as abobe "mypackage/MyRobot.leJOS.signature",
+  as it will be the same.
+  When running the emulator, the output of the run will be piped 
+  into a file named "mypackage/MyRobot.leJOS.emu.out" and/or onto
+  the standard console or a leJOS specific console.
+- "Show Signature" will open the signature file for the selected 
+  Java program in an editor window.
+- "Run Project in Emulator" will run all Java programs with a main
+  and pipe the output into .out files and/or to a console.
+  This enables for later regression testing, as this output can be 
+  compared against "golden tests".
+
+- "Preferences" will support:
+	- LEJOS_HOME installation directory
+	- Port: com1/...
+	- Speed (slow/fast)
+	- Create Signature files: true/false
+	- Use Java Tools: true/false
+
+
+2. Popup menu structure
+
+- Provide a menu structure based on a right mouse click
+  to an Java element (e.g. source folder, package, 
+  compilation unit, Java class).
+- leJOS
+	- Compile
+	- Link
+	- Download
+	- Run in Emulator
+	- ========
+	- Compile Recursively
+	- Link Recurively
+	- Run in Emulator Recurively
+
+- the function are described as above, except that not the 
+  whole project, but the actually selected Java element 
+  will be used for recursively compile/link/run.
+
+
+3. Support of multiple leJOS versions
+
+- The plugin should support multiple version of the underlying 
+  leJOS version
+- Primarily, the Java tools should be used, if available
+  Note: There are minor differences in usage of these tools between
+  v2.1.0 and the current CVS version !
+- When using lejOS 2.0 and 2.1 should also support the native tools, 
+  e.g. the .exe in Windows, or executables in Linux
+- leJOS 1.x will NOT be supported.
+
+- The plugin should automatically determine the version of leJOS,
+  using some heurostic algorith, e.g. size of lejos.srec.
+
+- Windows and Linux has to be supported
+
+
+Technical requirements:
+
+1. Namespace
+- Use an Eclipse styled namespace: "org.lejos.tools.eclipse.plugin"
+  Enables for later development of other tools, e.g. like ANT tasks
+
+2. Consolidation
+- consolidate leJOS plugin version 1.1.0 from Christophe Ponsard and 
+  Matthias Paul Scholz with version developed from Jochen Hiller
+- Use leJOS CVS location "/src/tools/org.lejos.tools.eclipse.plugin" for development
+- Incremental development, short term deliverables, working against 1.2.0
+
+3. Distribution
+- Deploy the leJOS Eclipse plugin as a separate file within the leJOS files 
+  area at SourceForge: "org.lejos.tools.eclipse.plugin-1.2.0.zip"
+
+
+Future plans:
+- Probably integration of JavaVM development, using the CDT
+- Integration of leJOSUnit, for JUnit support (if supporting 
+  a RemoteTestRunner...)
+- Support of PC based programs, e.g. using the Tower-API
+  and/or Vision programs, or probably a combination of PC and RCX based
+  programs.
+- Provide same functions as described above as ANT tasks, for compile/link/download

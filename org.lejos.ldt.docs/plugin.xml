@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.lejos.ldt.docs"
+   name="org.lejos.ldt.docs"
+   version="1.2.0"
+   provider-name="lejos.org">
+
+   <runtime>
+   </runtime>
+
+</plugin>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.lejos.ldt"
+      label="org.lejos.ldt-feature"
+      version="1.2.0"
+      provider-name="lejos.org"
+      image="eclipse_update_120.jpg">
+
+   <license url="LICENSE.TXT">
+      
+   </license>
+
+   <plugin
+         id="org.lejos"
+         download-size="0"
+         install-size="0"
+         version="2.1.0"/>
+
+   <plugin
+         id="org.lejos.tools"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"/>
+
+   <plugin
+         id="org.lejos.ldt.core"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"/>
+
+   <plugin
+         id="org.lejos.ldt.docs"
+         download-size="0"
+         install-size="0"
+         version="1.2.0"/>
+
+</feature>

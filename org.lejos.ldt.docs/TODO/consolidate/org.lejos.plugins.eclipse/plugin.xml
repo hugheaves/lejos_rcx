@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin
+   id="org.lejos.plugins.eclipse"
+   name="leJOS Integrated Development Environment in Eclipse"
+   version="1.1.0"
+   provider-name="Ponsard Christophe, Jochen Hiller"
+   class="org.lejos.plugins.eclipse.LejosPlugin">
+
+   <runtime>
+      <library name="org.lejos.plugins.eclipse.jar"/>
+   </runtime>
+   <requires>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.launching"/>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.ui.workbench"/>
+   </requires>
+
+
+   <extension
+         point="org.eclipse.ui.newWizards">
+      <wizard
+            name="leJOS Project"
+            icon="icons/rcx.gif"
+            category="org.eclipse.jdt.ui.java"
+            class="org.lejos.plugins.eclipse.LejosWizard"
+            project="true"
+            id="org.lejos.plugins.eclipse.wizard">
+         <description>
+            Create a Lejos project
+         </description>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            name="leJOS"
+            class="org.lejos.plugins.eclipse.LejosPreference"
+            id="org.lejos.plugins.eclipse.pref">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.ui.editorActions">
+      <editorContribution
+            targetID="org.eclipse.jdt.ui.CompilationUnitEditor"
+            id="org.lejos.plugins.eclipse.editorContribution">
+         <menu
+               label="leJOS"
+               path="additions"
+               id="lejosMenu">
+            <separator
+                  name="lejosGroup">
+            </separator>
+         </menu>
+         <action
+               label="&amp;Preference"
+               class="org.lejos.plugins.eclipse.actions.PreferenceAction"
+               menubarPath="lejosMenu/lejosGroup"
+               id="org.lejos.plugins.eclipse.actions.PreferenceAction">
+         </action>
+         <action
+               label="&amp;Firmware Download"
+               class="org.lejos.plugins.eclipse.actions.FirmwareAction"
+               menubarPath="lejosMenu/lejosGroup"
+               id="org.lejos.plugins.eclipse.actions.FirmwareAction">
+         </action>
+         <action
+               label="&amp;Bytecode Download"
+               class="org.lejos.plugins.eclipse.actions.DownloadAction"
+               menubarPath="lejosMenu/lejosGroup"
+               id="org.lejos.plugins.eclipse.actions.DownloadAction">
+         </action>
+         <action
+               label="&amp;Link"
+               class="org.lejos.plugins.eclipse.actions.LejosLinkAction"
+               menubarPath="lejosMenu/lejosGroup"
+               id="org.lejos.plugins.eclipse.actions.LejosLinkAction">
+         </action>
+      </editorContribution>
+   </extension>
+   <extension
+         point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            objectClass="org.eclipse.jdt.core.IPackageFragment"
+            nameFilter="*"
+            id="org.lejos.plugins.eclipse">
+         <action
+               label="Link leJOS"
+               class="org.lejos.plugins.eclipse.actions.ObjectActionLink"
+               enablesFor="1"
+               id="ShowTypes">
+         </action>
+      </objectContribution>
+   </extension>
+
+</plugin>
