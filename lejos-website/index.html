@@ -15,53 +15,84 @@
 </center>
 <p>
 Like its predecessor (<a href="http://sourceforge.net/projects/tinyvm">TinyVM</a>),
-leJOS is a tiny <a href="http://java.sun.com">Java</a><sup>TM</sup> runtime. It functions as a replacement firmware for the 
+leJOS is a tiny <a href="http://java.sun.com">Java</a><sup>TM</sup> runtime. 
+It functions as replacement firmware for the 
 <a href="http://www.legomindstorms.com">Lego Mindstorms</a><sup>TM</sup> 
-RCX microcontroller, which is part of Lego's Robotics Invention System (RIS).
-The RCX contains a Hitachi H8300 processor and 32 Kb of RAM. 
-We also have plans to port leJOS to other small devices.
+RCX microcontroller, which is part of Lego's Robotics Invention System<sup>TM</sup> (RIS).
+The RCX brick contains a Hitachi H8300 processor and 32 Kb of RAM. 
+We have plans to port leJOS to other small devices.
 
 <h3>TinyVM vs. leJOS</h3>
 
-TinyVM is about 5 to 6 Kb smaller than leJOS in the RCX. The most important features
+TinyVM is about 6 Kb smaller than leJOS in the RCX. The most important features
 missing in TinyVM which are currently supported by leJOS are:
 
 <ul>
 <li>Floating point operations
 <li>String constants
+<li>Thread.sleep (native) and System.currentTimeMillies
+<li>Other APIs
 </ul>
 
-Additionally, all references in the operand stack are marked as such.
+Additionally, all references in the operand stack are marked as such in leJOS.
 This means that garbage collection can be implemented without much extra
-effort. We are also writing several APIs consistent with this goal (e.g.
-Vector and Hashtable). Other planned enhancements include: Multi-program
+effort. Other planned enhancements include: Multi-program
 downloading, program arguments, auto power off, a fairly complete
 <code>java.lang.Math</code> class, <code>java.io</code> APIs, 
 <code>java.net</code> APIs, etc.
 
 <h3>Downloading</h3>
 
-There is no downloadable version of leJOS at this stage, but you can 
+An alpha release is now available:
+<p>
+<center>
+<table border="1">
+<tr>
+<td>
+Unix or CygWin
+</td>
+<td>
+<a href="http://download.sourceforge.net/lejos/lejos_1_0_0alpha1.tar.gz">
+<b>lejos_1_0_0alpha1.tar.gz</b></a>
+</td>
+<td>
+<a href="unixinstall.html">Installation Instructions</a>
+</td>
+</tr>
+<tr>
+<td>
+Windows 95/98/2000/NT
+</td> 
+<td>
+<a href="http://download.sourceforge.net/lejos/lejos_win32_1_0_0alpha2.zip">
+    <b>lejos_win32_1_0_0alpha2.zip</b></a>
+</td>
+<td>
+<a href="windowsinstall.html">Installation Instructions</a>
+</td>
+</tr>
+    
+</table>
+</center>
+<p>
+
+This is an early release. Assume that APIs, tool names, firmware behavior,
+and so on, are not stable. 
+<p>
+You can also  
 <a href="http://sourceforge.net/cvs/?group_id=9339">access
 the CVS repository</a>. The module name is <code>lejos</code>.
 If you are unfamiliar with CVS, visit the
 <a href="http://sfdocs.sourceforge.net/sfdocs/">SourceForge Documentation Project</a>.
 <p>
-leJOS should work on any Unix system, including CygWin.
 Do check the README
-file for installation instructions. Consider the code pre-alpha and not very stable, as it's
-constantly getting changed.
-<p>
-A first release is planned for late September or October 2000. 
-<p>
-The leJOS webpages are also on CVS. So you can not only contribute 
-code, but also webpages and documentation. Please
-contact us if you would like to become part of the leJOS team!
+file for instructions, but don't expect the information
+in there to be reliable or up to date at this stage.
 
 <h3>Comments? Questions?</h3>
 
-Please direct feedback to Jose at 
-<a href="mailto:jhsolorz@yahoo.com">jhsolorz@yahoo.com</a>. You can
+Please direct feedback to Jose Solorzano at 
+<a href="mailto:jhsolorz@yahoo.com">jhsolorz at yahoo.com</a>. You can
 also 
 <a href="http://sourceforge.net/mail/?group_id=8299">subscribe</a> to the <code>tinyvm-discussion</code> mailing list.
 <p>
@@ -70,7 +101,7 @@ for stopping by!
 <p>  
 <p>
 <center>
-
+<hr>
 <a href="http://www.sourceforge.net">
 <img src="http://sourceforge.net/sflogo.php?group_id=9339&type=1">
 </a>

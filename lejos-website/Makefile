@@ -8,7 +8,7 @@ release: clean apidocs
 
 apidocs:
 	mkdir -p apidocs
-	javadoc -author -d apidocs -sourcepath "`cygpath -w ${LEJOS_ROOT}/classes`" java.io java.lang java.util josx.platform.rcx
+	javadoc -author -d apidocs -sourcepath "`cygpath -w ${LEJOS_ROOT}/classes`" java.io java.lang java.util josx.platform.rcx josx.util
 	
 clean:
 	rm -f `find . -name '*~'`
