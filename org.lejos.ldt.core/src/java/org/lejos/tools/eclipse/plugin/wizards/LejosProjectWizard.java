@@ -5,7 +5,7 @@ import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaCore;
-import org.eclipse.jdt.internal.ui.wizards.NewProjectCreationWizard;
+import org.eclipse.jdt.internal.ui.wizards.JavaProjectWizard;
 import org.eclipse.jdt.ui.wizards.JavaCapabilityConfigurationPage;
 import org.lejos.tools.eclipse.plugin.EclipseUtilities;
 import org.lejos.tools.eclipse.plugin.LejosPlugin;
@@ -19,7 +19,7 @@ import org.lejos.tools.eclipse.plugin.LejosPlugin;
  * based on implementation parts of Christophe Ponsard
  *   
  */
-public class LejosProjectWizard  extends NewProjectCreationWizard {
+public class LejosProjectWizard  extends JavaProjectWizard {
     
     ///////////////////////////////////////////////////////////////////////////////////////////////////////
     // overrides of NewProjectCreationWizard
