@@ -81,11 +81,6 @@ public class RunEmulatorDelegate extends AbstractJavaLaunchConfigurationDelegate
 
          Job job = new Job("leJOS link")
          {
-            /*
-             * (non-Javadoc)
-             * 
-             * @see org.eclipse.core.internal.jobs.InternalJob#run(org.eclipse.core.runtime.IProgressMonitor)
-             */
             protected IStatus run (IProgressMonitor monitor)
             {
                EclipseToolsetFacade facade = new EclipseToolsetFacade();
