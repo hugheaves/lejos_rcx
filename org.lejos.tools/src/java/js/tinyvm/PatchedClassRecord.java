@@ -3,6 +3,7 @@ package js.tinyvm;
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.lang.reflect.Field;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -33,7 +34,7 @@ public class PatchedClassRecord extends ClassRecord {
 	        ".class) not found in CLASSPATH: " + aCP);
 	    }
 	    ClassRecord pCR = new PatchedClassRecord();
-	    pCR.iBinary = aBinary;
+        pCR.iBinary = aBinary;
 	    pCR.iCF = new JClassFile();
 	    pCR.iName = aName;
 	    InputStream pBufIn = new BufferedInputStream (pIn, 4096);
@@ -127,4 +128,25 @@ public class PatchedClassRecord extends ClassRecord {
 	      }
 	    }
 	  }
+	
+	
+	/**
+	 * Set the value of a protected field.
+	 * 
+	 * @param instance the instance to retrieve the field 
+	 * @param fieldName the name of the field
+	 * @param val the value to set
+	 * @return Object
+	 */
+	public static void setProtectedField (Object instance, String fieldName, Object val) {
+		try {
+			Field field = instance.getClass ().getField(fieldName);
+			field.setAccessible(true);
+			field.set(instance, val);
+		} catch (NoSuchFieldException ex) {
+			ex.printStackTrace();
+		} catch (IllegalAccessException ex) {
+			ex.printStackTrace();
+		}
+	}	
 }

@@ -1,3 +1,55 @@
+2003-12-28:
+===========
+
+- LDT-Deployment
+	- nochmals durchtesten
+	- wenn Fehler, mit Minimalbsp. testen
+	- wenn noch Fehler, an Eclipse posten
+- LDT-Deployment:
+	- Probleme mit ARCH, OS, WS, LANG, CPU
+	- Checken, was ich will, und nochmals durchtesten
+		- Win, Linux, MacOS
+		- Win, GTK, Carbon
+		- EN, DE
+		- INTEL, PPC
+- LDT-Deployment:
+	- Update der Files per Script !
+		- per ANT und SCP automatisieren
+- LDT-Deployment:
+	- Licenz nach CPL-v1.0.html umstellen
+	- mit MPS und Belgier verifizieren
+	- Nochmals installieren und testen:
+		- Copyright
+		- Lizenz
+		- PLugin-Namen verifizieren
+- Auftrennung LDT-core und LDT-ui
+- Plugin-ID's nochmals verifizieren
+- Packages nach LDT umbenennen
+
+
+- org.lejos.tools:
+	- ANT targets implementieren
+	- in Eclipse ANT Editor einbauen ?
+
+
+
+
+
+2003-12-17:
+===========
+
+1. Feature
+- Check, whether OS, WS, Languages, ARCH should be used or not
+	- check for additional docs at eclipse.org
+	- check CtE book
+
+2. All plugins:
+- Add a license file
+
+
+
+
+
 Open Issues for leJOS plugin:
 
 
@@ -20,3 +72,33 @@ Open Issues for leJOS plugin:
 4. UI
 - put leJOS in popupMenus after "Refresh"
 - give toolbar good icons
+
+5. Questions regarding Eclipse
+- Feature:
+	- How to specify "Operating System", "Window System", "Architecture" ?
+	- If specifying: os="linux,win32", export will result in an error:
+		"<pluginname>:build.xml:93: Target 'ROOTFILESlinux,win32_*_*' does not exist in this project"
+	- After deselecting all, in source there will a os="" left
+	- When arch="" will be left, there will an internal PDE Error:
+	
+java.lang.ArrayIndexOutOfBoundsException: 2
+	at org.eclipse.pde.internal.build.Config.<init>(Config.java:29)
+	at org.eclipse.pde.internal.build.Config.<init>(Config.java:33)
+	at org.eclipse.pde.internal.build.AbstractScriptGenerator.setConfigInfo(AbstractScriptGenerator.java:73)
+	at org.eclipse.pde.internal.ui.wizards.exports.FeatureExportJob.setConfigInfo(FeatureExportJob.java:179)
+	at org.eclipse.pde.internal.ui.wizards.exports.FeatureExportJob.makeScript(FeatureExportJob.java:169)
+	at org.eclipse.pde.internal.ui.wizards.exports.FeatureExportJob.doExport(FeatureExportJob.java:101)
+	at org.eclipse.pde.internal.ui.wizards.exports.BaseExportJob.doExports(BaseExportJob.java:179)
+	at org.eclipse.pde.internal.ui.wizards.exports.BaseExportJob.run(BaseExportJob.java:133)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:62)
+	
+
+- There will be a permanent error when creating the feature:
+	- Compiling incl. required plugins will work perfect
+	- logs.zip will contain compile errors
+	==> But: The deployed feature and plugins will work in an target Eclipse
+
+- After installling a new feature, it is working. The properties show it in feature list
+  (Help -> About Eclipse -> Congiuration Details)
+  But it is missing in the Help -> About Eclipse -> Feature Details
+  

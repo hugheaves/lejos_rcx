@@ -1,16 +1,11 @@
 package org.lejos.tools.eclipse.plugin;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
-import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 
 /**
@@ -63,23 +58,6 @@ public class LejosPlugin extends AbstractUIPlugin {
 	 */
 	public ResourceBundle getResourceBundle() {
 		return resourceBundle;
-	}
-
-	/**
-	 * Returns a file reference for a resource witin the plugin
-	 * 
-	 * @param path a path
-	 * @return a file reference looked up within plugin
-	 */
-	public File getFileInPlugin(IPath path) {
-		try {
-			URL installURL =
-				new URL(getDescriptor().getInstallURL(), path.toString());
-			URL localURL = Platform.asLocalURL(installURL);
-			return new File(localURL.getFile());
-		} catch (IOException e) {
-			return null;
-		}
 	}
 
 	// static methods

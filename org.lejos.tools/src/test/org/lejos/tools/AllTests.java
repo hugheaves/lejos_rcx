@@ -13,7 +13,7 @@ import org.lejos.tools.impl.RuntimeToolsetImplTest;
 import org.lejos.tools.main.LejosLinkTest;
 
 /**
- * Overall test suite for the whole Eclipse plugin.
+ * Overall test suite for lejos tools.
  * 
  * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller</a>
  */

@@ -65,7 +65,7 @@ public class LejosPreferences {
 	 */
 	public String[] getDefaultClasspathEntries() {
 		return new String[] {
-			"lejos/lib/classes.zip",
-			"lejos/lib/rcxrcxcomm.jar" };
+			"lib/classes.zip",
+			"lib/rcxrcxcomm.jar" };
 	}
 }

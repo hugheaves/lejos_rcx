@@ -1,6 +1,7 @@
 package org.lejos.tools.eclipse.plugin;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
@@ -75,12 +76,20 @@ public class EclipseToolsetFacade {
 			EclipseUtilities.getOutputFolder(aCompilationUnit).toString()
 				+ File.pathSeparator;
 		String[] lejosLibs = aPreferences.getDefaultClasspathEntries();
-		for (int i = 0; i < lejosLibs.length; i++) {
-			IPath lejosLibPath = new Path(lejosLibs[i]);
-			File absoluteLibPath =
-				LejosPlugin.getDefault().getFileInPlugin(lejosLibPath);
-			classpath =
-				classpath + absoluteLibPath.toString() + File.pathSeparator;
+		try {
+			for (int i = 0; i < lejosLibs.length; i++) {
+				IPath lejosLibPath = new Path(lejosLibs[i]);
+				Path absoluteLibPath =
+					EclipseUtilities.findFileInPlugin(
+						"org.lejos",
+						lejosLibPath.toString());
+				classpath =
+					classpath + absoluteLibPath.toString() + File.pathSeparator;
+			}
+		} catch (IOException ex) {
+			throw new ToolsetException(
+				"Could not create CLASSPATH for link: ",
+				ex);
 		}
 
 		// finally, call the link process
@@ -92,7 +101,7 @@ public class EclipseToolsetFacade {
 			}
 			sbuf.append(classNames[i]);
 		}
-		sbuf.append (" to " + outputFile.toString());
+		sbuf.append(" to " + outputFile.toString());
 		LejosPlugin.debug(sbuf.toString());
 		toolset.link(
 			outputFile,

@@ -12,7 +12,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
-import org.lejos.tools.eclipse.plugin.util.SimpleProjectCreator;
+import org.lejos.tools.eclipse.plugin.util.SimpleJavaProject;
 
 /**
  * Tests for <code>EclipseUtilities</code> class.
@@ -29,39 +29,39 @@ public class EclipseUtilitiesTest extends TestCase {
 		super(name);
 	}
 
-	private SimpleProjectCreator creator;
+	private SimpleJavaProject sjp;
 	protected void setUp() throws Exception {
-		creator = new SimpleProjectCreator();
-		creator.createSimpleProject();
+		sjp = new SimpleJavaProject();
+		sjp.createProject();
 	}
 	protected void tearDown() throws Exception {
 		// cleanup project
-		creator.deleteProject(creator.getJavaProject());
-		creator = null;
+		sjp.dispose();
+		sjp = null;
 	}
 
 	// test methods
 
 	public void testGetOutputFolder() throws CoreException, IOException {
 		// check, whether .class will be correct
-		ICompilationUnit cu = creator.getCUPackage2Class1();
+		ICompilationUnit cu = sjp.getPackage1Package2Class1CU();
 		File f = EclipseUtilities.getOutputFolder(cu);
 		assertNotNull(f);
 		File required =
 			new File(
-				"junit-workbench-workspace/simpleproject1/" + "build/classes/");
+				"junit-workbench-workspace/simpleproject/" + "build/classes/");
 		// compare the canonical files
 		assertEquals(required.getCanonicalFile(), f.getCanonicalFile());
 	}
 
 	public void testGetOutputFile() throws CoreException, IOException {
 		// check, whether .class will be correct
-		ICompilationUnit cu = creator.getCUPackage2Class1();
+		ICompilationUnit cu = sjp.getPackage1Package2Class1CU();
 		File f = EclipseUtilities.getOutputFile(cu, ".class");
 		assertNotNull(f);
 		File required =
 			new File(
-				"junit-workbench-workspace/simpleproject1/"
+				"junit-workbench-workspace/simpleproject/"
 					+ "build/classes/"
 					+ "package1/package2/Class1.class");
 		// compare the canonical files
@@ -71,7 +71,7 @@ public class EclipseUtilitiesTest extends TestCase {
 		assertNotNull(f);
 		required =
 			new File(
-				"junit-workbench-workspace/simpleproject1/"
+				"junit-workbench-workspace/simpleproject/"
 					+ "build/classes/"
 					+ "package1/package2/Class1.leJOS");
 		// compare the canonical files
@@ -81,7 +81,7 @@ public class EclipseUtilitiesTest extends TestCase {
 		assertNotNull(f);
 		required =
 			new File(
-				"junit-workbench-workspace/simpleproject1/"
+				"junit-workbench-workspace/simpleproject/"
 					+ "build/classes/"
 					+ "package1/package2/Class1.leJOS.signature");
 		// compare the canonical files
@@ -90,15 +90,15 @@ public class EclipseUtilitiesTest extends TestCase {
 
 	public void testGetAbsoluteLocationForResource()
 		throws CoreException, IOException {
-		IProject project = creator.getJavaProject().getProject();
+		IProject project = sjp.getJavaProject().getProject();
 		// the resource is named including the project name
 		IPath path =
-			new Path("/simpleproject1/src/package1/package2/Class1.java");
+			new Path("/simpleproject/src/package1/package2/Class1.java");
 
 		File f = EclipseUtilities.getAbsoluteLocationForResource(project, path);
 		File required =
 			new File(
-				"junit-workbench-workspace/simpleproject1/"
+				"junit-workbench-workspace/simpleproject/"
 					+ "src/"
 					+ "package1/package2/Class1.java");
 		// compare the canonical files
@@ -106,16 +106,17 @@ public class EclipseUtilitiesTest extends TestCase {
 	}
 
 	public void testGetFQCN() throws JavaModelException {
-		String fqcn = EclipseUtilities.getFQCN(creator.getCUPackage2Class1());
+		String fqcn =
+			EclipseUtilities.getFQCN(sjp.getPackage1Package2Class1CU());
 		assertEquals("package1.package2.Class1", fqcn);
 	}
 
 	public void testHasMain() throws JavaModelException {
 		boolean hasMain =
-			EclipseUtilities.hasMain(creator.getCUPackage2Class1());
+			EclipseUtilities.hasMain(sjp.getPackage1Package2Class1CU());
 		assertTrue(hasMain);
 		// Class2.java does NOT have a main
-		hasMain = EclipseUtilities.hasMain(creator.getCUPackage2Class2());
+		hasMain = EclipseUtilities.hasMain(sjp.getPackage1Package2Class2CU());
 		assertFalse(hasMain);
 	}
 
@@ -123,20 +124,22 @@ public class EclipseUtilitiesTest extends TestCase {
 		ICompilationUnit[] cus = null;
 		// for Class1, we expect 1 CU
 		cus =
-			EclipseUtilities.collectLinkClasses(creator.getCUPackage2Class1());
+			EclipseUtilities.collectLinkClasses(
+				sjp.getPackage1Package2Class1CU());
 		assertNotNull(cus);
 		assertEquals(1, cus.length);
 		// for Class2, we expect 0 CU
 		cus =
-			EclipseUtilities.collectLinkClasses(creator.getCUPackage2Class2());
+			EclipseUtilities.collectLinkClasses(
+				sjp.getPackage1Package2Class2CU());
 		assertNotNull(cus);
 		assertEquals(0, cus.length);
 		// for package2, we expect 1 CU
-		cus = EclipseUtilities.collectLinkClasses(creator.getPackage2());
+		cus = EclipseUtilities.collectLinkClasses(sjp.getPackage1Package2());
 		assertNotNull(cus);
 		assertEquals(1, cus.length);
 		// for package1, we expect 2 CU
-		cus = EclipseUtilities.collectLinkClasses(creator.getPackage1());
+		cus = EclipseUtilities.collectLinkClasses(sjp.getPackage1());
 		assertNotNull(cus);
 		assertEquals(2, cus.length);
 	}

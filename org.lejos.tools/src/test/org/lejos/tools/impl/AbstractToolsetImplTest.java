@@ -83,7 +83,7 @@ public class AbstractToolsetImplTest extends TestCase {
         // TODO specify somewhere the directory of lejos,
         // e.g. as LEJOS_HOME as part of the toolset
         copyFile("../org.lejos/lib/classes.zip", binDir + "/classes.zip");
-        copyFile("../org.lejos/lib/tools.jar", binDir + "/tools.jar");
+        copyFile("tools.jar", binDir + "/tools.jar");
 
         // check for lookup using a directory
         cp = toolset.new Classpath(binDir);

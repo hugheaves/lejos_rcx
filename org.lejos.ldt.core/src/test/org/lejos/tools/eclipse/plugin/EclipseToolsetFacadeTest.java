@@ -1,12 +1,14 @@
 package org.lejos.tools.eclipse.plugin;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.jdt.core.IJavaProject;
 import org.lejos.tools.api.ToolsetException;
-import org.lejos.tools.eclipse.plugin.util.SimpleProjectCreator;
+import org.lejos.tools.eclipse.plugin.util.SimpleJavaProject;
 import org.lejos.tools.impl.NullProgressMonitorToolsetImpl;
 
 /**
@@ -25,37 +27,41 @@ public class EclipseToolsetFacadeTest extends TestCase {
 		super(name);
 	}
 
+	private SimpleJavaProject sjp;
+	protected void setUp() throws Exception {
+		sjp = new SimpleJavaProject();
+		sjp.createProject();
+	}
+	protected void tearDown() throws Exception {
+		// cleanup project
+		sjp.dispose();
+		sjp = null;
+	}
+
 	// test methods
 
 	public void testLinkOneCU()
-		throws ToolsetException, CoreException, InterruptedException {
-		SimpleProjectCreator creator = new SimpleProjectCreator();
-		creator.createSimpleProject();
-		IJavaProject javaProject = creator.getJavaProject();
-
+		throws ToolsetException, InterruptedException, MalformedURLException, CoreException, IOException {
 		EclipseToolsetFacade facade = new EclipseToolsetFacade();
 		// disbable output for tests
 		facade.setProgressMonitor(new NullProgressMonitorToolsetImpl());
 		facade.linkCU(
-			creator.getCUPackage2Class1(),
+			sjp.getPackage1Package2Class1CU(),
 			LejosPlugin.getPreferences());
-
-		creator.deleteProject(javaProject);
 	}
 
 	public void testLinkJavaElement()
-		throws ToolsetException, CoreException, InterruptedException {
-		SimpleProjectCreator creator = new SimpleProjectCreator();
-		creator.createSimpleProject();
-		IJavaProject javaProject = creator.getJavaProject();
-
+		throws
+			ToolsetException,
+			InterruptedException,
+			MalformedURLException,
+			CoreException,
+			IOException {
 		EclipseToolsetFacade facade = new EclipseToolsetFacade();
 		// disbable output for tests
 		facade.setProgressMonitor(new NullProgressMonitorToolsetImpl());
 		facade.linkJavaElement(
-			creator.getPackage1(),
+			sjp.getPackage1(),
 			LejosPlugin.getPreferences());
-
-		creator.deleteProject(javaProject);
 	}
 }

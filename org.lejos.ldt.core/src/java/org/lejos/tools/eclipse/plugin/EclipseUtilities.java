@@ -1,11 +1,18 @@
 package org.lejos.tools.eclipse.plugin;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
+import org.eclipse.core.runtime.IPluginDescriptor;
+import org.eclipse.core.runtime.IPluginRegistry;
+import org.eclipse.core.runtime.Path;
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
@@ -32,7 +39,7 @@ public final class EclipseUtilities extends ToolsetFactory {
 	 * @param cu the compilation unit
 	 * @return a file specifiying the output directory
 	 * @throws JavaModelException will be raised, if output location cannot be
-	 * determined
+	 *             determined
 	 */
 	public static File getOutputFolder(ICompilationUnit cu)
 		throws JavaModelException {
@@ -56,7 +63,7 @@ public final class EclipseUtilities extends ToolsetFactory {
 	 * @param anExtension the given extension
 	 * @return a file reference to the output file
 	 * @throws JavaModelException will be raised, if output location cannot be
-	 * determined
+	 *             determined
 	 */
 	public static File getOutputFile(ICompilationUnit cu, String anExtension)
 		throws JavaModelException {
@@ -119,7 +126,7 @@ public final class EclipseUtilities extends ToolsetFactory {
 	 * @param cu the compilation unit
 	 * @return a full qualified class name in "." notation
 	 * @throws JavaModelException will be raised, if package declarations
-	 * cannot be determined
+	 *             cannot be determined
 	 */
 	public static String getFQCN(ICompilationUnit cu)
 		throws JavaModelException {
@@ -144,7 +151,7 @@ public final class EclipseUtilities extends ToolsetFactory {
 	 * @param cu the compilation unit
 	 * @return true, if the compilation unit has a main method
 	 * @throws JavaModelException will be raised, if output location cannot be
-	 * determined
+	 *             determined
 	 */
 	public static boolean hasMain(ICompilationUnit cu)
 		throws JavaModelException {
@@ -176,7 +183,7 @@ public final class EclipseUtilities extends ToolsetFactory {
 	 * @param javaElem the given java element
 	 * @return an array with compilation units
 	 * @throws JavaModelException will be raised, if output location cannot be
-	 * determined
+	 *             determined
 	 */
 	public static ICompilationUnit[] collectLinkClasses(IJavaElement javaElem)
 		throws JavaModelException {
@@ -185,73 +192,19 @@ public final class EclipseUtilities extends ToolsetFactory {
 		switch (javaElem.getElementType()) {
 
 			case IJavaElement.PACKAGE_FRAGMENT_ROOT :
-				{
-					IPackageFragmentRoot root = (IPackageFragmentRoot) javaElem;
-					IJavaElement[] elems = root.getChildren();
-					for (int i = 0; i < elems.length; i++) {
-						IPackageFragment aPackage = (IPackageFragment) elems[i];
-						ICompilationUnit[] subCUs =
-							collectLinkClasses(elems[i]);
-						for (int j = 0; j < subCUs.length; j++) {
-							allCU.add(subCUs[j]);
-						}
-					}
-				}
+				collectCU(allCU, (IPackageFragmentRoot) javaElem);
 				break;
 
 			case IJavaElement.PACKAGE_FRAGMENT :
-				{
-					IPackageFragment fragment = (IPackageFragment) javaElem;
-					ICompilationUnit[] children =
-						fragment.getCompilationUnits();
-					for (int i = 0; i < children.length; i++) {
-						if (hasMain(children[i])) {
-							allCU.add(children[i]);
-						}
-					}
-					// now recurse over all java elements
-					if (fragment.hasSubpackages()) {
-						IPackageFragmentRoot root =
-							(IPackageFragmentRoot) fragment.getParent();
-						IJavaElement[] elems = root.getChildren();
-						// now check, whether these packages are a subpackage
-						// of the given package
-						for (int i = 0; i < elems.length; i++) {
-							IPackageFragment aPackage =
-								(IPackageFragment) elems[i];
-							String fragmentName = fragment.getElementName();
-							String packageName = aPackage.getElementName();
-							// if package names match and are not the same
-							if ((packageName.indexOf(fragmentName) >= 0)
-								&& (!packageName.equals(fragmentName))) {
-								ICompilationUnit[] subCUs =
-									collectLinkClasses(elems[i]);
-								for (int j = 0; j < subCUs.length; j++) {
-									allCU.add(subCUs[j]);
-								}
-							}
-						}
-					}
-				}
+				collectCU(allCU, (IPackageFragment) javaElem);
 				break;
 
 			case IJavaElement.COMPILATION_UNIT :
-				{
-					ICompilationUnit cu = (ICompilationUnit) javaElem;
-					if (hasMain(cu)) {
-						allCU.add(cu);
-					}
-				}
+				collectCU(allCU, (ICompilationUnit) javaElem);
 				break;
 
 			case IJavaElement.TYPE :
-				{
-					IType type = (IType) javaElem;
-					ICompilationUnit cu = type.getCompilationUnit();
-					if (hasMain(cu)) {
-						allCU.add(cu);
-					}
-				}
+				collectCU(allCU, (IType) javaElem);
 				break;
 
 			default :
@@ -264,6 +217,126 @@ public final class EclipseUtilities extends ToolsetFactory {
 		ICompilationUnit[] cus = new ICompilationUnit[allCU.size()];
 		allCU.toArray(cus);
 		return cus;
+	}
+
+	/**
+	 * Add all compilation units for a type.
+	 * 
+	 * @param aSetToCollect a set to add the CUs for
+	 * @param aType a type, e.g. a class
+	 * @throws JavaModelException will be raised in any internal access to java
+	 *             model
+	 */
+	private static void collectCU(Set aSetToCollect, IType aType)
+		throws JavaModelException {
+		ICompilationUnit cu = aType.getCompilationUnit();
+		if (hasMain(cu)) {
+			aSetToCollect.add(cu);
+		}
+	}
+
+	/**
+	 * Add all compilation units for a compilation unit.
+	 * 
+	 * <p>
+	 * This method is trivial, but done to be compliant to other collect
+	 * methods.
+	 * </p>
+	 * 
+	 * @param aSetToCollect a set to add the CUs for
+	 * @param aCompilationUnit a compilation unit
+	 * @throws JavaModelException will be raised in any internal access to java
+	 *             model
+	 */
+	private static void collectCU(
+		Set aSetToCollect,
+		ICompilationUnit aCompilationUnit)
+		throws JavaModelException {
+		if (hasMain(aCompilationUnit)) {
+			aSetToCollect.add(aCompilationUnit);
+		}
+	}
+
+	/**
+	 * Add all compilation units for a package fragment.
+	 * 
+	 * @param aSetToCollect a set to add the CUs for
+	 * @param aFragment the given package fragment
+	 * @throws JavaModelException will be raised in any internal access to java
+	 *             model
+	 */
+	private static void collectCU(
+		Set aSetToCollect,
+		IPackageFragment aFragment)
+		throws JavaModelException {
+		ICompilationUnit[] children = aFragment.getCompilationUnits();
+		for (int i = 0; i < children.length; i++) {
+			if (hasMain(children[i])) {
+				aSetToCollect.add(children[i]);
+			}
+		}
+		// now recurse over all java elements
+		if (aFragment.hasSubpackages()) {
+			IPackageFragmentRoot root =
+				(IPackageFragmentRoot) aFragment.getParent();
+			IJavaElement[] elems = root.getChildren();
+			// now check, whether these packages are a subpackage
+			// of the given package
+			for (int i = 0; i < elems.length; i++) {
+				IPackageFragment aPackage = (IPackageFragment) elems[i];
+				String fragmentName = aFragment.getElementName();
+				String packageName = aPackage.getElementName();
+				// if package names match and are not the same
+				if ((packageName.indexOf(fragmentName) >= 0)
+					&& (!packageName.equals(fragmentName))) {
+					ICompilationUnit[] subCUs = collectLinkClasses(elems[i]);
+					for (int j = 0; j < subCUs.length; j++) {
+						aSetToCollect.add(subCUs[j]);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * Add all compilation units for a package fragment root.
+	 * 
+	 * @param aSetToCollect a set to add the CUs for
+	 * @param aFragmentRoot the given fragment root
+	 * @throws JavaModelException will be raised in any internal access to java
+	 *             model
+	 */
+	private static void collectCU(
+		Set aSetToCollect,
+		IPackageFragmentRoot aFragmentRoot)
+		throws JavaModelException {
+		IJavaElement[] elems = aFragmentRoot.getChildren();
+		for (int i = 0; i < elems.length; i++) {
+			IPackageFragment aPackage = (IPackageFragment) elems[i];
+			ICompilationUnit[] subCUs = collectLinkClasses(elems[i]);
+			for (int j = 0; j < subCUs.length; j++) {
+				aSetToCollect.add(subCUs[j]);
+			}
+		}
+	}
+
+	/**
+	 * Find a file within a plugin.
+	 * 
+	 * @param plugin the name of the plugin
+	 * @param file the name of the file
+	 * @return the path to the file
+	 * @throws MalformedURLException will be raised in any URL problme
+	 * @throws IOException will be raised in problem accessing ressource
+	 */
+	public static Path findFileInPlugin(String plugin, String file)
+		throws MalformedURLException, IOException {
+		IPluginRegistry registry = Platform.getPluginRegistry();
+		IPluginDescriptor descriptor = registry.getPluginDescriptor(plugin);
+		URL pluginURL = descriptor.getInstallURL();
+		URL jarURL = new URL(pluginURL, file);
+		URL localJarURL = Platform.asLocalURL(jarURL);
+		return new Path(localJarURL.getPath());
 	}
 
 	// constructor

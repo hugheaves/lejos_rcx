@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin
    id="org.lejos.tools"
-   name="org.lejos.tools"
+   name="leJOS Tools"
    version="1.2.0"
    provider-name="lejos.org">
 
@@ -9,12 +9,12 @@
       <library name="tools-extensions.jar">
          <export name="*"/>
       </library>
+      <library name="tools.jar"/>
       <library name="lib/commons-cli-1.0.jar"/>
    </runtime>
    <requires>
       <import plugin="org.junit"/>
       <import plugin="org.lejos"/>
    </requires>
-
 
 </plugin>

@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin
    id="org.lejos"
-   name="org.lejos"
+   name="leJOS"
    version="2.1.0"
    provider-name="lejos.org">
-
-   <runtime>
-      <library name="lib/tools.jar">
-         <export name="*"/>
-      </library>
-   </runtime>
 
 </plugin>
