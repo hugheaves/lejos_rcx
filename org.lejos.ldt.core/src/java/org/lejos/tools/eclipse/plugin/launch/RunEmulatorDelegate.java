@@ -92,13 +92,19 @@ public class RunEmulatorDelegate extends AbstractJavaLaunchConfigurationDelegate
                   monitor.beginTask("leJOS link", 1000);
                   OutputStream output = new FileOutputStream(binPath
                      .toOSString());
-                  facade
-                     .setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
-                        monitor));
-                  facade.link(PlatformRegistry.RCX,
-                     outputDir.getAbsolutePath(), mainClass, output);
-                  output.close();
-                  monitor.done();
+                  try
+                  {
+                     facade
+                        .setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
+                           monitor));
+                     facade.link(PlatformRegistry.RCX,
+                        outputDir.getAbsolutePath(), mainClass, output);
+                  }
+                  finally
+                  {
+                     output.close();
+                     monitor.done();
+                  }
                }
                catch (IOException e)
                {
