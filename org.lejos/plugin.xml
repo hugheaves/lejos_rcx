@@ -11,9 +11,6 @@
       <library name="lib/commons-cli-1.0.jar">
          <export name="*"/>
       </library>
-      <library name="lib/jtools.jar">
-         <export name="*"/>
-      </library>
       <library name="lib/pcrcxcomm.jar">
          <export name="*"/>
       </library>
@@ -21,5 +18,8 @@
          <export name="*"/>
       </library>
    </runtime>
+   <requires>
+      <import plugin="lejos" export="true"/>
+   </requires>
 
 </plugin>

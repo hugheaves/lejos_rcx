@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry sourcepath="/lejos/src/java/classes" kind="lib" path="lib/classes.jar"/>
 	<classpathentry sourcepath="/lejos/src/java/rcxcomm" kind="lib" path="lib/rcxcomm.jar"/>
-	<classpathentry exported="true" sourcepath="/lejos/src/java/tools" kind="lib" path="lib/jtools.jar"/>
 	<classpathentry exported="true" sourcepath="/lejos/src/java/pcrcxcomm" kind="lib" path="lib/pcrcxcomm.jar"/>
 	<classpathentry exported="true" sourcepath="/lejos/src/java/vision" kind="lib" path="lib/vision.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
