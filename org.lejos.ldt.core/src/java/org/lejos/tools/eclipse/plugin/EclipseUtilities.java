@@ -8,8 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
-import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
@@ -408,54 +406,6 @@ public final class EclipseUtilities extends ToolsetFactory
 
       String lib = "lib" + File.separator + libname;
       return findFileInPlugin("org.lejos", lib);
-   }
-
-   /**
-    * checks a project for leJOS nature
-    * 
-    * @param IProject the project
-    * @return boolean true, if the project has leJOS nature
-    * @throws CoreException
-    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
-    */
-   public static boolean checkForLeJOSNature (IProject aProject)
-      throws CoreException
-   {
-      // check project's natures
-      IProjectDescription description = aProject.getDescription();
-      String[] natures = description.getNatureIds();
-      for (int i = 0; i < natures.length; i++)
-      {
-         if (natures[i].equals("org.lejos.ldt.core.lejosprojectnature"))
-            return true;
-      }
-      return false;
-   }
-
-   /**
-    * sets a project's nature to "leJOS project"
-    * 
-    * @param IProject the project
-    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
-    * @throws CoreException
-    */
-   public static void addLeJOSNature (IProject aProject)
-   {
-      try
-      {
-         IProjectDescription description = aProject.getDescription();
-         String[] natures = description.getNatureIds();
-         String[] newNatures = new String[natures.length + 1];
-         System.arraycopy(natures, 0, newNatures, 0, natures.length);
-         newNatures[natures.length] = "org.lejos.ldt.core.lejosprojectnature";
-         description.setNatureIds(newNatures);
-         aProject.getProject().setDescription(description, null);
-      }
-      catch (CoreException e)
-      {
-         LejosPlugin.debug(e);
-         e.printStackTrace();
-      }
    }
 
    /**

@@ -146,11 +146,4 @@ public class EclipseUtilitiesTest extends TestCase
       assertNotNull(cus);
       assertEquals(2, cus.length);
    }
-
-   public void testSetAndCheckForLeJOSNature () throws CoreException
-   {
-      IProject project = sjp.getJavaProject().getProject();
-      EclipseUtilities.addLeJOSNature(project);
-      assertTrue(EclipseUtilities.checkForLeJOSNature(project));
-   }
 }

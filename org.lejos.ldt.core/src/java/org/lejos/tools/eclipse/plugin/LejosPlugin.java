@@ -3,8 +3,11 @@ package org.lejos.tools.eclipse.plugin;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.resources.IWorkspace;
 import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.lejos.tools.eclipse.plugin.preferences.LejosPreferences;
 
@@ -15,6 +18,12 @@ public class LejosPlugin extends AbstractUIPlugin
 {
 
    // static attributes
+
+   /** the nature id. */
+   public static final String LEJOS_NATURE = "org.lejos.ldt.core.lejosNature";
+
+   /** the builder id. */
+   public static final String LEJOS_BUILDER = "org.lejos.ldt.core.lejosBuilder";
 
    /** The shared instance. */
    private static LejosPlugin plugin;
@@ -159,5 +168,53 @@ public class LejosPlugin extends AbstractUIPlugin
          System.out.println(LejosPlugin.class.getName()
             + ": Exception occured: " + t.toString());
       }
+   }
+
+   /**
+    * sets a project's nature to "leJOS project"
+    * 
+    * @param IProject the project
+    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
+    * @throws CoreException
+    */
+   public static void addLeJOSNature (IProject aProject)
+   {
+      try
+      {
+         IProjectDescription description = aProject.getDescription();
+         String[] natures = description.getNatureIds();
+         String[] newNatures = new String[natures.length + 1];
+         System.arraycopy(natures, 0, newNatures, 0, natures.length);
+         newNatures[natures.length] = LEJOS_NATURE;
+         description.setNatureIds(newNatures);
+         aProject.getProject().setDescription(description, null);
+      }
+      catch (CoreException e)
+      {
+         LejosPlugin.debug(e);
+         e.printStackTrace();
+      }
+   }
+
+   /**
+    * checks a project for leJOS nature
+    * 
+    * @param IProject the project
+    * @return boolean true, if the project has leJOS nature
+    * @throws CoreException
+    * @author <a href="mailto:mp.scholz@t-online.de">Matthias Paul Scholz </a>
+    */
+   public static boolean checkForLeJOSNature (IProject aProject)
+      throws CoreException
+   {
+      // check project's natures
+      IProjectDescription description = aProject.getDescription();
+      String[] natures = description.getNatureIds();
+      for (int i = 0; i < natures.length; i++)
+      {
+         if (natures[i].equals(LEJOS_NATURE))
+            return true;
+      }
+      return false;
    }
 }

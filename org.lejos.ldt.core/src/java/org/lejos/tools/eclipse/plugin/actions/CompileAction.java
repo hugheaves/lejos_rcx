@@ -19,6 +19,7 @@ import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import org.lejos.tools.eclipse.plugin.EclipseUtilities;
+import org.lejos.tools.eclipse.plugin.LejosPlugin;
 
 /**
  * represents a compile action for object for the leJOS plugin.
@@ -181,7 +182,7 @@ public class CompileAction
          IProject project = firstElem.getJavaProject().getProject();
          try
          {
-            enabled = EclipseUtilities.checkForLeJOSNature(project);
+            enabled = LejosPlugin.checkForLeJOSNature(project);
          }
          catch (CoreException exc)
          {

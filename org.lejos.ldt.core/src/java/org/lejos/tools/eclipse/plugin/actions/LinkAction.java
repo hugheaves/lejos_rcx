@@ -214,7 +214,7 @@ public class LinkAction
          IProject project = firstElem.getJavaProject().getProject();
          try
          {
-            enabled = EclipseUtilities.checkForLeJOSNature(project);
+            enabled = LejosPlugin.checkForLeJOSNature(project);
          }
          catch (CoreException exc)
          {
