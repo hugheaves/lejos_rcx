@@ -4,6 +4,7 @@ ChangeLog:
 - Finished builder.
 	- now links only, if there are no compile errors
 	- if link fails, create a marker
+- Posted bug to Eclipse, for newWizards
 
 2004-06-19 (jhi):
 - Consolidated all tests again.
