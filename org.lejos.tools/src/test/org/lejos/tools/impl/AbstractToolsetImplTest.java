@@ -82,6 +82,7 @@ public class AbstractToolsetImplTest extends TestCase {
         classXFile.createNewFile();
         // TODO specify somewhere the directory of lejos,
         // e.g. as LEJOS_HOME as part of the toolset
+        //TODO this also does NOT work, if starting with PDE JUnit
         copyFile("../org.lejos/lib/classes.zip", binDir + "/classes.zip");
         copyFile("tools.jar", binDir + "/tools.jar");
 
