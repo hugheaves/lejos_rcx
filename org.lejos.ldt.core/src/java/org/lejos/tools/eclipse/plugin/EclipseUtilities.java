@@ -381,9 +381,8 @@ public final class EclipseUtilities extends ToolsetFactory
       URL resEntry = Platform.resolve(theFileAsEntry);
 
       // convert from URL to an IPath
-      IPath result = new Path(new File(resEntry.getFile()).getAbsolutePath());
-      System.out.println(result);
-      return result;
+      IPath thePath = new Path(new File(resEntry.getFile()).getAbsolutePath());
+      return thePath;
   }
   
   /**
