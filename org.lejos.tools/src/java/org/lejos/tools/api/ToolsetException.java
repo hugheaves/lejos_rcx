@@ -13,7 +13,6 @@ package org.lejos.tools.api;
  */
 public class ToolsetException extends Exception
 {
-
    /**
     * @param message
     */
@@ -38,4 +37,9 @@ public class ToolsetException extends Exception
    {
       super(message, cause);
    }
+
+   /**
+    * Comment for <code>serialVersionUID</code>
+    */
+   private static final long serialVersionUID = 3257568416704705329L;
 }

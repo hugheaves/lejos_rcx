@@ -14,7 +14,6 @@ package org.lejos.tools.api;
  */
 public class FactoryConfigurationError extends Error
 {
-
    // attributes
 
    /** The error message. */
@@ -105,4 +104,9 @@ public class FactoryConfigurationError extends Error
    {
       return this.originatingException;
    }
+
+   /**
+    * Comment for <code>serialVersionUID</code>
+    */
+   private static final long serialVersionUID = 3544676182827217461L;
 }
