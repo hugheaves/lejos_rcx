@@ -158,7 +158,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
     }
     catch (TinyVMException e)
     {
-      throw new ToolsetException("Failed to link binary:\n" + e.getMessage(), e);
+      throw new ToolsetException("Failed to link binary: " + e.getMessage(), e);
     }
   }
 
@@ -179,7 +179,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
     }
     catch (LejosdlException e)
     {
-      throw new ToolsetException("Failed to download binary:\n"
+      throw new ToolsetException("Failed to download binary: "
           + e.getMessage(), e);
     }
   }
@@ -201,7 +201,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
     }
     catch (FirmdlException e)
     {
-      throw new ToolsetException("Failed to install firmware:\n"
+      throw new ToolsetException("Failed to install firmware: "
           + e.getMessage(), e);
     }
   }
