@@ -7,11 +7,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import js.common.ToolException;
 import js.tinyvm.TinyVMException;
 import js.tinyvm.TinyVMTool;
 import js.tools.Firmdl;
+import js.tools.FirmdlException;
 import js.tools.Lejosdl;
+import js.tools.LejosdlException;
 
 import org.lejos.tools.api.IRuntimeToolset;
 import org.lejos.tools.api.ToolsetException;
@@ -176,7 +177,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
           getProgressMonitor()));
       lejosdl.start(stream, port, true);
     }
-    catch (ToolException e)
+    catch (LejosdlException e)
     {
       throw new ToolsetException("Failed to download binary:\n"
           + e.getMessage(), e);
@@ -198,7 +199,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
     {
       firmdl.start(port, true, fastMode);
     }
-    catch (ToolException e)
+    catch (FirmdlException e)
     {
       throw new ToolsetException("Failed to install firmware:\n"
           + e.getMessage(), e);
