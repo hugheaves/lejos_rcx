@@ -20,6 +20,7 @@ public class ToolProgressListenerImpl implements ToolProgressListener
     assert monitor != null : "Precondition: monitor != null";
 
     _monitor = monitor;
+    _progress = 0;
   }
 
   /*
