@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="LDT Update site build" default="all" basedir="..">
+
+    <!-- common properties -->
+    <property name="ldt.version" value="1.2.0" />
+    <property name="build.dir"
+              value="../org.lejos.ldt-site/build/org.lejos.ldt_${ldt.version}" />
+
+    <target name="prepare">
+        <mkdir dir="${build.dir}" />
+    </target>
+
+    <target name="plugin_export">
+        <!-- exportType may be "directory", "update" or "zip". -->
+        <!-- When using "zip", filename has to be specified too -->
+
+        <pde.exportPlugins plugins="org.lejos"
+                           destination="${build.dir}"
+                           exportType="update"
+                           exportSource="true" />
+        <pde.exportPlugins plugins="org.lejos.tools"
+                           destination="${build.dir}"
+                           exportType="update"
+                           exportSource="true" />
+        <pde.exportPlugins plugins="org.lejos.ldt.core"
+                           destination="${build.dir}"
+                           exportType="update"
+                           exportSource="true" />
+        <!-- export of doc project does not work, do not know why. 
+             Make manually for the moment -->
+        <!--
+		<pde.exportPlugins plugins="org.lejos.ldt.docs" 
+                           destination="${build.dir}"
+		exportType="directory" exportSource="true"/>
+-->
+    </target>
+
+    <target name="plugin.doc">
+        <copy todir="${build.dir}/plugins/org.lejos.ldt.docs_${ldt.version}">
+            <fileset dir="../org.lejos.ldt.docs">
+                <include name="META-INF/*" />
+                <include name="plugin.properties" />
+                <include name="plugin.xml" />
+                <include name="toc.xml" />
+                <include name="docs/**/*" />
+                <exclude name="docs/internal/**/*" />
+                <exclude name="docs/internal" />
+                <include name="src/**/*" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="feature_export">
+        <!--
+        <pde.exportFeatures features="org.lejos.ldt"
+                            destination="${build.dir}"
+                            exportType="directory"
+                            exportSource="true" />
+-->
+        <copy todir="${build.dir}/features/org.lejos.ldt_${ldt.version}">
+            <fileset dir="../org.lejos.ldt-feature">
+                <include name="eclipse*.jpg" />
+                <include name="feature.properties" />
+                <include name="feature.xml" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="site_export">
+        <copy todir="${build.dir}">
+            <fileset dir="../org.lejos.ldt-site">
+                <include name="site.xml" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="all"
+            depends="prepare, plugin.doc, feature_export, site_export, plugin_export"
+            description="Compile and creates all plugins and features">
+        <echo message="Build started. Wait until PDE is ready." />
+    </target>
+
+    <target name="dist" description="Creates the distribution">
+        <zip destfile="${build.dir}/../org.lejos.ldt_${ldt.version}.zip">
+            <fileset dir="${build.dir}">
+                <include name="**/*" />
+                <exclude name="site.xml" />
+            </fileset>
+        </zip>
+    </target>
+
+    <target name="clean" description="Cleanup all generated files">
+        <delete dir="${build.dir}" />
+        <delete file="${build.dir}/../org.lejos.ldt_${ldt.version}.zip" />
+    </target>
+
+</project>

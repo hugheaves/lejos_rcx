@@ -2,12 +2,12 @@ Manifest-Version: 1.0
 Bundle-Name: leJOS Tools
 Bundle-SymbolicName: org.lejos.tools
 Bundle-Version: 1.2.0
-Bundle-ClassPath: tools-extensions.jar,lib/commons-cli-1.0.jar
+Bundle-ClassPath: tools-extensions.jar
 Bundle-Vendor: leJOS.org
 Bundle-Localization: plugin
 Require-Bundle: org.lejos;reprovide=true,
  org.junit
-Eclipse-AutoStart: true
+Eclipse-AutoStart: false
 Provide-Package: org.lejos.tools,
  org.lejos.tools.api,
  org.lejos.tools.impl,

@@ -16,7 +16,6 @@ import org.lejos.tools.eclipse.plugin.preferences.LejosPreferences;
  */
 public class LejosPlugin extends AbstractUIPlugin
 {
-
    // static attributes
 
    /** the nature id. */
@@ -27,7 +26,7 @@ public class LejosPlugin extends AbstractUIPlugin
 
    /** the nature id. */
    public static final String LEJOS_MARKER_LINKER = "org.lejos.ldt.core.linkFailure";
-   
+
    /** The shared instance. */
    private static LejosPlugin plugin;
 
@@ -43,8 +42,6 @@ public class LejosPlugin extends AbstractUIPlugin
 
    /**
     * The constructor.
-    * 
-    * @param descriptor the plugin descriptor
     */
    public LejosPlugin ()
    {

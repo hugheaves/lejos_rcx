@@ -8,10 +8,6 @@ Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui.ide,
- org.eclipse.ui.views,
- org.eclipse.jface.text,
- org.eclipse.ui.workbench.texteditor,
- org.eclipse.ui.editors,
  org.junit,
  org.eclipse.core.resources,
  org.eclipse.ui,
@@ -21,10 +17,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.jdt.ui,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
- org.eclipse.jdt.debug.ui,
- org.eclipse.jdt.debug,
- org.eclipse.jdt.junit,
- org.eclipse.jdt.junit.runtime
+ org.eclipse.jdt.debug.ui
 Eclipse-AutoStart: true
 Plugin-Class: org.lejos.tools.eclipse.plugin.LejosPlugin
 Provide-Package: org.lejos.tools.eclipse,
@@ -33,4 +26,8 @@ Provide-Package: org.lejos.tools.eclipse,
  org.lejos.tools.eclipse.plugin.launch,
  org.lejos.tools.eclipse.plugin.natures,
  org.lejos.tools.eclipse.plugin.util,
- org.lejos.tools.eclipse.plugin.wizards
+ org.lejos.tools.eclipse.plugin.wizards,
+ org.lejos.tools.eclipse.plugin.builders,
+ org.lejos.tools.eclipse.plugin.preferences,
+ org.lejos.tools.eclipse.plugin.view,
+ org.lejos.tools.eclipse.plugin.view.model

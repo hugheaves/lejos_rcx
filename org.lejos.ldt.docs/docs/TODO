@@ -11,6 +11,14 @@ TODO
 		- using a leJOS Emulator console for output
 	- RunDelegate muss nicht nochmals linken
 
+
+* Deployment
+	- Differences in Eclipse when doing a plugin export via Wizard and via generated ANT file
+	- ANT file for exporting will return immediately, but will run in background
+		- parallel start not possible
+		- but seems to be ready, very annoying
+	- generated deploy.xml does not work from site project
+
 * Other stuff:
 
 	- newWizards: Ask Eclipse, how to change the classpath during new wizard,
