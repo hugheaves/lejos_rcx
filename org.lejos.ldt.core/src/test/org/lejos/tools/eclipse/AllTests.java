@@ -5,6 +5,7 @@ import junit.framework.TestSuite;
 
 import org.lejos.tools.eclipse.plugin.EclipseToolsetFacadeTest;
 import org.lejos.tools.eclipse.plugin.EclipseUtilitiesTest;
+import org.lejos.tools.eclipse.plugin.LejosPluginTest;
 
 /**
  * Overall test suite for the whole Eclipse implementation.
@@ -30,6 +31,7 @@ public class AllTests
       //$JUnit-BEGIN$
       suite.addTestSuite(EclipseUtilitiesTest.class);
       suite.addTestSuite(EclipseToolsetFacadeTest.class);
+      suite.addTestSuite(LejosPluginTest.class);
       //$JUnit-END$
       return suite;
    }
