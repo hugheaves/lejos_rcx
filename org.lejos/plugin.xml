@@ -2,7 +2,25 @@
 <plugin
    id="org.lejos"
    name="leJOS"
-   version="2.1.0"
+   version="3.0.0"
    provider-name="lejos.org">
+   
+   <runtime>
+      <library name="lib/classes.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/jtools.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/pcrcxcomm.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/rcxcomm.jar">
+         <export name="*"/>
+      </library>
+      <library name="lib/vision.jar">
+         <export name="*"/>
+      </library>
+   </runtime>
 
 </plugin>
