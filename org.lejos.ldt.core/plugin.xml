@@ -170,7 +170,6 @@
             class="org.lejos.tools.eclipse.plugin.launch.RunShortcut"
             modes="run"
             id="org.lejos.ldt.core.runShortcut">
-<!--
          <contextualLaunch>
             <enablement>
                <with variable="selection">
@@ -180,12 +179,13 @@
                    	  <instanceof value="org.eclipse.core.resources.IResource"/>
                    	  <instanceof value="org.eclipse.jdt.core.IJavaElement"/>
                     </or>
+<!--
                     <test property="org.lejos.tools.hasMain"/>
+-->
                   </iterate>
                </with>
             </enablement>
          </contextualLaunch>
--->
          <perspective
                id="org.eclipse.jdt.ui.JavaPerspective">
          </perspective>
