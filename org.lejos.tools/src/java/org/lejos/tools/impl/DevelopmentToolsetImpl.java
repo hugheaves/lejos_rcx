@@ -5,12 +5,11 @@ import org.lejos.tools.api.IDevelopmentToolset;
 /**
  * This is the default implementation of the IDevelopmentToolset.
  * 
- * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller</a>
+ * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
-public class DevelopmentToolsetImpl
-	extends AbstractToolsetImpl
-	implements IDevelopmentToolset {
+public class DevelopmentToolsetImpl extends AbstractToolsetImpl implements
+        IDevelopmentToolset {
 
-	// implementation of IDevelopmentToolset
+    // implementation of IDevelopmentToolset
 
 }
