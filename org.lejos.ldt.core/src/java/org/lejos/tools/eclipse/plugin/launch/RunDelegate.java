@@ -89,12 +89,12 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
       }
       catch (IOException e)
       {
-        abort("Linking failed", e,
+        abort("Linking failed: " + e.getMessage(), e,
             IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
       }
       catch (ToolsetException e)
       {
-        abort("Linking failed", e,
+        abort("Linking failed: " + e.getMessage(), e,
             IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
       }
 
@@ -107,18 +107,18 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
       }
       catch (IOException e)
       {
-        abort("Download failed", e,
+        abort("Download failed: " + e.getMessage(), e,
             IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
       }
       catch (ToolsetException e)
       {
-        abort("Download failed", e,
+        abort("Download failed: " + e.getMessage(), e,
             IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
       }
     }
     catch (ToolsetException e)
     {
-      abort("Run failed", e,
+      abort("Run failed: " + e.getMessage(), e,
           IJavaLaunchConfigurationConstants.ERR_VM_LAUNCH_ERROR);
     }
   }
