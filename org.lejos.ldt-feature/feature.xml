@@ -1,14 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.lejos.ldt"
-      label="org.lejos.ldt-feature"
+      label="%featureName"
       version="1.2.0"
-      provider-name="lejos.org"
+      provider-name="%providerName"
       image="eclipse_update_120.jpg">
 
-   <license url="LICENSE.TXT">
-      
+   <description>
+      %description
+   </description>
+
+   <license>
+      %license
    </license>
+
+   <url>
+      <update label="%updateSiteName" url="http://lejos.sourceforge.net/ldt/update"/>
+   </url>
+
+   <requires>
+      <import plugin="org.junit"/>
+      <import plugin="org.eclipse.core.resources"/>
+      <import plugin="org.eclipse.ui"/>
+      <import plugin="org.eclipse.jdt.core"/>
+      <import plugin="org.eclipse.jdt.ui"/>
+   </requires>
 
    <plugin
          id="org.lejos"
