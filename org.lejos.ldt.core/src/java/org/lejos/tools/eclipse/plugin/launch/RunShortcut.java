@@ -1,15 +1,12 @@
 package org.lejos.tools.eclipse.plugin.launch;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.debug.core.DebugPlugin;
 import org.eclipse.debug.core.ILaunchConfiguration;
 import org.eclipse.debug.core.ILaunchConfigurationType;
@@ -28,8 +25,6 @@ import org.eclipse.jdt.internal.debug.ui.launcher.LauncherMessages;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
-import org.eclipse.jface.operation.IRunnableContext;
-import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.window.Window;
@@ -86,7 +81,7 @@ public class RunShortcut implements ILaunchShortcut
 
     if (search != null)
     {
-      // filter / collect types
+      // collect types
       List types = new ArrayList(search.length);
       for (int i = 0; i < search.length; i++)
       {
@@ -102,9 +97,19 @@ public class RunShortcut implements ILaunchShortcut
             // ignore
           }
         }
-        if (search[i] instanceof IType)
+        else if (search[i] instanceof IType)
         {
           types.add(search[i]);
+        }
+      }
+
+      // filter types
+      Iterator iter = types.iterator();
+      while (iter.hasNext())
+      {
+        if (!hasMain((IType) iter.next()))
+        {
+          iter.remove();
         }
       }
 
@@ -280,7 +285,7 @@ public class RunShortcut implements ILaunchShortcut
   }
 
   /**
-   * Returns the local java launch config type
+   * Returns the local java launch config type.
    */
   protected ILaunchConfigurationType getLejosLaunchConfigType ()
   {
@@ -295,45 +300,6 @@ public class RunShortcut implements ILaunchShortcut
   protected Shell getShell ()
   {
     return JDIDebugUIPlugin.getActiveWorkbenchShell();
-  }
-
-  public IType[] findMains (IRunnableContext context, final IType[] elements)
-      throws InvocationTargetException, InterruptedException
-  {
-    final Set result = new HashSet();
-
-    if (elements.length > 0)
-    {
-      IRunnableWithProgress runnable = new IRunnableWithProgress()
-      {
-        public void run (IProgressMonitor pm) throws InterruptedException
-        {
-          int nElements = elements.length;
-          pm.beginTask("searching classes with main methods", nElements);
-          try
-          {
-            for (int i = 0; i < nElements; i++)
-            {
-              if (hasMain(elements[i]))
-              {
-                result.add(elements[i]);
-              }
-              pm.worked(1);
-              if (pm.isCanceled())
-              {
-                throw new InterruptedException();
-              }
-            }
-          }
-          finally
-          {
-            pm.done();
-          }
-        }
-      };
-      context.run(true, true, runnable);
-    }
-    return (IType[]) result.toArray(new IType[result.size()]);
   }
 
   /**
