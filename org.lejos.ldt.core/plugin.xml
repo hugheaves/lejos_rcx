@@ -200,5 +200,12 @@
          </perspective>
       </shortcut>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="org.lejos.tools.eclipse.plugin.preferences.LejosPreferencePage"
+            name="leJOS"
+            id="org.lejos.ldt.core.preferences"/>
+   </extension>
 
 </plugin>
