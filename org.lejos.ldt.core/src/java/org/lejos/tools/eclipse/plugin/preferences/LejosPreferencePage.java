@@ -79,7 +79,7 @@ public class LejosPreferencePage extends PreferencePage
       GridLayout resultLayout = new GridLayout(1, false);
       resultLayout.marginHeight = 0;
       resultLayout.marginWidth = 0;
-  		result.setLayout(resultLayout);
+      result.setLayout(resultLayout);
       result.setLayoutData(new GridData(GridData.FILL, GridData.FILL, true,
          true));
       result.setFont(parent.getFont());
@@ -98,9 +98,9 @@ public class LejosPreferencePage extends PreferencePage
          "USB", "COM1", "COM2", "COM3", "COM4"
       });
       _port.select(store.getInt(LejosPreferences.P_PORT));
-      
+
       Label spacer = new Label(group, SWT.NONE);
-  		spacer.setText(" ");
+      spacer.setText(" ");
 
       _fastmode = new Button(group, SWT.CHECK | SWT.LEFT);
       _fastmode.setText("Fast mode");

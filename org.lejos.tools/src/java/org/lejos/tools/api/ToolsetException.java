@@ -11,27 +11,31 @@ package org.lejos.tools.api;
  * 
  * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
-public class ToolsetException extends Exception {
+public class ToolsetException extends Exception
+{
 
-    /**
-     * @param message
-     */
-    public ToolsetException(String message) {
-        super(message);
-    }
+   /**
+    * @param message
+    */
+   public ToolsetException (String message)
+   {
+      super(message);
+   }
 
-    /**
-     * @param cause
-     */
-    public ToolsetException(Throwable cause) {
-        super(cause);
-    }
+   /**
+    * @param cause
+    */
+   public ToolsetException (Throwable cause)
+   {
+      super(cause);
+   }
 
-    /**
-     * @param message
-     * @param cause
-     */
-    public ToolsetException(String message, Throwable cause) {
-        super(message, cause);
-    }
+   /**
+    * @param message
+    * @param cause
+    */
+   public ToolsetException (String message, Throwable cause)
+   {
+      super(message, cause);
+   }
 }

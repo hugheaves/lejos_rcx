@@ -18,25 +18,28 @@ import org.lejos.tools.main.LejosLinkTest;
  * 
  * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
-public class AllTests {
+public class AllTests
+{
 
-    public static void main(String[] args) {
-        junit.textui.TestRunner.run(AllTests.suite());
-    }
+   public static void main (String[] args)
+   {
+      junit.textui.TestRunner.run(AllTests.suite());
+   }
 
-    public static Test suite() {
-        TestSuite suite = new TestSuite("Test for org.lejos.tools");
-        //$JUnit-BEGIN$
-        suite.addTestSuite(FactoryConfigurationErrorTest.class);
-        suite.addTestSuite(ToolsetExceptionTest.class);
-        suite.addTestSuite(ToolsetFactoryTest.class);
-        suite.addTestSuite(NullProgressMonitorToolsetImplTest.class);
-        suite.addTestSuite(ConsoleProgressMonitorToolsetImplTest.class);
-        suite.addTestSuite(AbstractToolsetImplTest.class);
-        suite.addTestSuite(RuntimeToolsetImplTest.class);
-        suite.addTestSuite(LejosCompileTest.class);
-        suite.addTestSuite(LejosLinkTest.class);
-        //$JUnit-END$
-        return suite;
-    }
+   public static Test suite ()
+   {
+      TestSuite suite = new TestSuite("Test for org.lejos.tools");
+      //$JUnit-BEGIN$
+      suite.addTestSuite(FactoryConfigurationErrorTest.class);
+      suite.addTestSuite(ToolsetExceptionTest.class);
+      suite.addTestSuite(ToolsetFactoryTest.class);
+      suite.addTestSuite(NullProgressMonitorToolsetImplTest.class);
+      suite.addTestSuite(ConsoleProgressMonitorToolsetImplTest.class);
+      suite.addTestSuite(AbstractToolsetImplTest.class);
+      suite.addTestSuite(RuntimeToolsetImplTest.class);
+      suite.addTestSuite(LejosCompileTest.class);
+      suite.addTestSuite(LejosLinkTest.class);
+      //$JUnit-END$
+      return suite;
+   }
 }

@@ -11,23 +11,28 @@ import org.eclipse.core.runtime.CoreException;
  * @author <a href="mailto:jochen.hiller@t-online.de">JOchen Hiller </a>
  *  
  */
-public class LejosProjectNature implements IProjectNature {
+public class LejosProjectNature implements IProjectNature
+{
 
-    private IProject fProject = null;
+   private IProject fProject = null;
 
-    public void configure() throws CoreException {
-        // nothing to do here yet
-    }
+   public void configure () throws CoreException
+   {
+   // nothing to do here yet
+   }
 
-    public void deconfigure() throws CoreException {
-        // nothing to do here yet
-    }
+   public void deconfigure () throws CoreException
+   {
+   // nothing to do here yet
+   }
 
-    public IProject getProject() {
-        return fProject;
-    }
+   public IProject getProject ()
+   {
+      return fProject;
+   }
 
-    public void setProject(IProject value) {
-        fProject = value;
-    }
+   public void setProject (IProject value)
+   {
+      fProject = value;
+   }
 }

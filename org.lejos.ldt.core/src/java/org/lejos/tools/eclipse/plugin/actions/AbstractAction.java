@@ -12,82 +12,83 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
  * Firmware download action.
  */
 public abstract class AbstractAction
-    implements
-      IObjectActionDelegate,
-      IWorkbenchWindowActionDelegate
+   implements IObjectActionDelegate, IWorkbenchWindowActionDelegate
 {
-  /**
-   * the current selection
-   */
-  private ISelection fSelection = null;
+   /**
+    * the current selection
+    */
+   private ISelection fSelection = null;
 
-  /**
-   * an workbench part
-   */
-  private IWorkbenchPart fWorkbenchPart = null;
+   /**
+    * an workbench part
+    */
+   private IWorkbenchPart fWorkbenchPart = null;
 
-  /**
-   * a workbench window
-   */
-  private IWorkbenchWindow fWorkbenchWindow = null;
+   /**
+    * a workbench window
+    */
+   private IWorkbenchWindow fWorkbenchWindow = null;
 
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
-   */
-  public void dispose ()
-  {
-  }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#dispose()
+    */
+   public void dispose ()
+   {}
 
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
-   */
-  public void init (IWorkbenchWindow window)
-  {
-    fWorkbenchWindow = window;
-  }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.eclipse.ui.IWorkbenchWindowActionDelegate#init(org.eclipse.ui.IWorkbenchWindow)
+    */
+   public void init (IWorkbenchWindow window)
+   {
+      fWorkbenchWindow = window;
+   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-   *      org.eclipse.ui.IWorkbenchPart)
-   */
-  public void setActivePart (IAction action, IWorkbenchPart targetPart)
-  {
-    fWorkbenchPart = targetPart;
-  }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
+    *      org.eclipse.ui.IWorkbenchPart)
+    */
+   public void setActivePart (IAction action, IWorkbenchPart targetPart)
+   {
+      fWorkbenchPart = targetPart;
+   }
 
-  /*
-   * (non-Javadoc)
-   * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-   *      org.eclipse.jface.viewers.ISelection)
-   */
-  public void selectionChanged (IAction action, ISelection selection)
-  {
-    fSelection = selection;
-  }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+    *      org.eclipse.jface.viewers.ISelection)
+    */
+   public void selectionChanged (IAction action, ISelection selection)
+   {
+      fSelection = selection;
+   }
 
-  //
-  // protected interface
-  //
+   //
+   // protected interface
+   //
 
-  /**
-   * Get current shell.
-   */
-  protected Shell getShell ()
-  {
-    // get shell
-    Shell result = null;
-    if (fWorkbenchPart != null)
-    {
-      result = fWorkbenchPart.getSite().getShell();
-    }
-    else if (fWorkbenchWindow != null)
-    {
-      result = fWorkbenchWindow.getShell();
-    }
+   /**
+    * Get current shell.
+    */
+   protected Shell getShell ()
+   {
+      // get shell
+      Shell result = null;
+      if (fWorkbenchPart != null)
+      {
+         result = fWorkbenchPart.getSite().getShell();
+      }
+      else if (fWorkbenchWindow != null)
+      {
+         result = fWorkbenchWindow.getShell();
+      }
 
-    return result;
-  }
+      return result;
+   }
 }

@@ -15,51 +15,54 @@ import org.apache.commons.cli.ParseException;
 public class LejosCompileTest extends TestCase
 {
 
-  // public methods
+   // public methods
 
-  public static void main(String[] args)
-  {
-    junit.textui.TestRunner.run(new TestSuite(LejosCompileTest.class));
-  }
+   public static void main (String[] args)
+   {
+      junit.textui.TestRunner.run(new TestSuite(LejosCompileTest.class));
+   }
 
-  public LejosCompileTest(String name)
-  {
-    super(name);
-  }
+   public LejosCompileTest (String name)
+   {
+      super(name);
+   }
 
-  // test methods
+   // test methods
 
-  public void testCommandLineValid()
-  {
-    NoLejosCompile noCompile = new NoLejosCompile();
+   public void testCommandLineValid ()
+   {
+      NoLejosCompile noCompile = new NoLejosCompile();
 
-    // check
-    int rc = noCompile.doMain(new String[] { "-verbose", "Source.java" });
-    assertEquals(0, rc);
-    assertEquals(2, noCompile.cl.getArgs().length);
-    //assertEquals("-verbose", noCompile.cl.getArgs()[0]);
-  }
+      // check
+      int rc = noCompile.doMain(new String[]
+      {
+         "-verbose", "Source.java"
+      });
+      assertEquals(0, rc);
+      assertEquals(2, noCompile.cl.getArgs().length);
+      //assertEquals("-verbose", noCompile.cl.getArgs()[0]);
+   }
 
-  // inner classes
+   // inner classes
 
-  /**
-   * no compiling
-   */
-  public static class NoLejosCompile extends LejosLink
-  {
-    public CommandLine cl;
+   /**
+    * no compiling
+    */
+   public static class NoLejosCompile extends LejosLink
+   {
+      public CommandLine cl;
 
-    public CommandLine getCommandLine(Options options, String[] args)
-        throws ParseException
-    {
-      cl = super.getCommandLine(options, args);
-      return cl;
-    }
+      public CommandLine getCommandLine (Options options, String[] args)
+         throws ParseException
+      {
+         cl = super.getCommandLine(options, args);
+         return cl;
+      }
 
-    public int executeCommandLine(CommandLine cmdLine)
-    {
-      // do nothing here
-      return 0;
-    }
-  }
+      public int executeCommandLine (CommandLine cmdLine)
+      {
+         // do nothing here
+         return 0;
+      }
+   }
 }

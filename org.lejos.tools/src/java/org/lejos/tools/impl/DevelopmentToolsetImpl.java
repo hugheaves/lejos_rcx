@@ -7,9 +7,10 @@ import org.lejos.tools.api.IDevelopmentToolset;
  * 
  * @author <a href="mailto:jochen.hiller@t-online.de">Jochen Hiller </a>
  */
-public class DevelopmentToolsetImpl extends AbstractToolsetImpl implements
-        IDevelopmentToolset {
+public class DevelopmentToolsetImpl extends AbstractToolsetImpl
+   implements IDevelopmentToolset
+{
 
-    // implementation of IDevelopmentToolset
+   // implementation of IDevelopmentToolset
 
 }

@@ -11,15 +11,17 @@ import org.eclipse.jdt.debug.ui.launchConfigurations.JavaMainTab;
  */
 public class RunTabGroup extends AbstractLaunchConfigurationTabGroup
 {
-  /*
-   * (non-Javadoc)
-   * 
-   * @see org.eclipse.debug.ui.ILaunchConfigurationTabGroup#createTabs(org.eclipse.debug.ui.ILaunchConfigurationDialog,
-   *      java.lang.String)
-   */
-  public void createTabs (ILaunchConfigurationDialog dialog, String mode)
-  {
-    setTabs(new ILaunchConfigurationTab[]
-    {new JavaMainTab(), new CommonTab()});
-  }
+   /*
+    * (non-Javadoc)
+    * 
+    * @see org.eclipse.debug.ui.ILaunchConfigurationTabGroup#createTabs(org.eclipse.debug.ui.ILaunchConfigurationDialog,
+    *      java.lang.String)
+    */
+   public void createTabs (ILaunchConfigurationDialog dialog, String mode)
+   {
+      setTabs(new ILaunchConfigurationTab[]
+      {
+         new JavaMainTab(), new CommonTab()
+      });
+   }
 }
