@@ -1,3 +1,4 @@
-rcx_gen.lds
-rcx.map
+*.lds
+*.map
 *.o
+*.srec
