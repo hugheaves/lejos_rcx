@@ -91,12 +91,33 @@ SECTIONS
     .hwreserved1 : {
         _extra_memory_end = . ;
     } > hwreserved1
-
+ 
+    .romdata2 : {
+      _rom_port4_ddr = 0x03 ; 
+      _rom_port5_ddr = 0x04 ; 
+    } > romdata2 
+    
     .intvectors : {
        _ocia_vector  = 0x12 ; /* 0xfda2 */
-    } > intvectors
+       _eri_vector   = 0x24 ; 
+       _rxi_vector   = 0x26 ; 
+       _txi_vector   = 0x28 ; 
+       _tei_vector   = 0x2a ; 
+   } > intvectors
 
     .hwregisters : {
        _T_IER        = 0x00 ; /* 0xff90 */
+       _PORT4_DDR    = 0x25 ;
+       _PORT4        = 0x27 ;
+       _PORT5_DDR    = 0x28 ;
+       _T1_CR        = 0x40 ;
+       _T1_CSR       = 0x41 ;
+       _T1_CORA      = 0x42 ;
+       _S_MR         = 0x48 ;
+       _S_BRR        = 0x49 ;
+       _S_CR         = 0x4a ;
+       _S_TDR        = 0x4b ;
+       _S_SR         = 0x4c ;
+       _S_RDR        = 0x4d ;
     } > hwregisters
 }
