@@ -96,12 +96,13 @@ public class LejosBuilder extends IncrementalProjectBuilder
                      monitor.worked(j);
                      try
                      {
+                        deleteMarkers(getProject(), cu);
                         facade
                            .linkJavaElement(cu, LejosPlugin.getPreferences());
                      }
-                     catch (ToolsetException ex1)
+                     catch (ToolsetException ex)
                      {
-                        createMarker(getProject(), cu, ex1);
+                        createMarker(getProject(), cu, ex);
                      }
                   }
                }
@@ -139,7 +140,24 @@ public class LejosBuilder extends IncrementalProjectBuilder
    }
 
    /**
-    * Create a marker for a given exception.
+    * Delete all linker markers (before linking).
+    */
+   private void deleteMarkers (IProject project, ICompilationUnit cu)
+   {
+      try
+      {
+         IResource resource = cu.getUnderlyingResource();
+         resource.deleteMarkers(LejosPlugin.LEJOS_MARKER_LINKER, false, IResource.DEPTH_INFINITE);
+      }
+      catch (CoreException ex)
+      {
+         // TODO Auto-generated catch block
+         ex.printStackTrace();
+      }
+   }
+
+   /**
+    * Create a linker marker for a given exception (linking failed).
     */
    private void createMarker (IProject project, ICompilationUnit cu,
       Exception anException)
