@@ -1,6 +1,8 @@
 TODO
 
 - newWizards: Post bug to Eclipse, as schema is invalid
+- contribute for leJOS Library Containers
+  for RCX and Client
 - fix all deprecated warnings
 
 - New project wizard: Add leJOS default jars to CLASSPATH
