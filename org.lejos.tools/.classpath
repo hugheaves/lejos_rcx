@@ -4,9 +4,8 @@
 	<classpathentry kind="src" path="src/test"/>
 	<classpathentry kind="lib" path="tools.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.0.jar"/>
-	<classpathentry kind="src" path="/org.junit"/>
-	<classpathentry kind="src" path="/org.eclipse.core.runtime.compatibility"/>
+	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="J:/j2sdk1.4.1_05/lib/tools.jar"/>
+	<classpathentry kind="lib" path="E:/j2sdk1.4.2_04/lib/tools.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
