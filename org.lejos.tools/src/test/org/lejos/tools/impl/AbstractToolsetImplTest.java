@@ -115,8 +115,8 @@ public class AbstractToolsetImplTest extends TestCase
       expected = binDir + File.separator + "jtools.jar" + File.pathSeparator;
       expected = expected.replace('/', File.separatorChar);
       assertEquals(expected, cp.toString());
-      assertTrue(cp.exists("js.tinyvm.ClassPath"));
-      is = cp.getInputStream("js.tinyvm.ClassPath");
+      assertTrue(cp.exists("js.tinyvm.TinyVM"));
+      is = cp.getInputStream("js.tinyvm.TinyVM");
       assertNotNull(is);
       is.close();
 
