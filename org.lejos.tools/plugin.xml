@@ -9,8 +9,10 @@
       <library name="tools-extensions.jar">
          <export name="*"/>
       </library>
-      <library name="tools.jar"/>
+      <library name="lib/jtools.jar"/>
+      <library name="lib/pcrcxcomm.jar"/>
       <library name="lib/commons-cli-1.0.jar"/>
+      <library name="lib/tools.jar"/>
    </runtime>
    <requires>
       <import plugin="org.junit"/>

@@ -2,10 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src/java"/>
 	<classpathentry kind="src" path="src/test"/>
-	<classpathentry kind="lib" path="tools.jar"/>
+	<classpathentry sourcepath="/lejos/src/java/tools" kind="lib" path="lib/jtools.jar"/>
 	<classpathentry kind="lib" path="lib/commons-cli-1.0.jar"/>
+	<classpathentry kind="lib" path="lib/tools.jar"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="E:/j2sdk1.4.2_04/lib/tools.jar"/>
+	<classpathentry sourcepath="/lejos/src/java/pcrcxcomm" kind="lib" path="lib/pcrcxcomm.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
