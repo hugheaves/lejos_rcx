@@ -3,16 +3,18 @@ package org.lejos.tools.impl.link;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Vector;
+import java.io.Writer;
 
 import js.tinyvm.Binary;
-import js.tinyvm.ClassPath;
+import js.tinyvm.BinaryReport;
 import js.tinyvm.io.BEDataOutputStream;
 import js.tinyvm.io.ByteWriter;
 import js.tinyvm.io.LEDataOutputStream;
 
+import org.apache.bcel.util.ClassPath;
 import org.lejos.tools.api.IRuntimeToolset;
 import org.lejos.tools.api.ToolsetException;
 import org.lejos.tools.impl.AbstractToolsetImpl.Classpath;
@@ -139,20 +141,16 @@ public class LejosLink
             + classpath.toString() + "\": " + ex.getMessage());
       }
       // TODO temporarily, convert to a vector
-      Vector vector = new Vector();
       for (int i = 0; i < classFiles.length; i++)
       {
-         String s = classFiles[i];
+         classFiles[i] = classFiles[i].replace('.', '/');
          // the old classes require a "package1/package2/Class1" style
-         s = s.replace('.', '/');
-         vector.add(s);
       }
       boolean linkAll = (this.linkMethod == IRuntimeToolset.LINK_METHOD_ALL);
       // check, whether the specified classes really have a main
       try
       {
-         this.binary = Binary
-            .createFromClosureOf(vector, oldClasspath, linkAll);
+         this.binary = Binary.createFromClosureOf(classFiles, oldClasspath, linkAll);
       }
       catch (Exception ex)
       {
@@ -162,9 +160,9 @@ public class LejosLink
       for (int i = 0; i < classFiles.length; i++)
       {
          // use convention package1/package2/Class1
-         if (!this.binary.hasMain((String) vector.elementAt(i)))
+         if (!this.binary.hasMain(classFiles[i]))
          {
-            throw new ToolsetException("Class " + classFiles[i]
+            throw new ToolsetException("Class " + classFiles[i].replace('/', '.')
                + " does not have a " + "static void main(String[]) method.");
          }
       }
@@ -203,7 +201,10 @@ public class LejosLink
 
          // now dump the binaries into the stream
          this.binary.dump(writer);
-         this.binary.flushSignatureFile(signatureFile);
+         BinaryReport report = new BinaryReport(this.binary);
+         Writer signatureWriter = new FileWriter(signatureFile);
+         report.report(signatureWriter);
+         signatureWriter.close();
          os.close();
       }
       catch (Exception ex)
