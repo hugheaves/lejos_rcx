@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fileset-config file-format-version="1.0.0">
+    <fileset name="Implementation" enabled="true" check-config-name="leJOS Checks">
+        <file-match-pattern match-pattern="src/java" include-pattern="true"/>
+    </fileset>
+</fileset-config>
