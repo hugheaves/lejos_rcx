@@ -84,5 +84,9 @@ testEQ(Ljava/lang/String;II)V
 floatToIntBits(F)I
 intBitsToFloat(I)F
 
-
+# josx.rcxcomm.LLC
+init()V
+write(B)V
+read()I
+dataAvailable()Z
 
