@@ -149,10 +149,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
     try
     {
       // TODO get correct classes.jar
-      TinyVM tinyVM = new TinyVM(new ToolProgressListenerImpl(
-          getProgressMonitor()));
-      classpath = "g:/workspace/lejos/lib/classes.jar" + File.pathSeparator
-          + classpath;
+      TinyVM tinyVM = new TinyVM(new ToolProgressListenerImpl(getProgressMonitor()));
       tinyVM.link(classpath, new String[]
       {classname}, false, stream, true);
     }

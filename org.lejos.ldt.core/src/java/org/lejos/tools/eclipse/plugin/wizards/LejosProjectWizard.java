@@ -69,7 +69,7 @@ public class LejosProjectWizard  extends JavaProjectWizard {
             int counter = 0;
             for (int j = 0; j < lejosLibs.length; j++) {
                 IPath lejosLibPath = new Path(lejosLibs[j]);
-                Path absoluteLibPath = EclipseUtilities.findFileInPlugin("org.lejos", lejosLibPath.toString());
+                IPath absoluteLibPath = EclipseUtilities.findFileInPlugin("org.lejos", lejosLibPath.toString());
                 IClasspathEntry classpathForLibrary = 
                     JavaCore.newLibraryEntry(absoluteLibPath,null,null);
                 newClasspath[counter++] = classpathForLibrary;

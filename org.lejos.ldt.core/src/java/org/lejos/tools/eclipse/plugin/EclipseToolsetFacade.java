@@ -3,11 +3,19 @@ package org.lejos.tools.eclipse.plugin;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URL;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
-import org.eclipse.jdt.core.*;
-import org.lejos.tools.api.*;
+import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.JavaModelException;
+import org.lejos.tools.api.IProgressMonitorToolset;
+import org.lejos.tools.api.IRuntimeToolset;
+import org.lejos.tools.api.ToolsetException;
+import org.lejos.tools.api.ToolsetFactory;
 
 /**
  * The <code>EclipseToolsetFacade</code> provides the services of the
@@ -79,7 +87,7 @@ public class EclipseToolsetFacade
       for (int i = 0; i < lejosLibs.length; i++)
       {
         IPath lejosLibPath = new Path(lejosLibs[i]);
-        Path absoluteLibPath = EclipseUtilities.findFileInPlugin("org.lejos",
+        IPath absoluteLibPath = EclipseUtilities.findFileInPlugin("org.lejos",
             lejosLibPath.toString());
         classpath = classpath + absoluteLibPath.toString() + File.pathSeparator;
       }
@@ -269,7 +277,7 @@ public class EclipseToolsetFacade
       for (int i = 0; i < lejosLibs.length; i++)
       {
         IPath lejosLibPath = new Path(lejosLibs[i]);
-        Path absoluteLibPath = EclipseUtilities.findFileInPlugin("org.lejos",
+        IPath absoluteLibPath = EclipseUtilities.findFileInPlugin("org.lejos",
             lejosLibPath.toString());
         libs += absoluteLibPath.toString() + File.pathSeparator;
       } //for
@@ -322,12 +330,23 @@ public class EclipseToolsetFacade
   public void link (String classdir, String classname, OutputStream stream)
       throws ToolsetException
   {
-    IRuntimeToolset toolset = createToolset();
-    toolset.link(classdir, classname, false, stream, true);
+    try
+    {
+      IRuntimeToolset toolset = createToolset();
+
+      IPath classesJar = EclipseUtilities.findLejosLib("classes.jar");
+      String classpath = classesJar.toOSString() + File.pathSeparator
+          + classdir;
+      toolset.link(classpath, classname, false, stream, true);
+    }
+    catch (IOException e)
+    {
+      e.printStackTrace();
+    }
   }
-  
+
   /**
-   * 
+   *  
    */
   protected IRuntimeToolset createToolset ()
   {
@@ -338,7 +357,7 @@ public class EclipseToolsetFacade
     {
       result.setProgressMonitor(progressMonitor);
     }
-    
+
     assert result != null : "Postconditon: result != null";
     return result;
   }
