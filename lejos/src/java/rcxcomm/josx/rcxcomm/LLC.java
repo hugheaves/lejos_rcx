@@ -7,6 +7,7 @@ public class LLC {
   public static native int read();
   public static native void write(byte b);
   public static native boolean dataAvailable();
+  public static native void discard();
 
   public static void send(byte b) {
     LLC.write(b);

@@ -52,4 +52,5 @@
 #define write_4B_5V 45
 #define read_4_5I 46
 #define dataAvailable_4_5Z 47
+#define discard_4_5V 48
 #endif // _SPECIALSIGNATURES_H

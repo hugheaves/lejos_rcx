@@ -89,4 +89,5 @@ init()V
 write(B)V
 read()I
 dataAvailable()Z
+discard()V
 
