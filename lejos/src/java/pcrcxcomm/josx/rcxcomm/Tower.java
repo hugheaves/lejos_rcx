@@ -70,6 +70,9 @@ public class Tower {
   }
 
   /** Converts an error number to a string
+   * Note you should neggate the error number before passing i to this method
+   * as this method expects a positive value
+   * param errno the negation of the returned error
    * @return the message
    */
   public String strerror(int errno) {
