@@ -11,8 +11,10 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.jdt.core.IClasspathEntry;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
+import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IPackageDeclaration;
 import org.eclipse.jdt.core.IPackageFragment;
@@ -33,6 +35,34 @@ import org.osgi.framework.Bundle;
 public final class EclipseUtilities extends ToolsetFactory
 {
    // static methods
+
+   /**
+    * Get the classpath of a java project.
+    * 
+    * @param project the java project
+    * @return classpath as string
+    * @throws JavaModelException 
+    */
+   public static String getClasspath (IJavaProject project) throws JavaModelException
+   {
+      IPath outputPath = project.getOutputLocation();
+      
+      StringBuffer result = new StringBuffer();
+      IClasspathEntry[] classpathEntries = project.getResolvedClasspath(false);
+      for (int i = 0; i < classpathEntries.length; i++)
+      {
+         IClasspathEntry entry = classpathEntries[i];
+         
+         // replace source dir by output location
+         IPath path = entry.getEntryKind() == IClasspathEntry.CPE_SOURCE? outputPath : entry.getPath();
+
+         result.append(getAbsoluteLocationForResource(project.getProject(), path).getAbsolutePath());
+         result.append(File.pathSeparator);
+      }
+      result.setLength(result.length() - File.pathSeparator.length());
+      
+      return result.toString();
+   }
 
    /**
     * Get the output folder for the compilation unit.
@@ -105,17 +135,22 @@ public final class EclipseUtilities extends ToolsetFactory
    public static File getAbsoluteLocationForResource (IProject aProject,
       IPath aResourcePath)
    {
-      // we have to know the physical project location
-      IPath absoluteProjectPath = aProject.getLocation();
+      if (aResourcePath.getDevice() == null)
+      {
+         // we have to know the physical project location
+         IPath absoluteProjectPath = aProject.getLocation();
 
-      // we have to remove the project name again, otherwise it would be
-      // there twice. API of Eclipse a little bit strange
-      aResourcePath = aResourcePath.removeFirstSegments(1);
+         // we have to remove the project name again, otherwise it would be
+         // there twice. API of Eclipse a little bit strange
+         aResourcePath = aResourcePath.removeFirstSegments(1);
 
-      // create the output file
-      IPath absoluteOutputFileName = absoluteProjectPath.append(aResourcePath);
-      File absoluteOutputFile = new File(absoluteOutputFileName.toOSString());
+         // create the output file
+         aResourcePath = absoluteProjectPath.append(aResourcePath);
+      }
 
+      File absoluteOutputFile = new File(aResourcePath.toOSString());
+
+      assert absoluteOutputFile != null: "Postconditon: result != null";
       return absoluteOutputFile;
    }
 

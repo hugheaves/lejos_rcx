@@ -1,7 +1,6 @@
 package org.lejos.tools.eclipse.plugin;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
@@ -352,27 +351,15 @@ public class EclipseToolsetFacade
    /**
     * Dump binary.
     * 
-    * @param classdir dir with all classes
+    * @param classpath classpath
     * @param classname main class
     * @param stream output stream to write binary to
     * @throws ToolsetException
     */
-   public void link (IPlatform platform, String classdir, String classname,
+   public void link (IPlatform platform, String classpath, String classname,
       OutputStream stream) throws ToolsetException
    {
-      try
-      {
-         IRuntimeToolset toolset = createToolset();
-
-         IPath classesJar = EclipseUtilities.findLejosLib("classes.jar");
-         String classpath = classesJar.toOSString() + File.pathSeparator
-            + classdir;
-         toolset.link(platform, classpath, classname, false, stream, true);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
+      createToolset().link(platform, classpath, classname, false, stream, true);
    }
 
    /**

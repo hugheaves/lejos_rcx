@@ -1,6 +1,5 @@
 package org.lejos.tools.eclipse.plugin.launch;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -55,6 +54,8 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
             throw new ToolsetException("java project not found");
          }
 
+         final String classpath = EclipseUtilities.getClasspath(javaProject);
+         
          final String mainClass = verifyMainTypeName(configuration);
          if (mainClass == null)
          {
@@ -69,7 +70,6 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
          ICompilationUnit cu = type.getCompilationUnit();
 
          final IPath outputPathRel = javaProject.getOutputLocation();
-         final File outputDir = EclipseUtilities.getOutputFolder(cu);
 
          String typeName = type.getFullyQualifiedName();
          String typePath = typeName.replace('.', IPath.SEPARATOR);
@@ -105,8 +105,7 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
                      facade
                         .setProgressMonitor(new EclipseProgressMonitorToolsetImpl(
                            monitor));
-                     facade.link(PlatformRegistry.RCX, outputDir
-                        .getAbsolutePath(), mainClass, output);
+                     facade.link(PlatformRegistry.RCX, classpath, mainClass, output);
                   }
                   finally
                   {
