@@ -11,8 +11,6 @@ import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
-import org.eclipse.core.runtime.IPluginDescriptor;
-import org.eclipse.core.runtime.IPluginRegistry;
 import org.eclipse.core.runtime.Path;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.jdt.core.ICompilationUnit;
@@ -26,6 +24,7 @@ import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.lejos.tools.api.ToolsetFactory;
+import org.osgi.framework.Bundle;
 
 /**
  * The <code>EclipseUtilities</code> provides some common services to handle
@@ -363,22 +362,28 @@ public final class EclipseUtilities extends ToolsetFactory
   /**
    * Find a file within a plugin.
    * 
-   * @param plugin the name of the plugin
-   * @param file the name of the file
+   * @param pluginId the id of the plugin
+   * @param fileName the name of the file
    * @return the path to the file
    * @throws MalformedURLException will be raised in any URL problme
    * @throws IOException will be raised in problem accessing ressource
    */
-  public static IPath findFileInPlugin (String plugin, String file)
+  public static IPath findFileInPlugin (String pluginId, String fileName)
     throws MalformedURLException, IOException
   {
-    IPluginRegistry registry = Platform.getPluginRegistry();
-    IPluginDescriptor descriptor = registry.getPluginDescriptor(plugin);
-    URL pluginURL = descriptor.getInstallURL();
-    URL localURL = Platform.asLocalURL(pluginURL);
-    File localFile = new File(new File(localURL.getFile()), file);
-    IPath result = new Path(localFile.getAbsolutePath());
-    return result;
+      // get the bundle and its location
+      Bundle theBundle = Platform.getBundle(pluginId);
+      String theBundleLocation = theBundle.getLocation();
+
+      // get an entry in bundle as URL, will return bundleentry://nnn/...
+      // resolve the entry as an URL, typically file://...
+      URL theFileAsEntry = theBundle.getEntry(fileName);
+      URL resEntry = Platform.resolve(theFileAsEntry);
+
+      // convert from URL to an IPath
+      IPath result = new Path(new File(resEntry.getFile()).getAbsolutePath());
+      System.out.println(result);
+      return result;
   }
   
   /**
