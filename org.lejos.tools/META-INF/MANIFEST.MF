@@ -11,5 +11,6 @@ Eclipse-AutoStart: false
 Provide-Package: org.lejos.tools,
  org.lejos.tools.api,
  org.lejos.tools.impl,
+ org.lejos.tools.impl.download,
  org.lejos.tools.impl.link,
  org.lejos.tools.main
