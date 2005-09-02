@@ -19,8 +19,6 @@ import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.IMethod;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.internal.debug.ui.JDIDebugUIPlugin;
-import org.eclipse.jdt.internal.debug.ui.launcher.LauncherMessages;
 import org.eclipse.jdt.launching.IJavaLaunchConfigurationConstants;
 import org.eclipse.jdt.ui.JavaElementLabelProvider;
 import org.eclipse.jface.dialogs.MessageDialog;
@@ -30,6 +28,8 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.IEditorPart;
+import org.eclipse.ui.IWorkbenchWindow;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.dialogs.ElementListSelectionDialog;
 
 /**
@@ -146,8 +146,8 @@ public abstract class RunShortcut implements ILaunchShortcut
       ElementListSelectionDialog dialog = new ElementListSelectionDialog(
          getShell(), new JavaElementLabelProvider());
       dialog.setElements(types.toArray(new IType[types.size()]));
-      dialog.setTitle(LauncherMessages.getString("leJOS launch"));
-      dialog.setMessage(LauncherMessages.getString("select main class to run"));
+      dialog.setTitle("leJOS launch");
+      dialog.setMessage("select main class to run");
       dialog.setMultipleSelection(false);
       if (dialog.open() == Window.OK)
       {
@@ -202,7 +202,8 @@ public abstract class RunShortcut implements ILaunchShortcut
       }
       catch (CoreException e)
       {
-         JDIDebugUIPlugin.log(e);
+         // TODO fix logging!
+         e.printStackTrace();
       }
 
       // If there are no existing configs associated with the IType, create one.
@@ -255,9 +256,10 @@ public abstract class RunShortcut implements ILaunchShortcut
             type.getJavaProject().getElementName());
          config = wc.doSave();
       }
-      catch (CoreException ce)
+      catch (CoreException e)
       {
-         JDIDebugUIPlugin.log(ce);
+         // TODO fix logging!
+         e.printStackTrace();
       }
       return config;
    }
@@ -275,9 +277,8 @@ public abstract class RunShortcut implements ILaunchShortcut
       ElementListSelectionDialog dialog = new ElementListSelectionDialog(
          getShell(), labelProvider);
       dialog.setElements(configList.toArray());
-      dialog.setTitle(LauncherMessages.getString("leJOS launch"));
-      dialog.setMessage(LauncherMessages
-         .getString("select configuration for running main class"));
+      dialog.setTitle("leJOS launch");
+      dialog.setMessage("select configuration for running main class");
       dialog.setMultipleSelection(false);
       int result = dialog.open();
       labelProvider.dispose();
@@ -300,7 +301,8 @@ public abstract class RunShortcut implements ILaunchShortcut
     */
    protected Shell getShell ()
    {
-      return JDIDebugUIPlugin.getActiveWorkbenchShell();
+      IWorkbenchWindow window = PlatformUI.getWorkbench().getActiveWorkbenchWindow();
+      return window == null? null  : window.getShell();
    }
 
    /**

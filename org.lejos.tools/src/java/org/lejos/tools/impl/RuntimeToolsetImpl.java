@@ -138,7 +138,7 @@ public class RuntimeToolsetImpl extends AbstractToolsetImpl
       // compile
       try
       {
-         int rc = doCompile(arguments);
+         doCompile(arguments);
       }
       finally
       {

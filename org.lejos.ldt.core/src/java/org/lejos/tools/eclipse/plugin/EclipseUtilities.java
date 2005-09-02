@@ -383,7 +383,6 @@ public final class EclipseUtilities extends ToolsetFactory
       IJavaElement[] elems = aFragmentRoot.getChildren();
       for (int i = 0; i < elems.length; i++)
       {
-         IPackageFragment aPackage = (IPackageFragment) elems[i];
          ICompilationUnit[] subCUs = collectLinkClasses(elems[i]);
          for (int j = 0; j < subCUs.length; j++)
          {
@@ -404,7 +403,6 @@ public final class EclipseUtilities extends ToolsetFactory
    {
       // get the bundle and its location
       Bundle theBundle = Platform.getBundle(pluginId);
-      String theBundleLocation = theBundle.getLocation();
 
       // get an entry in bundle as URL, will return bundleentry://nnn/...
       // resolve the entry as an URL, typically file://...

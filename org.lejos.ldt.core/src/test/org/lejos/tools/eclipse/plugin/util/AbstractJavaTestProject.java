@@ -228,7 +228,6 @@ public abstract class AbstractJavaTestProject
    {
       // get the bundle and its location
       Bundle theBundle = Platform.getBundle(pluginId);
-      String theBundleLocation = theBundle.getLocation();
 
       // get an entry in bundle as URL, will return bundleentry://nnn/...
       // resolve the entry as an URL, typically file://...

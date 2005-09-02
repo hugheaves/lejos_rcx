@@ -142,11 +142,10 @@ public class LejosLinkTest extends TestCase
    public void testCommandLineInvalidOptions ()
    {
       NullLejosLink main = new NullLejosLink();
-      int rc;
-
+ 
       // wrong short option
       // TODO should result in an error !
-      rc = main.doMain(new String[]
+      main.doMain(new String[]
       {
          "-z", "MyClass"
       });
@@ -154,7 +153,7 @@ public class LejosLinkTest extends TestCase
 
       // wrong long option
       // TODO should result in an error !
-      rc = main.doMain(new String[]
+      main.doMain(new String[]
       {
          "--blabla", "MyClass"
       });

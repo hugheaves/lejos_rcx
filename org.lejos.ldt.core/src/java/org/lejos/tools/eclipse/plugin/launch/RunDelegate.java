@@ -17,7 +17,6 @@ import org.eclipse.core.runtime.Status;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.debug.core.ILaunch;
 import org.eclipse.debug.core.ILaunchConfiguration;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.launching.AbstractJavaLaunchConfigurationDelegate;
@@ -67,7 +66,6 @@ public class RunDelegate extends AbstractJavaLaunchConfigurationDelegate
          {
             throw new ToolsetException("main class not found");
          }
-         ICompilationUnit cu = type.getCompilationUnit();
 
          final IPath outputPathRel = javaProject.getOutputLocation();
 
