@@ -9,7 +9,6 @@ Eclipse-AutoStart: false
 Provide-Package: josx.rcxcomm,
  josx.rcxcomm.remotecontrol,
  josx.vision,
- js.classfile,
  js.common,
  js.tinyvm,
  js.tinyvm.gameboy,
