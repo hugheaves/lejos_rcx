@@ -9,7 +9,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 /**
- * Firmware download action.
+ * Abstract base class for actions.
  */
 public abstract class AbstractAction
    implements IObjectActionDelegate, IWorkbenchWindowActionDelegate
@@ -90,5 +90,13 @@ public abstract class AbstractAction
       }
 
       return result;
+   }
+   
+   /**
+    * Get current selection.
+    */
+   protected ISelection getSelection ()
+   {
+      return fSelection;
    }
 }

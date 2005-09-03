@@ -6,9 +6,6 @@
  */
 package org.lejos.tools.eclipse.plugin.view;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import js.tinyvm.Binary;
 import js.tinyvm.ClassRecord;
 import js.tinyvm.ConstantRecord;
@@ -73,7 +70,6 @@ public class LinkerContentProvider implements ITreeContentProvider
       {
          BinaryClassElement binaryClassElement = (BinaryClassElement) parentElement;
          Binary binary = binaryClassElement.getBinary();
-         List classRecords = new ArrayList();
          ClassRecord classRecord = binary.getClassRecord("java/lang/Object");
          return new Object[]
          {
