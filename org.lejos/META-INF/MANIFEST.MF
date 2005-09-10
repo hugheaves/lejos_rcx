@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Bundle-Name: %pluginName
 Bundle-SymbolicName: org.lejos
-Bundle-Version: 1.2.0
+Bundle-Version: 3.0.0
 Bundle-ClassPath: lib/jtools.jar,lib/pcrcxcomm.jar,lib/vision.jar,lib/bcel-5.1.jar,lib/commons-cli-1.0.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
