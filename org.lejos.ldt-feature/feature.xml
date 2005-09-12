@@ -19,7 +19,8 @@
    </license>
 
    <url>
-      <update label="%updateSiteName" url="http://lejos.sourceforge.net/ldt/update"/>
+      <!--update label="%updateSiteName" url="http://lejos.sourceforge.net/ldt/update"/-->
+      <update label="%updateSiteName" url="http://www.markusheiden.de/ldt/update"/>
    </url>
 
    <requires>
@@ -60,6 +61,6 @@
          id="org.lejos"
          download-size="0"
          install-size="0"
-         version="2.1.0"/>
+         version="3.0.0"/>
 
 </feature>
