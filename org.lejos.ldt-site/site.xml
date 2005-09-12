@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <site>
-
    <description url="www.lejos.org/tools/eclipse/LDT">
       leJOS Development Toolset
    </description>
-   <feature url="features/org.lejos.ldt_1.2.0.jar" id="org.lejos.ldt" version="1.2.0">
+   <feature url="features/org.lejos.ldt_1.2.0.jar" id="org.lejos.ldt" version="1.2.0" os="linux,win32" arch="x86">
       <category name="leJOS Development Toolset"/>
    </feature>
    <category-def name="leJOS Development Toolset" label="LDT">
