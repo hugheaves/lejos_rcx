@@ -1,4 +1,5 @@
-*.so
-emu-dump
-emu-lejos
-emu-lejosrun
+emu-dump*
+emu-lejos*
+emu-lejosrun*
+*irtrcx*
+*jirtrcx*
