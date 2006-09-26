@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.lejos.ldt.core; singleton=true
+Bundle-SymbolicName: org.lejos.ldt.core;singleton:=true
 Bundle-Version: 1.2.0
 Bundle-ClassPath: ldt-core.jar
 Bundle-Activator: org.lejos.tools.eclipse.plugin.LejosPlugin
@@ -19,7 +19,7 @@ Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.debug.core,
  org.eclipse.debug.ui,
  org.eclipse.jdt.debug.ui
-Eclipse-AutoStart: true
+Eclipse-LazyStart: true
 Provide-Package: org.lejos.tools.eclipse,
  org.lejos.tools.eclipse.plugin,
  org.lejos.tools.eclipse.plugin.actions,
@@ -31,3 +31,4 @@ Provide-Package: org.lejos.tools.eclipse,
  org.lejos.tools.eclipse.plugin.preferences,
  org.lejos.tools.eclipse.plugin.view,
  org.lejos.tools.eclipse.plugin.view.model
+Bundle-ManifestVersion: 2

@@ -7,7 +7,7 @@ Bundle-Vendor: leJOS.org
 Bundle-Localization: plugin
 Require-Bundle: org.lejos;reprovide=true,
  org.junit
-Eclipse-AutoStart: false
+Eclipse-LazyStart: false
 Provide-Package: org.lejos.tools,
  org.lejos.tools.api,
  org.lejos.tools.impl,

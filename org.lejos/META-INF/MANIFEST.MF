@@ -5,7 +5,7 @@ Bundle-Version: 3.0.0
 Bundle-ClassPath: lib/jtools.jar,lib/pcrcxcomm.jar,lib/vision.jar,lib/bcel-5.1.jar,lib/commons-cli-1.0.jar
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Eclipse-AutoStart: false
+Eclipse-LazyStart: false
 Provide-Package: josx.rcxcomm,
  josx.rcxcomm.remotecontrol,
  josx.vision,

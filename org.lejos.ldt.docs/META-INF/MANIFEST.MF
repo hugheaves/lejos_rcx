@@ -1,8 +1,9 @@
 Manifest-Version: 1.0
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.lejos.ldt.docs; singleton=true
+Bundle-SymbolicName: org.lejos.ldt.docs;singleton:=true
 Bundle-Version: 1.2.0
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.help
-Eclipse-AutoStart: false
+Eclipse-LazyStart: false
+Bundle-ManifestVersion: 2
