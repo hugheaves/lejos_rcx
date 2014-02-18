@@ -72,7 +72,7 @@ int __rcx_read(rcx_dev_t *port, void *buf, int maxlen, int timeout)
 
 	int count;
 	fd_set fds;
-	struct timeval_t tv;
+	struct timeval tv;
 	int retry = 10;
 
 	while (len < maxlen) {
