@@ -140,6 +140,8 @@
       		</fileset>
     	</copy>
     	<javac srcdir="${javasrc}/vision" destdir="${build.tmp}/vision" fork="yes" optimize="on" debug="on" source="1.4">
+ <!-- compiler arg prevents build errors on "modern" JDK / ant -->
+    		<compilerarg value="-XDignore.symbol.file" />
       		<classpath path="${3rdparty.libs}/jmf.jar;${lib}/pcrcxcomm.jar" />
     	</javac>
     	<jar destfile="${lib}/vision.jar" basedir="${build.tmp}/vision" update="false"/>

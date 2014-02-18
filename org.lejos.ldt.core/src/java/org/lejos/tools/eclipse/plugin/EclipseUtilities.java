@@ -52,11 +52,20 @@ public final class EclipseUtilities extends ToolsetFactory
       for (int i = 0; i < classpathEntries.length; i++)
       {
          IClasspathEntry entry = classpathEntries[i];
-         
-         // replace source dir by output location
-         IPath path = entry.getEntryKind() == IClasspathEntry.CPE_SOURCE? outputPath : entry.getPath();
 
-         result.append(getAbsoluteLocationForResource(project.getProject(), path).getAbsolutePath());
+         System.out.println ("HLE: entry.getPath().toOSString() = " + entry.getPath().toOSString());
+         
+         String pathStr = null;
+         // replace source dir by output location
+         if (entry.getEntryKind() == IClasspathEntry.CPE_SOURCE) {
+        	 pathStr = getAbsoluteLocationForResource(project.getProject(), outputPath).getAbsolutePath();
+         }
+         else {
+        	 pathStr = entry.getPath().toOSString();
+         }
+//         result.append(
+         result.append(pathStr);
+         System.out.println ("HLE: pathStr = " + pathStr);
          result.append(File.pathSeparator);
       }
       result.setLength(result.length() - File.pathSeparator.length());

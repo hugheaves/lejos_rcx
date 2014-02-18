@@ -39,7 +39,7 @@ default: all
 all: ${JIRTRCX}
 
 ${JIRTRCX}: tower.c
-	$(CC) $(CCOPT) $(TRACE) -o "$@" *.c
+	$(CC) $(CCOPT) $(TRACE) -o "$@" *.c -lirtrcx
 
 clean:
 	rm -rf *.o

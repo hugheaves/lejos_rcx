@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-Name: %pluginName
-Bundle-SymbolicName: org.lejos
+Bundle-SymbolicName: org.lejos;singleton:=true
 Bundle-Version: 3.0.0
 Bundle-ClassPath: lib/jtools.jar,lib/pcrcxcomm.jar,lib/vision.jar,lib/bcel-5.1.jar,lib/commons-cli-1.0.jar
 Bundle-Vendor: %providerName
@@ -24,3 +24,4 @@ Provide-Package: josx.rcxcomm,
  org.apache.bcel.verifier.exc,
  org.apache.bcel.verifier.statics,
  org.apache.bcel.verifier.structurals
+Bundle-ManifestVersion: 2

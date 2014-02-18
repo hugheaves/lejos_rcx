@@ -27,7 +27,7 @@ public class LejosPreferences
    };
    private static final String[] D_PORTS_LINUX = new String[]
    {
-      "usb0", "usb1", "usb2", "usb3", "/dev/ttyS0", "/dev/ttyS1", "/dev/ttyS2", "/dev/ttyS3"
+      "/dev/usb/legousbtower0", "/dev/usb/legousbtower1", "/dev/usb/legousbtower2", "/dev/usb/legousbtower3", "/dev/ttyS0", "/dev/ttyS1", "/dev/ttyS2", "/dev/ttyS3"
    };
 
    //
