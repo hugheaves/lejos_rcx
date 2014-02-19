@@ -1,3 +1,4 @@
+<?xml version="1.0"?>
 <!--
   ==================================================
   Buildfile for building the cvs TOT of leJOS
@@ -16,8 +17,10 @@
 	<property name="javasrc" value="${src}/java"/>
 	<property name="javavm.src" value="${src}/javavm"/>
 	<property name="emu.src" value="${src}/tools/emu-lejos"/>
+	<!--
 	<property name="irctrcx.lib.src" value="${src}/comms/libirtrcx"/>
 	<property name="jirctrcx.lib.src" value="${src}/comms/libjirtrcx"/>
+	-->
 	<property name="plat.unix.src" value="${src}/platform/unix"/>
 	<property name="plat.rcx.src" value="${src}/platform/rcx"/>
 	<property name="fastdl.src" value="${src}/comms/tools/fastdl"/>
@@ -28,8 +31,10 @@
 	<property name="org.lejos" value="${lejos.root}/../org.lejos"/>
 	<property name="org.lejos.lib" value="${org.lejos}/lib"/>
 	<property name="org.lejos.src" value="${org.lejos}/src"/>
+<!--
 	<property name="org.lejos.driver.win32.dir" value="${org.lejos}/os/win32/x86"/>
 	<property name="org.lejos.driver.linux.dir" value="${org.lejos}/os/linux/x86"/>
+-->
 
 	<!-- cpptasks task & type def -->
 	<taskdef resource="cpptasks.tasks">
@@ -92,20 +97,24 @@
  	
 	<!-- builds the irctrcx libraries -->
 	<target name="irctrcx.libs" description="builds the irctrcx libraries">
+		<!--
 		<exec executable="make" failonerror="true" dir="${irctrcx.lib.src}">
 			<arg line="OSTYPE=${lejos.ostype} LEJOS_HOME=${lejos.root} BIN_TARGET=${make.out}"/>
 		</exec> 
+		-->
 	</target>
 
 	<!-- builds the jirctrcx libraries -->
 	<target name="jirctrcx.libs" depends="irctrcx.libs" description="builds the jirctrcx libraries">
+		<!--
 		<exec executable="make" failonerror="true" dir="${jirctrcx.lib.src}">
 			<arg line="OSTYPE=${lejos.ostype} LEJOS_HOME=${lejos.root} BIN_TARGET=${make.out} TRACE=${trace}"/>
 		</exec> 
+		-->
   	</target>
 
 	<!-- create all lejos library jar files  -->
-	<target name="lejos.libs" depends="classes.jar, rcxcomm.jar, pcrcxcomm.jar, vision.jar, jtools.jar" description="make all lejos library jars">
+	<target name="lejos.libs" depends="classes.jar, rcxcomm.jar, vision.jar, jtools.jar" description="make all lejos library jars">
 	</target>
   				
   	<!-- creates the classes jar (RCX: JDK 1.1) -->
@@ -126,10 +135,13 @@
 
   	<!--creates the pcrcxcomm jar (PC: JDK 1.4) -->
   	<target name="pcrcxcomm.jar" description="generate pcrcxcomm jar">
-    	<mkdir dir="${build.tmp}/pcrcxcomm"/>
+  <!--  	<mkdir dir="${build.tmp}/pcrcxcomm"/>
     	<javac srcdir="${javasrc}/pcrcxcomm" destdir="${build.tmp}/pcrcxcomm" fork="yes" optimize="on" debug="on" source="1.4"/>
-    	<jar destfile="${lib}/pcrcxcomm.jar" basedir="${build.tmp}/pcrcxcomm" update="false"/>
+    	<jar destfile="${lib}/pcrcxcomm.jar" basedir="${build.tmp}/pcrcxcomm" update="false"/> -->
+		<copy file="${3rdparty.libs}/pcrcxcomm-0.0.1-SNAPSHOT.jar" tofile="${lib}/pcrcxcomm.jar">
+		</copy>
   	</target>
+
 
   	<!--creates the vision jar (PC: JDK 1.4) -->
   	<target name="vision.jar" depends="pcrcxcomm.jar" description="generate vision jar">
@@ -140,9 +152,9 @@
       		</fileset>
     	</copy>
     	<javac srcdir="${javasrc}/vision" destdir="${build.tmp}/vision" fork="yes" optimize="on" debug="on" source="1.4">
- <!-- compiler arg prevents build errors on "modern" JDK / ant -->
-    		<compilerarg value="-XDignore.symbol.file" />
-      		<classpath path="${3rdparty.libs}/jmf.jar;${lib}/pcrcxcomm.jar" />
+<!-- compiler arg prevents build errors on "modern" JDK / ant -->
+     		<compilerarg value="-XDignore.symbol.file" />
+    		<classpath path="${3rdparty.libs}/jmf.jar;${lib}/pcrcxcomm.jar" />
     	</javac>
     	<jar destfile="${lib}/vision.jar" basedir="${build.tmp}/vision" update="false"/>
   	</target>
